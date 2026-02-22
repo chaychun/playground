@@ -5,7 +5,7 @@ export default async function Home() {
   const items = await getPlaygroundItems();
 
   return (
-    <main className="min-h-svh bg-paper">
+    <main className="mx-auto min-h-svh max-w-[1440px] bg-paper">
       <header className="px-6 pt-12 pb-8">
         <h1 className="text-2xl font-semibold tracking-tight text-ink">playground</h1>
       </header>

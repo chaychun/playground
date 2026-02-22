@@ -1,21 +1,43 @@
 import { ExternalCell } from "@/components/grid/external-cell";
 import { InlineCell } from "@/components/grid/inline-cell";
 import { PreviewCell } from "@/components/grid/preview-cell";
+import { computeGridLayout } from "@/lib/grid-layout";
 import type { GridItem } from "@/lib/types";
 
+function itemKey(item: GridItem): string {
+  return item.type === "external-link" ? item.id : item.slug;
+}
+
+function renderCell(item: GridItem) {
+  switch (item.type) {
+    case "inline":
+      return <InlineCell item={item} />;
+    case "preview":
+      return <PreviewCell item={item} />;
+    case "external-link":
+      return <ExternalCell item={item} />;
+  }
+}
+
 export function PortfolioGrid({ items }: { items: GridItem[] }) {
+  const placements = computeGridLayout(items);
+
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => {
-        switch (item.type) {
-          case "inline":
-            return <InlineCell key={item.slug} item={item} />;
-          case "preview":
-            return <PreviewCell key={item.slug} item={item} />;
-          case "external-link":
-            return <ExternalCell key={item.id} item={item} />;
-        }
-      })}
+    <div className="grid grid-cols-1 gap-5 px-6 md:grid-cols-5">
+      {placements.map(({ item, colSpan, row }) => (
+        <div
+          key={itemKey(item)}
+          className="grid-cell"
+          style={
+            {
+              "--gc": colSpan,
+              "--gr": String(row),
+            } as React.CSSProperties
+          }
+        >
+          {renderCell(item)}
+        </div>
+      ))}
     </div>
   );
 }

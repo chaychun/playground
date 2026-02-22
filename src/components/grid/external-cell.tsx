@@ -1,3 +1,4 @@
+import { cn } from "@/lib/cn";
 import type { LinkItem } from "@/lib/types";
 
 export function ExternalCell({ item }: { item: LinkItem }) {
@@ -8,7 +9,12 @@ export function ExternalCell({ item }: { item: LinkItem }) {
       rel="noopener noreferrer"
       className="group block overflow-hidden rounded-lg border border-border bg-surface"
     >
-      <div className="aspect-video bg-mid">
+      <div
+        className={cn(
+          "bg-mid",
+          item.orientation === "portrait" ? "aspect-[3/4]" : "aspect-video",
+        )}
+      >
         {item.preview.type === "image" ? (
           <img src={item.preview.src} alt={item.title} className="h-full w-full object-cover" />
         ) : (
