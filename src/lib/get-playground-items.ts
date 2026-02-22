@@ -15,30 +15,37 @@ export async function getPlaygroundItems(): Promise<GridItem[]> {
     return [];
   }
 
-  const components: GridItem[] = await Promise.all(
-    dirs.map(async (slug) => {
-      const { meta } = (await import(`@/playground/${slug}/meta`)) as { meta: ComponentMeta };
+  const results = await Promise.all(
+    dirs.map(async (slug): Promise<GridItem | null> => {
+      try {
+        const { meta } = (await import(`@/playground/${slug}/meta`)) as { meta: ComponentMeta };
 
-      if (meta.display === "preview") {
+        if (meta.display === "preview") {
+          return {
+            type: "preview" as const,
+            slug,
+            title: meta.title,
+            orientation: meta.orientation,
+            createdAt: meta.createdAt,
+            preview: meta.preview,
+          };
+        }
+
         return {
-          type: "preview" as const,
+          type: "inline" as const,
           slug,
           title: meta.title,
           orientation: meta.orientation,
           createdAt: meta.createdAt,
-          preview: meta.preview,
         };
+      } catch {
+        // eslint-disable-next-line no-console -- intentional diagnostic for broken playground items
+        console.warn(`Skipping playground item "${slug}": failed to load meta.ts`);
+        return null;
       }
-
-      return {
-        type: "inline" as const,
-        slug,
-        title: meta.title,
-        orientation: meta.orientation,
-        createdAt: meta.createdAt,
-      };
     }),
   );
+  const components = results.filter((item): item is GridItem => item !== null);
 
   const { links } = await import("@/data/links");
   const all: GridItem[] = [...components, ...links];

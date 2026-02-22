@@ -77,7 +77,7 @@ type LinkItem = {
 2. External links are imported from `src/data/links.ts`
 3. Both are merged and sorted by `createdAt` (newest first)
 4. Grid renders each item:
-   - `display: "inline"` → `next/dynamic` loads and renders the component live in the grid
+   - `display: "inline"` → `React.lazy` with `Suspense` (via `LazyPlaygroundComponent`) loads and renders the component live in the grid
    - `display: "preview"` → renders preview image/video, wraps in link to `/playground/[slug]`
    - `external-link` → renders preview image/video, wraps in external link
 
@@ -136,6 +136,7 @@ src/
 ### Component Patterns
 
 - Interactive components use `"use client"` directive
-- Dynamic imports via `next/dynamic` for grid-embedded inline components
+- Dynamic imports via `React.lazy` with module-level cache (`src/lib/lazy-component.tsx`) for grid-embedded inline components
 - Server components by default; client only when needed
 - `meta.ts` files are always server-safe (no "use client", no heavy deps)
+- See [new-component.md](./new-component.md) for step-by-step guide on adding a new playground component

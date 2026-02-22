@@ -35,7 +35,12 @@ export default async function PlaygroundPage({ params }: { params: Promise<{ slu
         <h1 className="text-2xl font-semibold tracking-tight text-ink">{meta.title}</h1>
       </header>
       <div className="px-6">
-        <LazyPlaygroundComponent slug={slug} />
+        <LazyPlaygroundComponent
+          slug={slug}
+          fallback={
+            <div className="flex h-64 items-center justify-center text-xs text-muted">Loading…</div>
+          }
+        />
       </div>
     </main>
   );
