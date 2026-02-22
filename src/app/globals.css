@@ -31,27 +31,27 @@
 }
 
 :root {
-  --paper: #F3F3EF;
-  --surface: #E9E9E5;
-  --border: #DCDCD8;
-  --mid: #C5C5C1;
-  --muted: #9C9C98;
+  --paper: #f3f3ef;
+  --surface: #e9e9e5;
+  --border: #dcdcd8;
+  --mid: #c5c5c1;
+  --muted: #9c9c98;
   --link: #696966;
-  --dim: #4A4A47;
+  --dim: #4a4a47;
   --ink: #111110;
-  --ink-inv: #F3F3EF;
+  --ink-inv: #f3f3ef;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --paper: #141312;
-    --surface: #1E1D1B;
-    --border: #2C2B28;
-    --mid: #3D3C39;
-    --muted: #72716D;
+    --surface: #1e1d1b;
+    --border: #2c2b28;
+    --mid: #3d3c39;
+    --muted: #72716d;
     --link: #949390;
-    --dim: #A8A7A2;
-    --ink: #E8E7E3;
+    --dim: #a8a7a2;
+    --ink: #e8e7e3;
     --ink-inv: #141312;
   }
 }

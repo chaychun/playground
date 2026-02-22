@@ -79,12 +79,16 @@ const fontWeights = [
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-xl font-medium text-ink tracking-[-0.01em] pb-3 mb-6 border-b border-border">{children}</h2>
+    <h2 className="mb-6 border-b border-border pb-3 text-xl font-medium tracking-[-0.01em] text-ink">
+      {children}
+    </h2>
   );
 }
 
 function MonoLabel({ children }: { children: React.ReactNode }) {
-  return <div className="font-mono text-2xs text-muted tracking-[0.08em] uppercase mb-3">{children}</div>;
+  return (
+    <div className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">{children}</div>
+  );
 }
 
 export default function DesignSystemPage() {
@@ -93,10 +97,15 @@ export default function DesignSystemPage() {
       <div className="mx-auto max-w-3xl px-6 py-16">
         {/* Header */}
         <header className="mb-16">
-          <div className="font-mono text-2xs text-muted tracking-[0.08em] uppercase mb-3">Design System</div>
-          <h1 className="text-3xl font-normal text-ink tracking-[-0.02em] leading-[1.1] mb-4">Foundations</h1>
-          <p className="text-sm text-dim leading-[1.6] max-w-[540px]">
-            Typography and color tokens extracted from syne-refined. Two fonts, one neutral scale, light and dark.
+          <div className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
+            Design System
+          </div>
+          <h1 className="mb-4 text-3xl leading-[1.1] font-normal tracking-[-0.02em] text-ink">
+            Foundations
+          </h1>
+          <p className="max-w-[540px] text-sm leading-[1.6] text-dim">
+            Typography and color tokens extracted from syne-refined. Two fonts, one neutral scale,
+            light and dark.
           </p>
         </header>
 
@@ -104,49 +113,53 @@ export default function DesignSystemPage() {
         <section className="mb-20">
           <SectionHeading>Typography</SectionHeading>
 
-          <p className="text-sm text-dim leading-[1.6] mb-10">
-            Two families. Manrope handles everything functional — body, headings, buttons, labels. IBM Plex Mono covers
-            code, specs, and technical metadata. They never compete because they never overlap.
+          <p className="mb-10 text-sm leading-[1.6] text-dim">
+            Two families. Manrope handles everything functional — body, headings, buttons, labels.
+            IBM Plex Mono covers code, specs, and technical metadata. They never compete because
+            they never overlap.
           </p>
 
           {/* Manrope */}
           <div className="mb-12">
             <MonoLabel>Sans — Body &amp; UI</MonoLabel>
-            <div className="text-2xl font-normal text-ink tracking-[-0.02em] mb-4">Manrope</div>
-            <p className="text-sm text-dim leading-[1.6] mb-6">
-              The default for everything. Body text, buttons, labels, navigation, headings. Optimized for readability at
-              14px. Default weight is 400; use 500 for emphasis, 600 for small labels and buttons, 700 rarely.
+            <div className="mb-4 text-2xl font-normal tracking-[-0.02em] text-ink">Manrope</div>
+            <p className="mb-6 text-sm leading-[1.6] text-dim">
+              The default for everything. Body text, buttons, labels, navigation, headings.
+              Optimized for readability at 14px. Default weight is 400; use 500 for emphasis, 600
+              for small labels and buttons, 700 rarely.
             </p>
 
             <MonoLabel>Weights</MonoLabel>
-            <div className="flex gap-10 mb-6">
-              {(["font-normal", "font-medium", "font-semibold", "font-bold"] as const).map((w, i) => (
-                <div key={w}>
-                  <div className={`text-xl text-ink ${w} mb-1`}>Ag</div>
-                  <div className="font-mono text-2xs text-muted">
-                    {[400, 500, 600, 700][i]} {["Regular", "Medium", "Semibold", "Bold"][i]}
+            <div className="mb-6 flex gap-10">
+              {(["font-normal", "font-medium", "font-semibold", "font-bold"] as const).map(
+                (w, i) => (
+                  <div key={w}>
+                    <div className={`text-xl text-ink ${w} mb-1`}>Ag</div>
+                    <div className="font-mono text-2xs text-muted">
+                      {[400, 500, 600, 700][i]} {["Regular", "Medium", "Semibold", "Bold"][i]}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
 
-            <div className="text-sm text-dim leading-[1.6]">
-              The quick brown fox jumps over the lazy dog. Nodes in the knowledge graph represent discrete concepts,
-              people, places, and ideas.
+            <div className="text-sm leading-[1.6] text-dim">
+              The quick brown fox jumps over the lazy dog. Nodes in the knowledge graph represent
+              discrete concepts, people, places, and ideas.
             </div>
           </div>
 
           {/* IBM Plex Mono */}
           <div className="mb-12">
             <MonoLabel>Monospace — Code &amp; Specs</MonoLabel>
-            <div className="font-mono font-light text-2xl text-ink mb-4">IBM Plex Mono</div>
-            <p className="text-sm text-dim leading-[1.6] mb-6">
-              Technical contexts only. Metadata labels (uppercase, 10px, 0.08em tracking), color values, code blocks.
-              Use 300 for subtle annotations, 400 for code, 500 for emphasis.
+            <div className="mb-4 font-mono text-2xl font-light text-ink">IBM Plex Mono</div>
+            <p className="mb-6 text-sm leading-[1.6] text-dim">
+              Technical contexts only. Metadata labels (uppercase, 10px, 0.08em tracking), color
+              values, code blocks. Use 300 for subtle annotations, 400 for code, 500 for emphasis.
             </p>
 
             <MonoLabel>Weights</MonoLabel>
-            <div className="flex gap-10 mb-6">
+            <div className="mb-6 flex gap-10">
               {(["font-light", "font-normal", "font-medium"] as const).map((w, i) => (
                 <div key={w}>
                   <div className={`font-mono text-xl text-ink ${w} mb-1`}>Ag</div>
@@ -159,16 +172,22 @@ export default function DesignSystemPage() {
 
             <div className="flex flex-col gap-2.5">
               <div className="flex items-baseline gap-5">
-                <span className="font-mono text-2xs w-20 shrink-0 text-muted">Labels</span>
-                <span className="font-mono text-2xs tracking-[0.08em] uppercase text-muted">Color System</span>
+                <span className="w-20 shrink-0 font-mono text-2xs text-muted">Labels</span>
+                <span className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">
+                  Color System
+                </span>
               </div>
               <div className="flex items-baseline gap-5">
-                <span className="font-mono text-2xs w-20 shrink-0 text-muted">Specs</span>
-                <span className="font-mono text-2xs text-muted">28px / Regular / -0.02em / 1.1</span>
+                <span className="w-20 shrink-0 font-mono text-2xs text-muted">Specs</span>
+                <span className="font-mono text-2xs text-muted">
+                  28px / Regular / -0.02em / 1.1
+                </span>
               </div>
               <div className="flex items-baseline gap-5">
-                <span className="font-mono text-2xs w-20 shrink-0 text-muted">Code</span>
-                <span className="font-mono text-sm font-normal text-dim">const nodes = graph.query(filter)</span>
+                <span className="w-20 shrink-0 font-mono text-2xs text-muted">Code</span>
+                <span className="font-mono text-sm font-normal text-dim">
+                  const nodes = graph.query(filter)
+                </span>
               </div>
             </div>
           </div>
@@ -176,18 +195,18 @@ export default function DesignSystemPage() {
           {/* Type Scale */}
           <div className="mb-12">
             <MonoLabel>Type Scale</MonoLabel>
-            <p className="text-sm text-dim leading-[1.6] mb-8">
-              Seven steps from 10px to 32px. Tight at the top (1.1 line-height for display) and relaxed at the bottom
-              (1.6 for body).
+            <p className="mb-8 text-sm leading-[1.6] text-dim">
+              Seven steps from 10px to 32px. Tight at the top (1.1 line-height for display) and
+              relaxed at the bottom (1.6 for body).
             </p>
 
             <div className="flex flex-col gap-8">
               {typeScale.map((t) => (
                 <div key={t.token} className="flex items-baseline gap-5">
-                  <span className="font-mono text-2xs w-12 shrink-0 text-muted">{t.token}</span>
+                  <span className="w-12 shrink-0 font-mono text-2xs text-muted">{t.token}</span>
                   <div className="flex-1">
                     <span
-                      className={`text-ink ${t.token === "3xl" || t.token === "2xl" ? `text-${t.token} font-normal tracking-[-0.02em]` : ""} ${t.token === "xl" ? "text-xl font-medium tracking-[-0.01em]" : ""} ${t.token === "lg" ? "text-lg font-normal tracking-[-0.01em]" : ""} ${t.token === "sm" ? "text-sm font-normal text-dim" : ""} ${t.token === "xs" ? "text-xs font-normal text-muted tracking-[0.04em]" : ""} ${t.token === "2xs" ? "font-mono text-2xs text-muted tracking-[0.08em] uppercase" : ""}`}
+                      className={`text-ink ${t.token === "3xl" || t.token === "2xl" ? `text-${t.token} font-normal tracking-[-0.02em]` : ""} ${t.token === "xl" ? "text-xl font-medium tracking-[-0.01em]" : ""} ${t.token === "lg" ? "text-lg font-normal tracking-[-0.01em]" : ""} ${t.token === "sm" ? "text-sm font-normal text-dim" : ""} ${t.token === "xs" ? "text-xs font-normal tracking-[0.04em] text-muted" : ""} ${t.token === "2xs" ? "font-mono text-2xs tracking-[0.08em] text-muted uppercase" : ""}`}
                     >
                       {t.token === "sm"
                         ? "Body text. This is where users spend most of their time reading."
@@ -197,7 +216,7 @@ export default function DesignSystemPage() {
                             ? "Color System"
                             : t.role.split("—")[0].trim()}
                     </span>
-                    <div className="font-mono text-2xs text-muted mt-1">
+                    <div className="mt-1 font-mono text-2xs text-muted">
                       {t.token === "2xs" ? "IBM Plex Mono" : "Manrope"} · {t.size} / {t.weight} /{" "}
                       {t.tracking !== "0" ? `${t.tracking} / ` : ""}
                       {t.lineHeight}
@@ -213,18 +232,22 @@ export default function DesignSystemPage() {
         <section className="mb-20">
           <SectionHeading>Color</SectionHeading>
 
-          <p className="text-sm text-dim leading-[1.6] mb-4">
-            Nine warm-tinted neutrals from paper (lightest) to ink (darkest). Each stop has a distinct role. Dark mode
-            inverts the luminance order while keeping the same semantic meaning.
+          <p className="mb-4 text-sm leading-[1.6] text-dim">
+            Nine warm-tinted neutrals from paper (lightest) to ink (darkest). Each stop has a
+            distinct role. Dark mode inverts the luminance order while keeping the same semantic
+            meaning.
           </p>
 
           {/* Swatch strip */}
           <div className="mb-10">
             <MonoLabel>Light</MonoLabel>
-            <div className="flex gap-1 mb-6">
+            <div className="mb-6 flex gap-1">
               {neutrals.map((n) => (
-                <div key={n.token} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="w-full h-12 border border-border" style={{ backgroundColor: n.light }} />
+                <div key={n.token} className="flex flex-1 flex-col items-center gap-2">
+                  <div
+                    className="h-12 w-full border border-border"
+                    style={{ backgroundColor: n.light }}
+                  />
                   <div className="font-mono text-2xs text-muted">{n.token}</div>
                   <div className="font-mono text-2xs text-muted">{n.light}</div>
                 </div>
@@ -232,10 +255,13 @@ export default function DesignSystemPage() {
             </div>
 
             <MonoLabel>Dark</MonoLabel>
-            <div className="flex gap-1 mb-6">
+            <div className="mb-6 flex gap-1">
               {neutrals.map((n) => (
-                <div key={n.token} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="w-full h-12 border border-border" style={{ backgroundColor: n.dark }} />
+                <div key={n.token} className="flex flex-1 flex-col items-center gap-2">
+                  <div
+                    className="h-12 w-full border border-border"
+                    style={{ backgroundColor: n.dark }}
+                  />
                   <div className="font-mono text-2xs text-muted">{n.token}</div>
                   <div className="font-mono text-2xs text-muted">{n.dark}</div>
                 </div>
@@ -249,7 +275,10 @@ export default function DesignSystemPage() {
             <div className="flex flex-col gap-4">
               {neutrals.map((n) => (
                 <div key={n.token} className="flex items-center gap-4">
-                  <div className="w-8 h-8 shrink-0 border border-border" style={{ backgroundColor: n.light }} />
+                  <div
+                    className="h-8 w-8 shrink-0 border border-border"
+                    style={{ backgroundColor: n.light }}
+                  />
                   <div className="w-20 shrink-0">
                     <code className="font-mono text-2xs text-ink">{n.token}</code>
                   </div>
@@ -267,34 +296,35 @@ export default function DesignSystemPage() {
           <SectionHeading>Quick Reference</SectionHeading>
 
           <div className="grid grid-cols-[120px_1fr] gap-x-6 gap-y-5">
-            <div className="font-mono text-2xs text-muted pt-0.5">Headings</div>
-            <p className="text-sm text-dim leading-[1.6]">
-              <code className="font-mono text-2xs text-ink">text-ink</code>. Use medium (500) or semibold (600) weight.
-              Track tighter at larger sizes: -0.02em for 2xl+, -0.01em for xl–lg.
+            <div className="pt-0.5 font-mono text-2xs text-muted">Headings</div>
+            <p className="text-sm leading-[1.6] text-dim">
+              <code className="font-mono text-2xs text-ink">text-ink</code>. Use medium (500) or
+              semibold (600) weight. Track tighter at larger sizes: -0.02em for 2xl+, -0.01em for
+              xl–lg.
             </p>
 
-            <div className="font-mono text-2xs text-muted pt-0.5">Body text</div>
-            <p className="text-sm text-dim leading-[1.6]">
-              <code className="font-mono text-2xs text-ink">text-dim</code> at 14px, regular weight, 1.6 line-height.
-              Not ink — it is too heavy for sustained reading.
+            <div className="pt-0.5 font-mono text-2xs text-muted">Body text</div>
+            <p className="text-sm leading-[1.6] text-dim">
+              <code className="font-mono text-2xs text-ink">text-dim</code> at 14px, regular weight,
+              1.6 line-height. Not ink — it is too heavy for sustained reading.
             </p>
 
-            <div className="font-mono text-2xs text-muted pt-0.5">Secondary text</div>
-            <p className="text-sm text-dim leading-[1.6]">
-              <code className="font-mono text-2xs text-ink">text-muted</code> for timestamps, metadata, breadcrumbs,
-              placeholders.
+            <div className="pt-0.5 font-mono text-2xs text-muted">Secondary text</div>
+            <p className="text-sm leading-[1.6] text-dim">
+              <code className="font-mono text-2xs text-ink">text-muted</code> for timestamps,
+              metadata, breadcrumbs, placeholders.
             </p>
 
-            <div className="font-mono text-2xs text-muted pt-0.5">Borders</div>
-            <p className="text-sm text-dim leading-[1.6]">
-              Always 1px <code className="font-mono text-2xs text-ink">border-border</code>. Never use border color as a
-              background fill.
+            <div className="pt-0.5 font-mono text-2xs text-muted">Borders</div>
+            <p className="text-sm leading-[1.6] text-dim">
+              Always 1px <code className="font-mono text-2xs text-ink">border-border</code>. Never
+              use border color as a background fill.
             </p>
 
-            <div className="font-mono text-2xs text-muted pt-0.5">Dark mode</div>
-            <p className="text-sm text-dim leading-[1.6]">
-              Set <code className="font-mono text-2xs text-ink">data-theme=&quot;dark&quot;</code> on html. All semantic
-              tokens remap automatically — no conditional logic needed.
+            <div className="pt-0.5 font-mono text-2xs text-muted">Dark mode</div>
+            <p className="text-sm leading-[1.6] text-dim">
+              Set <code className="font-mono text-2xs text-ink">data-theme=&quot;dark&quot;</code>{" "}
+              on html. All semantic tokens remap automatically — no conditional logic needed.
             </p>
           </div>
         </section>
