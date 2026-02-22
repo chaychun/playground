@@ -1,26 +1,19 @@
+import { CellAction, CellCaption, aspectClass } from "@/components/grid/cell-parts";
+import { cn } from "@/lib/cn";
 import type { GridItem } from "@/lib/types";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
 type PreviewItem = Extract<GridItem, { type: "preview" }>;
 
 export function PreviewCell({ item }: { item: PreviewItem }) {
   return (
-    <Link
-      href={`/playground/${item.slug}`}
-      className="group block overflow-hidden rounded-lg border border-border bg-surface"
-    >
-      <div className="aspect-video bg-mid">
-        {item.preview.type === "image" ? (
-          <img src={item.preview.src} alt={item.title} className="h-full w-full object-cover" />
-        ) : (
-          <video src={item.preview.src} muted loop className="h-full w-full object-cover" />
-        )}
-      </div>
-      <div className="p-3">
-        <p className="text-xs font-medium text-muted transition-colors group-hover:text-ink">
-          {item.title}
-        </p>
-      </div>
+    <Link href={`/playground/${item.slug}`} className="group block">
+      <div className={cn("bg-surface", aspectClass(item.orientation))} />
+      <CellCaption
+        title={item.title}
+        action={<CellAction label="VIEW" icon={<CaretRight weight="bold" className="size-3" />} />}
+      />
     </Link>
   );
 }

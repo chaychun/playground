@@ -1,26 +1,18 @@
+import { CellAction, CellCaption, aspectClass } from "@/components/grid/cell-parts";
+import { cn } from "@/lib/cn";
 import type { LinkItem } from "@/lib/types";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 export function ExternalCell({ item }: { item: LinkItem }) {
   return (
-    <a
-      href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block overflow-hidden rounded-lg border border-border bg-surface"
-    >
-      <div className="aspect-video bg-mid">
-        {item.preview.type === "image" ? (
-          <img src={item.preview.src} alt={item.title} className="h-full w-full object-cover" />
-        ) : (
-          <video src={item.preview.src} muted loop className="h-full w-full object-cover" />
-        )}
-      </div>
-      <div className="flex items-center justify-between p-3">
-        <p className="text-xs font-medium text-muted transition-colors group-hover:text-ink">
-          {item.title}
-        </p>
-        <span className="text-xs text-muted">&#x2197;</span>
-      </div>
+    <a href={item.href} target="_blank" rel="noopener noreferrer" className="group block">
+      <div className={cn("bg-surface", aspectClass(item.orientation))} />
+      <CellCaption
+        title={item.title}
+        action={
+          <CellAction label="VISIT" icon={<ArrowUpRight weight="bold" className="size-3" />} />
+        }
+      />
     </a>
   );
 }

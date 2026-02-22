@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, lazy } from "react";
+import { Component as ReactComponent, Suspense, lazy } from "react";
 import type { ComponentType, ReactNode } from "react";
 
 const cache = new Map<string, React.LazyExoticComponent<ComponentType>>();
@@ -14,6 +14,25 @@ function getLazyComponent(slug: string) {
   return component;
 }
 
+class CellErrorBoundary extends ReactComponent<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex h-full items-center justify-center text-xs text-muted">
+          Failed to load
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export function LazyPlaygroundComponent({
   slug,
   fallback,
@@ -23,8 +42,10 @@ export function LazyPlaygroundComponent({
 }) {
   const Component = getLazyComponent(slug);
   return (
-    <Suspense fallback={fallback ?? null}>
-      <Component />
-    </Suspense>
+    <CellErrorBoundary>
+      <Suspense fallback={fallback ?? null}>
+        <Component />
+      </Suspense>
+    </CellErrorBoundary>
   );
 }

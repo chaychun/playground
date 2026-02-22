@@ -10,9 +10,9 @@ export async function getPlaygroundItems(): Promise<GridItem[]> {
   try {
     const entries = await fs.readdir(playgroundDir, { withFileTypes: true });
     dirs = entries.filter((e) => e.isDirectory()).map((e) => e.name);
-  } catch {
-    // src/playground/ doesn't exist yet
-    return [];
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw error;
   }
 
   const results = await Promise.all(
@@ -38,9 +38,9 @@ export async function getPlaygroundItems(): Promise<GridItem[]> {
           orientation: meta.orientation,
           createdAt: meta.createdAt,
         };
-      } catch {
+      } catch (error) {
         // eslint-disable-next-line no-console -- intentional diagnostic for broken playground items
-        console.warn(`Skipping playground item "${slug}": failed to load meta.ts`);
+        console.warn(`Skipping playground item "${slug}": failed to load meta.ts`, error);
         return null;
       }
     }),
