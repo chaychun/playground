@@ -1,31 +1,22 @@
 import { cn } from "@/lib/cn";
 import type { LinkItem } from "@/lib/types";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 export function ExternalCell({ item }: { item: LinkItem }) {
   return (
-    <a
-      href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block overflow-hidden rounded-lg border border-border bg-surface"
-    >
+    <a href={item.href} target="_blank" rel="noopener noreferrer" className="group block">
       <div
         className={cn(
-          "bg-mid",
+          "bg-surface",
           item.orientation === "portrait" ? "aspect-[3/4]" : "aspect-video",
         )}
-      >
-        {item.preview.type === "image" ? (
-          <img src={item.preview.src} alt={item.title} className="h-full w-full object-cover" />
-        ) : (
-          <video src={item.preview.src} muted loop className="h-full w-full object-cover" />
-        )}
-      </div>
-      <div className="flex items-center justify-between p-3">
-        <p className="text-xs font-medium text-muted transition-colors group-hover:text-ink">
-          {item.title}
-        </p>
-        <span className="text-xs text-muted">&#x2197;</span>
+      />
+      <div className="flex items-baseline justify-between pt-1.5">
+        <p className="text-xs font-medium tracking-wide text-ink">{item.title}</p>
+        <span className="flex items-center gap-1 font-mono text-2xs tracking-wide text-muted uppercase transition-colors group-hover:text-ink">
+          VISIT
+          <ArrowUpRight weight="bold" className="size-3" />
+        </span>
       </div>
     </a>
   );

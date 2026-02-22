@@ -8,9 +8,10 @@ type InlineItem = Extract<GridItem, { type: "inline" }>;
 
 export function InlineCell({ item }: { item: InlineItem }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-surface">
+    <div>
       <div
         className={cn(
+          "overflow-hidden bg-surface",
           item.orientation === "portrait" ? "aspect-[3/4]" : "aspect-video",
         )}
       >
@@ -23,8 +24,8 @@ export function InlineCell({ item }: { item: InlineItem }) {
           }
         />
       </div>
-      <div className="p-3">
-        <p className="text-xs font-medium text-muted">{item.title}</p>
+      <div className="pt-1.5">
+        <p className="text-xs font-medium tracking-wide text-ink">{item.title}</p>
       </div>
     </div>
   );

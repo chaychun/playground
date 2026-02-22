@@ -1,31 +1,25 @@
 import { cn } from "@/lib/cn";
 import type { GridItem } from "@/lib/types";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
 type PreviewItem = Extract<GridItem, { type: "preview" }>;
 
 export function PreviewCell({ item }: { item: PreviewItem }) {
   return (
-    <Link
-      href={`/playground/${item.slug}`}
-      className="group block overflow-hidden rounded-lg border border-border bg-surface"
-    >
+    <Link href={`/playground/${item.slug}`} className="group block">
       <div
         className={cn(
-          "bg-mid",
+          "bg-surface",
           item.orientation === "portrait" ? "aspect-[3/4]" : "aspect-video",
         )}
-      >
-        {item.preview.type === "image" ? (
-          <img src={item.preview.src} alt={item.title} className="h-full w-full object-cover" />
-        ) : (
-          <video src={item.preview.src} muted loop className="h-full w-full object-cover" />
-        )}
-      </div>
-      <div className="p-3">
-        <p className="text-xs font-medium text-muted transition-colors group-hover:text-ink">
-          {item.title}
-        </p>
+      />
+      <div className="flex items-baseline justify-between pt-1.5">
+        <p className="text-xs font-medium tracking-wide text-ink">{item.title}</p>
+        <span className="flex items-center gap-1 font-mono text-2xs tracking-wide text-muted uppercase transition-colors group-hover:text-ink">
+          VIEW
+          <CaretRight weight="bold" className="size-3" />
+        </span>
       </div>
     </Link>
   );

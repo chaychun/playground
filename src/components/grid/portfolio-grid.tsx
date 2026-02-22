@@ -23,7 +23,7 @@ export function PortfolioGrid({ items }: { items: GridItem[] }) {
   const placements = computeGridLayout(items);
 
   return (
-    <div className="grid grid-cols-1 gap-5 px-6 md:grid-cols-5">
+    <div className="grid grid-cols-1 gap-x-5 gap-y-16 px-6 md:grid-cols-5">
       {placements.map(({ item, colSpan, row }) => (
         <div
           key={itemKey(item)}
