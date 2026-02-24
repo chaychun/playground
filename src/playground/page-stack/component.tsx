@@ -40,8 +40,7 @@ const PEEK_RIGHT = [20, 30, 40, 50, 60];
 const MAX_OPEN = 5;
 const MAX_CLOSED = 2;
 const MAX_COLLAPSED = 4;
-const CARD_BLEED = 80;
-const LEFT_PAD = 600;
+const CARD_BLEED = 600;
 
 // --- Position Calculations ---
 
@@ -76,11 +75,11 @@ function getPos(
 ): number {
   const eff = collapsed ? false : isOpen;
   if (!collapsed && isOpen && total > MAX_OPEN && idx < total - MAX_OPEN + 1) {
-    return LEFT_PAD;
+    return vw * 0.1;
   }
   const ao = calcApproach(idx, total, eff, collapsed);
   const inc = calcIncrement(idx, total, eff, collapsed);
-  return !collapsed && isOpen ? LEFT_PAD + ao + inc : vw - ao - inc;
+  return !collapsed && isOpen ? vw * 0.1 + ao + inc : vw - ao - inc;
 }
 
 function getStackPositions(active: number, stack: CardId[], vw: number): number[] {
