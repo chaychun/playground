@@ -28,6 +28,21 @@ export default async function PlaygroundPage({ params }: { params: Promise<{ slu
   const meta = await getMeta(slug);
   if (!meta) notFound();
 
+  if (meta.fullViewport) {
+    return (
+      <main className="h-svh overflow-hidden bg-paper">
+        <LazyPlaygroundComponent
+          slug={slug}
+          fallback={
+            <div className="flex h-svh items-center justify-center text-xs text-muted">
+              Loading…
+            </div>
+          }
+        />
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-svh bg-paper">
       <header className="px-6 pt-12 pb-8">

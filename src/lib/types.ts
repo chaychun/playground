@@ -2,6 +2,7 @@ export type ComponentMeta = {
   title: string;
   orientation: "portrait" | "landscape";
   createdAt: string;
+  fullViewport?: boolean;
 } & (
   | { display: "inline" }
   | { display: "preview"; preview: { type: "image" | "video"; src: string } }
