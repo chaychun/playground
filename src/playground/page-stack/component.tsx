@@ -275,7 +275,11 @@ function CardBContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
         itself decided to make room for water and stone.
       </p>
       <div className="h-7" />
-      <ImagePlaceholder height={355} label="Therme Vals exterior" />
+      <img
+        src="/images/page-stack/therme-vals.jpg"
+        alt="Therme Vals exterior"
+        className="h-[355px] w-full object-cover"
+      />
       <div className="h-5" />
       <p className="text-[14px] leading-[24px] text-[#4a4a47]">
         Every surface is deliberate. The stone is laid in precise courses that echo geological
@@ -326,7 +330,11 @@ function CardCContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
           — the space holds its breath, somewhere between silence and sound.
         </p>
       </div>
-      <ImagePlaceholder height={500} label="Atrium interior" />
+      <img
+        src="/images/page-stack/atrium.jpg"
+        alt="Atrium interior"
+        className="h-[500px] w-full object-cover"
+      />
     </div>
   );
 }
@@ -388,7 +396,11 @@ function CardDContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 function CardEContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
     <div className="flex flex-col">
-      <ImagePlaceholder height={450} label="Portrait" />
+      <img
+        src="/images/page-stack/peter-zumthor.jpg"
+        alt="Peter Zumthor portrait"
+        className="h-[450px] w-full object-cover"
+      />
       <div className="px-9 pt-8">
         <CategoryLabel>Person</CategoryLabel>
         <div className="h-3.5" />
@@ -464,7 +476,11 @@ function CardFContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 function CardGContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
     <div className="flex min-h-full flex-col">
-      <ImagePlaceholder height={733} label="Light on stone" />
+      <img
+        src="/images/page-stack/light-studies.jpg"
+        alt="Light on stone"
+        className="h-[733px] w-full object-cover"
+      />
       <div className="flex flex-col gap-2.5 px-9 pt-6 pb-9">
         <CategoryLabel>Media</CategoryLabel>
         <h2 className="text-[24px] font-bold leading-[30px] text-[#111110]">Light Studies</h2>
