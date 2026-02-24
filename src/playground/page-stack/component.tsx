@@ -1,7 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { X } from "@phosphor-icons/react";
+import {
+  BookOpenText,
+  Image,
+  Lightbulb,
+  MapPin,
+  Stack,
+  User,
+  X,
+} from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ComponentType } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -67,11 +75,11 @@ function getPos(
 ): number {
   const eff = collapsed ? false : isOpen;
   if (!collapsed && isOpen && total > MAX_OPEN && idx < total - MAX_OPEN + 1) {
-    return vw * 0.2;
+    return vw * 0.1;
   }
   const ao = calcApproach(idx, total, eff, collapsed);
   const inc = calcIncrement(idx, total, eff, collapsed);
-  return !collapsed && isOpen ? vw * 0.2 + ao + inc : vw - ao - inc;
+  return !collapsed && isOpen ? vw * 0.1 + ao + inc : vw - ao - inc;
 }
 
 function getStackPositions(active: number, stack: CardId[], vw: number): number[] {
@@ -120,6 +128,18 @@ function getPeekOffsets(hovered: number | null, active: number, total: number): 
   return offsets;
 }
 
+// --- Icon mapping per card type ---
+
+const CARD_ICON: Record<CardId, ComponentType<{ weight?: string; className?: string }>> = {
+  a: BookOpenText,
+  b: MapPin,
+  c: Image,
+  d: Stack,
+  e: User,
+  f: Lightbulb,
+  g: Image,
+};
+
 // --- Small Utility Components ---
 
 function MentionLink({
@@ -131,6 +151,7 @@ function MentionLink({
   target: CardId;
   onNavigate: (target: CardId) => void;
 }) {
+  const Icon = CARD_ICON[target];
   return (
     <button
       type="button"
@@ -138,35 +159,39 @@ function MentionLink({
         e.stopPropagation();
         onNavigate(target);
       }}
-      className="cursor-pointer underline decoration-1 underline-offset-2 transition-opacity hover:opacity-70"
-      style={{ color: ACCENT }}
+      className="inline-flex cursor-pointer items-baseline gap-1 transition-opacity hover:opacity-70"
     >
-      {children}
+      <span
+        className="relative top-[0.05em] inline-flex shrink-0 items-center justify-center rounded-[4px] p-[3px]"
+        style={{ backgroundColor: "rgba(198, 103, 46, 0.08)" }}
+      >
+        <Icon weight="regular" className="h-[0.85em] w-[0.85em]" style={{ color: "#7a4a28" }} />
+      </span>
+      <span
+        className="underline decoration-1 underline-offset-2"
+        style={{ color: "#696966", textDecorationColor: ACCENT }}
+      >
+        {children}
+      </span>
     </button>
   );
 }
 
-function TagBar({ tags }: { tags: string[] }) {
+function CategoryLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] tracking-[0.12em] uppercase">
-      {tags.map((tag, i) => (
-        <span key={tag} className="flex items-center gap-2" style={{ color: ACCENT }}>
-          {i > 0 && (
-            <span className="text-[8px] opacity-50" style={{ color: ACCENT }}>
-              ·
-            </span>
-          )}
-          {tag}
-        </span>
-      ))}
-    </div>
+    <span
+      className="font-mono text-[10px] font-medium tracking-[0.08em] uppercase"
+      style={{ color: ACCENT }}
+    >
+      {children}
+    </span>
   );
 }
 
-function ImagePlaceholder({ height = 300, label }: { height?: number; label?: string }) {
+function ImagePlaceholder({ height, label }: { height: number; label?: string }) {
   return (
     <div
-      className="flex items-center justify-center rounded-sm"
+      className="flex items-center justify-center"
       style={{
         height,
         background: "linear-gradient(135deg, #e8e5e0 0%, #d4d0ca 50%, #c8c4be 100%)",
@@ -185,46 +210,44 @@ function ImagePlaceholder({ height = 300, label }: { height?: number; label?: st
 
 function CardAContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
-    <div className="flex min-h-full flex-col justify-between px-10 py-12 text-[#e8e5e0]">
-      <div>
-        <TagBar tags={["Architecture", "Philosophy", "Space"]} />
-        <h1 className="mt-8 text-[32px] leading-[1.1] font-light tracking-tight">
-          On Quiet
-          <br />
-          Architecture
-        </h1>
-        <div className="mt-8 max-w-[460px] space-y-4 text-sm leading-relaxed text-[#b0ada6]">
-          <p>
-            There is a kind of building that does not announce itself. It waits. It allows the
-            weather to speak first, then the light, then the silence between footsteps on stone.
-          </p>
-          <p>
-            Consider{" "}
-            <MentionLink target="b" onNavigate={onNavigate}>
-              Therme Vals
-            </MentionLink>{" "}
-            — carved into the mountainside as though it had always been there. Or the Japanese
-            concept of{" "}
-            <MentionLink target="f" onNavigate={onNavigate}>
-              wabi-sabi
-            </MentionLink>
-            , which finds beauty in impermanence and imperfection.
-          </p>
-          <p>
-            <MentionLink target="e" onNavigate={onNavigate}>
-              Peter Zumthor
-            </MentionLink>{" "}
-            once wrote that architecture is not about form. It is about a careful arrangement of
-            substances — a{" "}
-            <MentionLink target="d" onNavigate={onNavigate}>
-              material palette
-            </MentionLink>{" "}
-            chosen not for appearance but for the way it ages, warms, breathes.
-          </p>
-        </div>
-      </div>
-      <p className="mt-12 font-mono text-[10px] tracking-[0.15em] text-[#6b6862] uppercase">
-        An interconnected essay in seven parts
+    <div className="flex min-h-full flex-col p-12">
+      <CategoryLabel>Essay</CategoryLabel>
+      <div className="h-20" />
+      <h1
+        className="text-[56px] font-medium leading-[60px] text-[#111110]"
+        style={{ letterSpacing: "-0.02em" }}
+      >
+        On Quiet
+        <br />
+        Architecture
+      </h1>
+      <div className="h-8" />
+      <p className="text-[16px] leading-[26px] text-[#4a4a47]">
+        There is a kind of building that does not shout.
+        <br />
+        It breathes with the landscape, ages with grace,
+        <br />
+        and finds its beauty in what it chooses to leave out.
+      </p>
+      <div className="flex-1" />
+      <p className="text-[14px] leading-[22px] text-[#4a4a47]">
+        An exploration of restraint — from{" "}
+        <MentionLink target="b" onNavigate={onNavigate}>
+          Therme Vals
+        </MentionLink>{" "}
+        to{" "}
+        <MentionLink target="f" onNavigate={onNavigate}>
+          Wabi-Sabi
+        </MentionLink>
+        , through the lens of{" "}
+        <MentionLink target="e" onNavigate={onNavigate}>
+          Peter Zumthor
+        </MentionLink>{" "}
+        and a{" "}
+        <MentionLink target="d" onNavigate={onNavigate}>
+          Material Palette
+        </MentionLink>{" "}
+        that ages with honesty.
       </p>
     </div>
   );
@@ -232,154 +255,131 @@ function CardAContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 
 function CardBContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
-    <div className="px-10 py-12">
-      <TagBar tags={["Place", "Thermal Baths", "Switzerland"]} />
-      <h2 className="mt-6 text-[26px] leading-[1.15] font-light tracking-tight text-ink">
+    <div className="px-11 py-10">
+      <CategoryLabel>Place</CategoryLabel>
+      <div className="h-4" />
+      <h2
+        className="text-[32px] font-semibold leading-[38px] text-[#111110]"
+        style={{ letterSpacing: "-0.01em" }}
+      >
         Therme Vals
       </h2>
-      <p className="mt-1 font-mono text-[10px] tracking-[0.12em] text-muted uppercase">
-        Graubünden, Switzerland · 1996
+      <div className="h-7" />
+      <p className="text-[14px] leading-[24px] text-[#4a4a47]">
+        Nestled in the Swiss Alps,{" "}
+        <MentionLink target="e" onNavigate={onNavigate}>
+          Peter Zumthor
+        </MentionLink>
+        &rsquo;s thermal baths are carved from 60,000 slabs of locally quarried Vals gneiss. The
+        building doesn&rsquo;t sit on the landscape — it emerges from it, as though the mountain
+        itself decided to make room for water and stone.
       </p>
-
-      <div className="mt-8 space-y-4 text-sm leading-relaxed text-dim">
-        <p>
-          Built from 60,000 slabs of local Valser quartzite, the thermal baths are simultaneously
-          cave and temple. The stone was quarried from the same mountain the building occupies — it
-          is, in some sense, the mountain turned inside out.
-        </p>
-        <ImagePlaceholder height={240} label="Interior view" />
-        <p>
-          Designed by{" "}
-          <MentionLink target="e" onNavigate={onNavigate}>
-            Peter Zumthor
-          </MentionLink>
-          , the building channels water through spaces of varying temperature and light. You move
-          from warm to cold, dark to light, enclosed to open. The{" "}
-          <MentionLink target="d" onNavigate={onNavigate}>
-            material palette
-          </MentionLink>{" "}
-          is deliberately restrained — stone, water, air.
-        </p>
-        <ImagePlaceholder height={200} label="Light shaft" />
-        <p>
-          There is a quality of attention here that approaches the spirit of{" "}
-          <MentionLink target="f" onNavigate={onNavigate}>
-            wabi-sabi
-          </MentionLink>{" "}
-          — not through rusticity, but through a reduction so thorough that every remaining element
-          becomes essential. Each surface reveals itself slowly: the way condensation beads on cool
-          stone, the way sound changes between{" "}
-          <MentionLink target="c" onNavigate={onNavigate}>
-            the atrium
-          </MentionLink>{" "}
-          and the interior pools.
-        </p>
-      </div>
+      <div className="h-7" />
+      <ImagePlaceholder height={355} label="Therme Vals exterior" />
+      <div className="h-5" />
+      <p className="text-[14px] leading-[24px] text-[#4a4a47]">
+        Every surface is deliberate. The stone is laid in precise courses that echo geological
+        strata. Light enters through thin slits in the roof, drawing bright lines across dark water.
+        There is a room that smells of herbs, another of petals. The sound of moving water is
+        everywhere.
+      </p>
+      <div className="h-5" />
+      <p className="text-[14px] leading-[24px] text-[#4a4a47]">
+        Zumthor speaks of architecture as atmosphere — the tension between interior and exterior, the
+        way the{" "}
+        <MentionLink target="d" onNavigate={onNavigate}>
+          Material Palette
+        </MentionLink>{" "}
+        of stone, water, and filtered light can make you forget time. This is{" "}
+        <MentionLink target="f" onNavigate={onNavigate}>
+          Wabi-Sabi
+        </MentionLink>{" "}
+        at its most elemental —{" "}
+        <MentionLink target="c" onNavigate={onNavigate}>
+          The Atrium at Dusk
+        </MentionLink>{" "}
+        holding its breath.
+      </p>
     </div>
   );
 }
 
 function CardCContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
-    <div className="flex flex-col">
-      <ImagePlaceholder height={500} label="The atrium at dusk" />
-      <div className="px-8 py-8">
-        <TagBar tags={["Photography", "Light"]} />
-        <h2 className="mt-4 text-[22px] leading-[1.15] font-light tracking-tight text-ink">
-          The Atrium at Dusk
+    <div className="flex flex-col p-6">
+      <div className="h-[111px]" />
+      <div className="py-6">
+        <CategoryLabel>Media</CategoryLabel>
+        <div className="h-3" />
+        <h2 className="text-[28px] font-bold leading-[34px] text-[#111110]">
+          The Atrium
+          <br />
+          at Dusk
         </h2>
-        <div className="mt-4 space-y-3 text-sm leading-relaxed text-dim">
-          <p>
-            As daylight fades, the atrium transforms. The quartzite walls absorb the last warm tones
-            of the setting sun while the water surface becomes a mirror, doubling the geometry
-            above.
-          </p>
-          <p>
-            This quality of transience — architecture shaped as much by time as by stone — echoes
-            the philosophy of{" "}
-            <MentionLink target="f" onNavigate={onNavigate}>
-              wabi-sabi
-            </MentionLink>
-            , where impermanence is not a defect but a feature.
-          </p>
-        </div>
+        <div className="h-3" />
+        <p className="text-[14px] leading-[22px] text-[#4a4a47]">
+          The last light of day enters through a narrow clerestory, casting a warm line across the
+          concrete floor. A study in light and{" "}
+          <MentionLink target="f" onNavigate={onNavigate}>
+            Wabi-Sabi
+          </MentionLink>{" "}
+          — the space holds its breath, somewhere between silence and sound.
+        </p>
       </div>
+      <ImagePlaceholder height={500} label="Atrium interior" />
     </div>
   );
 }
 
 function CardDContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   const materials = [
-    {
-      num: "01",
-      name: "Valser Quartzite",
-      desc: "Layered metamorphic stone from the Graubünden Alps. Cool grey-green with occasional veins of mica.",
-    },
-    {
-      num: "02",
-      name: "Pigmented Concrete",
-      desc: "Tinted to match the local granite. Smooth-formed, left uncoated to develop patina over decades.",
-    },
-    {
-      num: "03",
-      name: "Brass Fixtures",
-      desc: "Untreated brass that oxidizes naturally, shifting from gold to deep brown in humid thermal air.",
-    },
-    {
-      num: "04",
-      name: "Leather (Aniline)",
-      desc: "Full-grain, undyed leather on seating. Develops a unique surface record of every hand that touches it.",
-    },
-    {
-      num: "05",
-      name: "Water",
-      desc: "Thermal spring water at 30°C. Not merely plumbing — the primary architectural material, shaping how every surface is experienced.",
-    },
+    { num: "01", name: "Travertine", desc: "Quarried from the Swiss Alps, every slab tells a geological story" },
+    { num: "02", name: "White Oak", desc: "Quarter-sawn for stability, it mellows to honey over the years" },
+    { num: "03", name: "Brushed Brass", desc: "Develops a living patina over decades of touch" },
+    { num: "04", name: "Raw Concrete", desc: "Board-formed to capture the grain of timber in stone" },
+    { num: "05", name: "Handmade Ceramic", desc: "Each tile carries the slight asymmetry of the maker\u2019s hand" },
   ];
 
   return (
-    <div className="px-10 py-12">
-      <TagBar tags={["Materials", "Craft", "Detail"]} />
-      <h2 className="mt-6 text-[26px] leading-[1.15] font-light tracking-tight text-ink">
-        Material Palette
-      </h2>
-      <p className="mt-1 font-mono text-[10px] tracking-[0.12em] text-muted uppercase">
-        5 substances, chosen to age
-      </p>
-
-      <div className="mt-8 space-y-6">
-        {materials.map((m) => (
-          <div key={m.num} className="flex gap-4">
-            <span
-              className="shrink-0 font-mono text-[11px] font-medium tabular-nums"
-              style={{ color: ACCENT }}
-            >
-              {m.num}
-            </span>
-            <div>
-              <p className="text-sm font-medium text-ink">{m.name}</p>
-              <p className="mt-0.5 text-[13px] leading-relaxed text-dim">{m.desc}</p>
+    <div className="flex min-h-full flex-col px-6 py-10">
+      <div className="px-3">
+        <CategoryLabel>Collection</CategoryLabel>
+        <div className="h-3.5" />
+        <h2
+          className="text-[28px] font-semibold leading-[34px] text-[#111110]"
+          style={{ letterSpacing: "-0.01em" }}
+        >
+          Material Palette
+        </h2>
+        <div className="h-3.5" />
+        <p className="text-[14px] leading-[22px] text-[#4a4a47]">
+          A curated selection of materials that define the practice — chosen for how they age, how
+          they embody{" "}
+          <MentionLink target="f" onNavigate={onNavigate}>
+            Wabi-Sabi
+          </MentionLink>
+          , and how they appear in{" "}
+          <MentionLink target="g" onNavigate={onNavigate}>
+            Light Studies
+          </MentionLink>
+          .
+        </p>
+      </div>
+      <div className="flex-1" />
+      <div>
+        {materials.map((m, i) => (
+          <div key={m.num}>
+            <div className="flex flex-col gap-1.5 px-3 py-3 transition-colors duration-150 hover:bg-[#e9e9e5]">
+              <div className="flex items-center justify-between">
+                <span className="text-[15px] font-medium text-[#111110]">{m.name}</span>
+                <span className="font-mono text-[12px] text-[#9c9c98]">{m.num}</span>
+              </div>
+              <p className="text-[13px] leading-[20px] text-[#4a4a47]">{m.desc}</p>
             </div>
+            {i < materials.length - 1 && <div className="h-px bg-[#dcdcd8]" />}
           </div>
         ))}
-      </div>
-
-      <div className="mt-10 space-y-3 text-sm leading-relaxed text-dim">
-        <p>
-          Every material here was chosen for how it would look in twenty years, not on opening day.
-          This is the philosophy of{" "}
-          <MentionLink target="f" onNavigate={onNavigate}>
-            wabi-sabi
-          </MentionLink>{" "}
-          applied to construction — beauty through wear, through the honest passage of time.
-        </p>
-        <p>
-          See also:{" "}
-          <MentionLink target="g" onNavigate={onNavigate}>
-            light studies
-          </MentionLink>{" "}
-          — how these materials transform under shifting illumination.
-        </p>
+        <div className="h-px bg-[#dcdcd8]" />
       </div>
     </div>
   );
@@ -387,51 +387,40 @@ function CardDContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 
 function CardEContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
-    <div className="px-10 py-12">
-      <ImagePlaceholder height={280} label="Portrait" />
-      <div className="mt-8">
-        <TagBar tags={["Person", "Architect"]} />
-        <h2 className="mt-4 text-[26px] leading-[1.15] font-light tracking-tight text-ink">
+    <div className="flex flex-col">
+      <ImagePlaceholder height={450} label="Portrait" />
+      <div className="px-9 pt-8">
+        <CategoryLabel>Person</CategoryLabel>
+        <div className="h-3.5" />
+        <h2
+          className="text-[28px] font-semibold leading-[34px] text-[#111110]"
+          style={{ letterSpacing: "-0.01em" }}
+        >
           Peter Zumthor
         </h2>
-        <p className="mt-1 font-mono text-[10px] tracking-[0.12em] text-muted uppercase">
-          b. 1943 · Basel, Switzerland
+        <div className="h-2" />
+        <p className="text-[13px] text-[#9c9c98]">b. 1943, Basel · Pritzker Prize 2009</p>
+        <div className="h-6" />
+        <p className="text-[14px] leading-[22px] text-[#4a4a47]">
+          Swiss architect known for his intensely tactile approach to materials and space. His
+          buildings are experienced before they are understood — spaces where stone, light, and water
+          speak with more authority than any drawing.
         </p>
-
-        <div className="mt-6 space-y-4 text-sm leading-relaxed text-dim">
+        <div className="h-6" />
+        <p className="font-mono text-[10px] tracking-[0.08em] text-[#9c9c98] uppercase">
+          Notable works
+        </p>
+        <div className="h-3" />
+        <div className="space-y-0 text-[13px] leading-[24px] text-[#4a4a47]">
           <p>
-            Swiss architect known for an intensely sensory approach to building. His work resists
-            the spectacular in favor of the atmospheric — spaces designed to be felt before they are
-            seen.
+            <MentionLink target="b" onNavigate={onNavigate}>
+              Therme Vals
+            </MentionLink>
+            , 1996
           </p>
-          <p>
-            Pritzker Prize laureate (2009). Works primarily in Switzerland and maintains a small
-            practice in Haldenstein, deliberately limiting the number of commissions to preserve
-            quality of attention.
-          </p>
-        </div>
-
-        <div className="mt-8">
-          <p className="font-mono text-[10px] tracking-[0.12em] text-muted uppercase">
-            Notable works
-          </p>
-          <ul className="mt-3 space-y-1.5 text-sm text-dim">
-            <li>
-              <MentionLink target="b" onNavigate={onNavigate}>
-                Therme Vals
-              </MentionLink>
-              <span className="ml-2 text-muted">· 1996</span>
-            </li>
-            <li>
-              Bruder Klaus Chapel<span className="ml-2 text-muted">· 2007</span>
-            </li>
-            <li>
-              Kolumba Museum<span className="ml-2 text-muted">· 2007</span>
-            </li>
-            <li>
-              Zinc Mine Museum<span className="ml-2 text-muted">· 2016</span>
-            </li>
-          </ul>
+          <p>Kunsthaus Bregenz, 1997</p>
+          <p>Bruder Klaus Chapel, 2007</p>
+          <p>Zinc Mine Museum, 2016</p>
         </div>
       </div>
     </div>
@@ -440,69 +429,53 @@ function CardEContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 
 function CardFContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
-    <div className="px-8 py-12">
-      <TagBar tags={["Concept", "Philosophy"]} />
-      <h2 className="mt-6 text-[26px] leading-[1.15] font-light tracking-tight text-ink">
-        Wabi-Sabi
-      </h2>
-      <p className="mt-1 font-mono text-[10px] tracking-[0.12em] text-muted uppercase">
-        侘寂 · beauty in imperfection
-      </p>
-
-      <div className="mt-8 space-y-4 text-sm leading-relaxed text-dim">
-        <p>
-          A Japanese aesthetic rooted in the acceptance of transience and imperfection. Derived from
-          Buddhist teachings on the three marks of existence: impermanence, suffering, and
-          emptiness.
-        </p>
-
-        <blockquote
-          className="my-6 border-l-2 py-1 pl-5 text-[15px] leading-relaxed text-ink italic"
-          style={{ borderColor: ACCENT }}
-        >
-          &ldquo;Pare down to the essence, but don&rsquo;t remove the poetry.&rdquo;
-        </blockquote>
-
-        <p>
-          In architecture, wabi-sabi manifests not as a style but as a stance — choosing materials
-          that record the passage of time, details that reward slow looking, spaces where silence is
-          a feature. See how this thinking shapes the{" "}
-          <MentionLink target="d" onNavigate={onNavigate}>
-            material palette
-          </MentionLink>{" "}
-          at Therme Vals.
-        </p>
-        <p>
-          Return to{" "}
-          <MentionLink target="a" onNavigate={onNavigate}>
-            On Quiet Architecture
-          </MentionLink>{" "}
-          for the broader argument.
+    <div className="flex min-h-full flex-col p-9">
+      <div className="py-6">
+        <p className="text-[24px] leading-[110%] text-[#111110]">
+          Nothing lasts, nothing is finished, and nothing is perfect.
         </p>
       </div>
+      <p className="font-mono text-[11px] font-medium text-[#9c9c98]">— Richard Powell</p>
+      <div className="flex-1" />
+      <CategoryLabel>Concept</CategoryLabel>
+      <div className="h-6" />
+      <h2 className="text-[32px] font-bold leading-[38px] text-[#111110]">Wabi-Sabi</h2>
+      <div className="h-4" />
+      <p className="text-[14px] leading-[22px] text-[#4a4a47]">
+        The Japanese worldview centered on the acceptance of transience and imperfection.
+      </p>
+      <div className="h-5" />
+      <p className="text-[14px] leading-[22px] text-[#4a4a47]">
+        In architecture, wabi-sabi appears in the{" "}
+        <MentionLink target="d" onNavigate={onNavigate}>
+          Material Palette
+        </MentionLink>{" "}
+        that ages honestly — raw concrete softening, brass darkening, wood silvering. It is the
+        philosophy behind{" "}
+        <MentionLink target="a" onNavigate={onNavigate}>
+          On Quiet Architecture
+        </MentionLink>
+        .
+      </p>
     </div>
   );
 }
 
 function CardGContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
-    <div className="flex flex-col">
-      <ImagePlaceholder height={420} label="Light studies" />
-      <div className="px-8 py-6">
-        <TagBar tags={["Photography", "Light", "Material"]} />
-        <h2 className="mt-3 text-[20px] leading-[1.15] font-light tracking-tight text-ink">
-          Light Studies
-        </h2>
-        <p className="mt-2 text-[13px] leading-relaxed text-dim">
-          The way light enters a space is itself a material. In Zumthor&rsquo;s buildings, apertures
-          are tuned like instruments — narrow slots that rake across stone, overhead voids that pour
-          light into pools. See these surfaces at rest in{" "}
+    <div className="flex min-h-full flex-col">
+      <ImagePlaceholder height={733} label="Light on stone" />
+      <div className="flex flex-col gap-2.5 px-9 pt-6 pb-9">
+        <CategoryLabel>Media</CategoryLabel>
+        <h2 className="text-[24px] font-bold leading-[30px] text-[#111110]">Light Studies</h2>
+        <p className="text-[14px] leading-[22px] text-[#4a4a47]">
+          How natural light transforms architectural space — captured in{" "}
           <MentionLink target="c" onNavigate={onNavigate}>
-            the atrium at dusk
-          </MentionLink>
-          , or read about the philosophy of impermanent beauty in{" "}
+            The Atrium at Dusk
+          </MentionLink>{" "}
+          and other moments where light meets{" "}
           <MentionLink target="f" onNavigate={onNavigate}>
-            wabi-sabi
+            Wabi-Sabi
           </MentionLink>
           .
         </p>
@@ -521,7 +494,7 @@ const CARD_DEFS: Record<
     Content: ComponentType<{ onNavigate: (t: CardId) => void }>;
   }
 > = {
-  a: { width: 600, darkBg: true, Content: CardAContent },
+  a: { width: 600, darkBg: false, Content: CardAContent },
   b: { width: 600, darkBg: false, Content: CardBContent },
   c: { width: 420, darkBg: false, Content: CardCContent },
   d: { width: 500, darkBg: false, Content: CardDContent },
