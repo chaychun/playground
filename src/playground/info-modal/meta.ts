@@ -1,8 +1,8 @@
 import type { ComponentMeta } from "@/lib/types";
 
 export const meta: ComponentMeta = {
-  title: "Hello Counter",
+  title: "Info Modal",
   orientation: "portrait",
   display: "inline",
-  createdAt: "2026-02-22",
+  createdAt: "2026-02-08",
 };
