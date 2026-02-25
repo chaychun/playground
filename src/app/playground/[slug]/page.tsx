@@ -12,7 +12,19 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const entries = await fs.readdir(playgroundDir, { withFileTypes: true });
-  return entries.filter((e) => e.isDirectory()).map((e) => ({ slug: e.name }));
+  const dirs = entries.filter((e) => e.isDirectory()).map((e) => e.name);
+
+  const results = await Promise.all(
+    dirs.map(async (slug) => {
+      try {
+        const { meta } = (await import(`@/playground/${slug}/meta`)) as { meta: ComponentMeta };
+        return meta.display === "preview" ? { slug } : null;
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return results.filter((r): r is { slug: string } => r !== null);
 }
 
 async function getMeta(slug: string): Promise<ComponentMeta | null> {
@@ -27,7 +39,7 @@ async function getMeta(slug: string): Promise<ComponentMeta | null> {
 export default async function PlaygroundPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const meta = await getMeta(slug);
-  if (!meta) notFound();
+  if (!meta || meta.display === "inline") notFound();
 
   if (meta.fullViewport) {
     return (
