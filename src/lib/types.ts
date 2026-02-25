@@ -1,39 +1,9 @@
-export type ComponentMeta = {
+export type Item = {
+  slug: string;
   title: string;
-  orientation: "portrait" | "landscape";
+  description: string;
+  tags: string[];
   createdAt: string;
-  fullViewport?: boolean;
-  /** Controls the nav pill appearance — "dark" for dark backgrounds, defaults to "light" */
-  navTheme?: "dark" | "light";
-} & (
-  | { display: "inline" }
-  | { display: "preview"; preview: { type: "image" | "video"; src: string } }
-);
-
-export type LinkItem = {
-  type: "external-link";
-  id: string;
-  title: string;
-  orientation: "portrait" | "landscape";
-  createdAt: string;
-  preview: { type: "image" | "video"; src: string };
-  href: string;
+  preview: { type: "image"; src: string } | { type: "video"; src: string } | { type: "custom" };
+  content: { type: "component" } | { type: "external"; href: string };
 };
-
-export type GridItem =
-  | {
-      type: "inline";
-      slug: string;
-      title: string;
-      orientation: "portrait" | "landscape";
-      createdAt: string;
-    }
-  | {
-      type: "preview";
-      slug: string;
-      title: string;
-      orientation: "portrait" | "landscape";
-      createdAt: string;
-      preview: { type: "image" | "video"; src: string };
-    }
-  | LinkItem;

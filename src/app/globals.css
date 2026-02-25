@@ -61,15 +61,3 @@ body {
   background: var(--paper);
   color: var(--ink);
 }
-
-/* Grid cell placement — mobile: auto-flow, md+: explicit grid position */
-.grid-cell {
-  grid-column: auto;
-  grid-row: auto;
-}
-@media (min-width: 768px) {
-  .grid-cell {
-    grid-column: var(--gc);
-    grid-row: var(--gr);
-  }
-}
