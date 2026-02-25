@@ -69,14 +69,6 @@ const typeScale = [
   },
 ] as const;
 
-const fontWeights = [
-  { weight: "font-light", label: "300 Light", mono: true },
-  { weight: "font-normal", label: "400 Regular", mono: true },
-  { weight: "font-medium", label: "500 Medium", mono: true },
-  { weight: "font-semibold", label: "600 Semibold", mono: false },
-  { weight: "font-bold", label: "700 Bold", mono: false },
-] as const;
-
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="mb-6 border-b border-border pb-3 text-xl font-medium tracking-[-0.01em] text-ink">

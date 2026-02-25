@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { BookOpenText, Image, Lightbulb, MapPin, Stack, User, X } from "@phosphor-icons/react";
+import { X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ComponentType } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -120,18 +120,6 @@ function getPeekOffsets(hovered: number | null, active: number, total: number): 
   return offsets;
 }
 
-// --- Icon mapping per card type ---
-
-const CARD_ICON: Record<CardId, ComponentType<{ weight?: string; className?: string }>> = {
-  a: BookOpenText,
-  b: MapPin,
-  c: Image,
-  d: Stack,
-  e: User,
-  f: Lightbulb,
-  g: Image,
-};
-
 // --- Small Utility Components ---
 
 function MentionLink({
@@ -166,24 +154,6 @@ function CategoryLabel({ children }: { children: React.ReactNode }) {
     >
       {children}
     </span>
-  );
-}
-
-function ImagePlaceholder({ height, label }: { height: number; label?: string }) {
-  return (
-    <div
-      className="flex items-center justify-center"
-      style={{
-        height,
-        background: "linear-gradient(135deg, #e8e8ec 0%, #d4d4d8 50%, #c8c8cc 100%)",
-      }}
-    >
-      {label && (
-        <span className="font-mono text-[10px] tracking-widest text-[#9c9a9e] uppercase">
-          {label}
-        </span>
-      )}
-    </div>
   );
 }
 
