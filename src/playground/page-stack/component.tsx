@@ -1,15 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import {
-  BookOpenText,
-  Image,
-  Lightbulb,
-  MapPin,
-  Stack,
-  User,
-  X,
-} from "@phosphor-icons/react";
+import { BookOpenText, Image, Lightbulb, MapPin, Stack, User, X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ComponentType } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -203,7 +195,7 @@ function CardAContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
       <CategoryLabel>Essay</CategoryLabel>
       <div className="h-20" />
       <h1
-        className="text-[56px] font-medium leading-[60px] text-[#121214]"
+        className="text-[56px] leading-[60px] font-medium text-[#121214]"
         style={{ letterSpacing: "-0.02em" }}
       >
         On Quiet
@@ -248,7 +240,7 @@ function CardBContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
       <CategoryLabel>Place</CategoryLabel>
       <div className="h-4" />
       <h2
-        className="text-[32px] font-semibold leading-[38px] text-[#121214]"
+        className="text-[32px] leading-[38px] font-semibold text-[#121214]"
         style={{ letterSpacing: "-0.01em" }}
       >
         Therme Vals
@@ -278,8 +270,8 @@ function CardBContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
       </p>
       <div className="h-5" />
       <p className="text-[14px] leading-[24px] text-[#4a4a4e]">
-        Zumthor speaks of architecture as atmosphere — the tension between interior and exterior, the
-        way the{" "}
+        Zumthor speaks of architecture as atmosphere — the tension between interior and exterior,
+        the way the{" "}
         <MentionLink target="d" onNavigate={onNavigate}>
           Material Palette
         </MentionLink>{" "}
@@ -304,7 +296,7 @@ function CardCContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
       <div className="py-6">
         <CategoryLabel>Media</CategoryLabel>
         <div className="h-3" />
-        <h2 className="text-[28px] font-bold leading-[34px] text-[#121214]">
+        <h2 className="text-[28px] leading-[34px] font-bold text-[#121214]">
           The Atrium
           <br />
           at Dusk
@@ -330,11 +322,27 @@ function CardCContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 
 function CardDContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   const materials = [
-    { num: "01", name: "Travertine", desc: "Quarried from the Swiss Alps, every slab tells a geological story" },
-    { num: "02", name: "White Oak", desc: "Quarter-sawn for stability, it mellows to honey over the years" },
+    {
+      num: "01",
+      name: "Travertine",
+      desc: "Quarried from the Swiss Alps, every slab tells a geological story",
+    },
+    {
+      num: "02",
+      name: "White Oak",
+      desc: "Quarter-sawn for stability, it mellows to honey over the years",
+    },
     { num: "03", name: "Brushed Brass", desc: "Develops a living patina over decades of touch" },
-    { num: "04", name: "Raw Concrete", desc: "Board-formed to capture the grain of timber in stone" },
-    { num: "05", name: "Handmade Ceramic", desc: "Each tile carries the slight asymmetry of the maker\u2019s hand" },
+    {
+      num: "04",
+      name: "Raw Concrete",
+      desc: "Board-formed to capture the grain of timber in stone",
+    },
+    {
+      num: "05",
+      name: "Handmade Ceramic",
+      desc: "Each tile carries the slight asymmetry of the maker\u2019s hand",
+    },
   ];
 
   return (
@@ -343,7 +351,7 @@ function CardDContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
         <CategoryLabel>Collection</CategoryLabel>
         <div className="h-3.5" />
         <h2
-          className="text-[28px] font-semibold leading-[34px] text-[#121214]"
+          className="text-[28px] leading-[34px] font-semibold text-[#121214]"
           style={{ letterSpacing: "-0.01em" }}
         >
           Material Palette
@@ -394,7 +402,7 @@ function CardEContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
         <CategoryLabel>Person</CategoryLabel>
         <div className="h-3.5" />
         <h2
-          className="text-[28px] font-semibold leading-[34px] text-[#121214]"
+          className="text-[28px] leading-[34px] font-semibold text-[#121214]"
           style={{ letterSpacing: "-0.01em" }}
         >
           Peter Zumthor
@@ -404,8 +412,8 @@ function CardEContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
         <div className="h-6" />
         <p className="text-[14px] leading-[22px] text-[#4a4a4e]">
           Swiss architect known for his intensely tactile approach to materials and space. His
-          buildings are experienced before they are understood — spaces where stone, light, and water
-          speak with more authority than any drawing.
+          buildings are experienced before they are understood — spaces where stone, light, and
+          water speak with more authority than any drawing.
         </p>
         <div className="h-6" />
         <p className="font-mono text-[10px] tracking-[0.08em] text-[#9c9c9e] uppercase">
@@ -440,7 +448,7 @@ function CardFContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
       <div className="flex-1" />
       <CategoryLabel>Concept</CategoryLabel>
       <div className="h-6" />
-      <h2 className="text-[32px] font-bold leading-[38px] text-[#121214]">Wabi-Sabi</h2>
+      <h2 className="text-[32px] leading-[38px] font-bold text-[#121214]">Wabi-Sabi</h2>
       <div className="h-4" />
       <p className="text-[14px] leading-[22px] text-[#4a4a4e]">
         The Japanese worldview centered on the acceptance of transience and imperfection.
@@ -472,7 +480,7 @@ function CardGContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
       />
       <div className="flex flex-col gap-2.5 px-9 pt-6 pb-9">
         <CategoryLabel>Media</CategoryLabel>
-        <h2 className="text-[24px] font-bold leading-[30px] text-[#121214]">Light Studies</h2>
+        <h2 className="text-[24px] leading-[30px] font-bold text-[#121214]">Light Studies</h2>
         <p className="text-[14px] leading-[22px] text-[#4a4a4e]">
           How natural light transforms architectural space — captured in{" "}
           <MentionLink target="c" onNavigate={onNavigate}>
@@ -649,86 +657,102 @@ export default function PageStack() {
 
   return (
     <div ref={containerRef} className="relative h-full w-full bg-ink">
-      {/* Editorial magazine cover background */}
+      {/* Background image — always visible */}
       <div className="absolute inset-0 select-none" aria-hidden="true">
-        {/* Background image */}
         <img
           src="/images/page-stack/bg-cover.jpg"
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
           style={{ filter: "saturate(0) contrast(0.8) brightness(0.6)" }}
         />
-        {/* Editorial typography overlay */}
-        <div className="relative flex h-full flex-col justify-between p-12">
-          {/* Top: issue number + rule */}
-          <div className="flex flex-col gap-3">
-            <span
-              className="font-mono text-[10px] tracking-[0.1em] text-white/80 uppercase"
-            >
-              No. 01 — 2025
-            </span>
-            <div className="h-px w-[min(600px,50%)] bg-white/10" />
-          </div>
-          {/* Bottom: title + subtitle */}
-          <div className="relative flex flex-col gap-2">
-            {/* Giant "01" ghost numeral */}
-            <span
-              className="pointer-events-none absolute bottom-[10%] left-[12%] font-sans text-[clamp(200px,35vw,500px)] font-extralight leading-none text-white/[0.12]"
-              style={{ letterSpacing: "-0.05em" }}
-            >
-              01
-            </span>
+      </div>
+      {isMobile ? (
+        /* Mobile: just the background image + a centered message */
+        <div className="relative flex h-full flex-col items-center justify-center gap-6 px-8 text-center">
+          <div className="flex flex-col gap-2">
             <h2
-              className="font-sans text-[clamp(80px,11vw,160px)] font-light leading-[0.95] text-white/90"
+              className="font-sans text-[42px] leading-[0.95] font-light text-white/90"
               style={{ letterSpacing: "-0.02em" }}
             >
               Quiet
             </h2>
             <h2
-              className="font-sans text-[clamp(52px,7vw,100px)] font-bold leading-[1.1] text-white"
+              className="font-sans text-[26px] leading-[1.1] font-bold text-white"
               style={{ letterSpacing: "-0.01em" }}
             >
               Architecture
             </h2>
-            <p className="mt-2 text-[13px] leading-[20px] text-white/60">
-              On restraint, stones, and the architecture of silence
-            </p>
           </div>
-        </div>
-      </div>
-      {isMobile ? (
-        <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
-          <p className="text-sm text-ink-inv">Best viewed on a wider screen.</p>
-          <p className="font-mono text-2xs text-ink-inv/50">
-            Resize your browser or switch to a desktop device.
+          <div className="h-px w-16 bg-white/15" />
+          <p className="max-w-[240px] text-[13px] leading-relaxed text-white/50">
+            This interactive experience is designed for desktop. Please visit on a wider screen.
           </p>
         </div>
       ) : (
-        <div ref={stackRef}>
-          <AnimatePresence>
-            {stack.map((cardId, i) => {
-              const def = CARD_DEFS[cardId];
-              return (
-                <StackCard
-                  key={cardId}
-                  width={def.width}
-                  containerWidth={bounds.width}
-                  darkBg={def.darkBg}
-                  isReady={hasMeasured}
-                  pos={basePositions[i] + (peekOffsets[i] ?? 0)}
-                  isActive={i === activeIndex}
-                  isCloseable={i !== 0}
-                  onMouseEnter={() => setPeekedIndex(i)}
-                  onMouseLeave={() => setPeekedIndex(null)}
-                  onClick={() => setActiveIndex(i)}
-                  onClose={() => handleClose(i)}
+        <>
+          {/* Editorial typography overlay — desktop only */}
+          <div className="absolute inset-0 select-none" aria-hidden="true">
+            <div className="relative flex h-full flex-col justify-between px-12 pt-16 pb-12">
+              {/* Top: issue number + rule — pushed down to clear nav pill */}
+              <div className="flex flex-col gap-3">
+                <span className="font-mono text-[10px] tracking-[0.1em] text-white/80 uppercase">
+                  No. 01 — 2025
+                </span>
+                <div className="h-px w-[min(600px,50%)] bg-white/10" />
+              </div>
+              {/* Bottom: title + subtitle */}
+              <div className="relative flex flex-col gap-2">
+                {/* Giant "01" ghost numeral */}
+                <span
+                  className="pointer-events-none absolute bottom-[10%] left-[12%] font-sans text-[clamp(200px,35vw,500px)] leading-none font-extralight text-white/[0.12]"
+                  style={{ letterSpacing: "-0.05em" }}
                 >
-                  <def.Content onNavigate={(t) => handleNavigate(i, t)} />
-                </StackCard>
-              );
-            })}
-          </AnimatePresence>
-        </div>
+                  01
+                </span>
+                <h2
+                  className="font-sans text-[clamp(80px,11vw,160px)] leading-[0.95] font-light text-white/90"
+                  style={{ letterSpacing: "-0.02em" }}
+                >
+                  Quiet
+                </h2>
+                <h2
+                  className="font-sans text-[clamp(52px,7vw,100px)] leading-[1.1] font-bold text-white"
+                  style={{ letterSpacing: "-0.01em" }}
+                >
+                  Architecture
+                </h2>
+                <p className="mt-2 text-[13px] leading-[20px] text-white/60">
+                  On restraint, stones, and the architecture of silence
+                </p>
+              </div>
+            </div>
+          </div>
+          <div ref={stackRef}>
+            <AnimatePresence>
+              {stack.map((cardId, i) => {
+                const def = CARD_DEFS[cardId];
+                return (
+                  <StackCard
+                    key={cardId}
+                    width={def.width}
+                    containerWidth={bounds.width}
+                    darkBg={def.darkBg}
+                    isReady={hasMeasured}
+                    pos={basePositions[i] + (peekOffsets[i] ?? 0)}
+                    isActive={i === activeIndex}
+                    isCloseable={i !== 0}
+                    onMouseEnter={() => setPeekedIndex(i)}
+                    onMouseLeave={() => setPeekedIndex(null)}
+                    onClick={() => setActiveIndex(i)}
+                    onClose={() => handleClose(i)}
+                  >
+                    <def.Content onNavigate={(t) => handleNavigate(i, t)} />
+                  </StackCard>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        </>
       )}
     </div>
   );

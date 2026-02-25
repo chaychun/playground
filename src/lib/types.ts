@@ -3,6 +3,8 @@ export type ComponentMeta = {
   orientation: "portrait" | "landscape";
   createdAt: string;
   fullViewport?: boolean;
+  /** Controls the nav pill appearance — "dark" for dark backgrounds, defaults to "light" */
+  navTheme?: "dark" | "light";
 } & (
   | { display: "inline" }
   | { display: "preview"; preview: { type: "image" | "video"; src: string } }

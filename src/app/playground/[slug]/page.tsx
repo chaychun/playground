@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { NavPill } from "@/components/nav-pill";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
 import type { ComponentMeta } from "@/lib/types";
 import { notFound } from "next/navigation";
@@ -31,6 +32,7 @@ export default async function PlaygroundPage({ params }: { params: Promise<{ slu
   if (meta.fullViewport) {
     return (
       <main className="h-svh overflow-hidden bg-paper">
+        <NavPill title={meta.title} theme={meta.navTheme ?? "light"} />
         <LazyPlaygroundComponent
           slug={slug}
           fallback={
@@ -45,7 +47,8 @@ export default async function PlaygroundPage({ params }: { params: Promise<{ slu
 
   return (
     <main className="min-h-svh bg-paper">
-      <header className="px-6 pt-12 pb-8">
+      <NavPill title={meta.title} theme={meta.navTheme ?? "light"} />
+      <header className="px-6 pt-16 pb-8">
         <p className="mb-2 font-mono text-2xs tracking-[0.08em] text-muted uppercase">Playground</p>
         <h1 className="text-2xl font-semibold tracking-tight text-ink">{meta.title}</h1>
       </header>

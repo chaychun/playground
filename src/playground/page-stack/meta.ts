@@ -6,5 +6,6 @@ export const meta: ComponentMeta = {
   display: "preview",
   preview: { type: "image", src: "/previews/page-stack.png" },
   fullViewport: true,
+  navTheme: "dark",
   createdAt: "2026-02-02",
 };
