@@ -45,6 +45,12 @@ export function PreviewCard({ item }: { item: Item }) {
       <div className="mt-3 flex items-baseline justify-between">
         <h3 className="text-sm font-medium text-ink">{item.title}</h3>
         <div className="flex items-center gap-2">
+          <time className="font-mono text-2xs text-muted">
+            {new Date(item.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            })}
+          </time>
           {isExternal && (
             <ArrowUpRight
               weight="bold"
