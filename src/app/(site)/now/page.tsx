@@ -1,37 +1,37 @@
 export default function NowPage() {
   return (
-    <div className="max-w-xl px-10 py-10">
+    <div className="max-w-xl pr-8 py-8">
       <h1 className="text-2xl font-semibold tracking-tight text-ink">Now</h1>
-      <p className="mt-2 text-xs text-muted">What I&rsquo;m focused on at this point in my life.</p>
+      <p className="mt-2 text-xs text-muted">Lorem ipsum dolor sit amet.</p>
 
       <div className="mt-10 space-y-8">
         <section>
           <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
-            Building
+            Lorem
           </h2>
           <p className="text-sm leading-relaxed text-dim">
-            Interactive components and experiments for this portfolio. Exploring spring physics,
-            gesture interactions, and scroll-driven animations.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua.
           </p>
         </section>
 
         <section>
           <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
-            Learning
+            Ipsum
           </h2>
           <p className="text-sm leading-relaxed text-dim">
-            Deeper into motion design principles. Reading about animation choreography and timing
-            curves.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+            commodo consequat.
           </p>
         </section>
 
         <section>
           <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
-            Inspired by
+            Dolor
           </h2>
           <p className="text-sm leading-relaxed text-dim">
-            The craft of studios like Basement, Resn, and Active Theory. The quiet confidence of
-            Swiss design. Japanese attention to detail.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur.
           </p>
         </section>
       </div>

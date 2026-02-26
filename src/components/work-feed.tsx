@@ -3,7 +3,7 @@ import type { Item } from "@/lib/types";
 
 export function WorkFeed({ items }: { items: Item[] }) {
   return (
-    <div className="px-10 py-10">
+    <div className="pr-8 py-8">
       <p className="mb-8 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
         Selected Work
       </p>

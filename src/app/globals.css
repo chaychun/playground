@@ -42,18 +42,16 @@
   --ink-inv: #f3f3ef;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #141312;
-    --surface: #1e1d1b;
-    --border: #2c2b28;
-    --mid: #3d3c39;
-    --muted: #72716d;
-    --link: #949390;
-    --dim: #a8a7a2;
-    --ink: #e8e7e3;
-    --ink-inv: #141312;
-  }
+.dark {
+  --paper: #141312;
+  --surface: #1e1d1b;
+  --border: #2c2b28;
+  --mid: #3d3c39;
+  --muted: #72716d;
+  --link: #949390;
+  --dim: #a8a7a2;
+  --ink: #e8e7e3;
+  --ink-inv: #141312;
 }
 
 body {

@@ -1,3 +1,4 @@
+import { SidebarFooter } from "@/components/sidebar-footer";
 import { cn } from "@/lib/cn";
 import type { Item } from "@/lib/types";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
@@ -83,28 +84,7 @@ export function SidebarDetail({ item, prev, next }: Props) {
           </div>
         )}
 
-        <div className="h-px w-10 bg-mid" />
-        <div className="mt-4 flex gap-4 font-mono text-2xs text-link">
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-colors hover:text-ink"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://x.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-colors hover:text-ink"
-          >
-            Twitter/X
-          </a>
-          <a href="mailto:hello@example.com" className="transition-colors hover:text-ink">
-            Email
-          </a>
-        </div>
+        <SidebarFooter />
       </div>
     </>
   );
