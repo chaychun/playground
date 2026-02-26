@@ -7,11 +7,11 @@ export default function SiteLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex min-h-svh bg-paper">
+    <div className="flex h-svh bg-paper">
       <Sidebar>
         <SidebarDefault />
       </Sidebar>
-      <main className="min-w-0 flex-1">{children}</main>
+      <main className="min-w-0 flex-1 overflow-y-auto overscroll-y-auto">{children}</main>
     </div>
   );
 }
