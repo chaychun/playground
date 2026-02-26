@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "figma": {
+    "agentation": {
       "type": "http",
-      "url": "https://mcp.figma.com/mcp"
+      "url": "https://agentation.dev/mcp"
     }
   }
 }
