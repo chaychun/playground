@@ -4,6 +4,9 @@ export type Item = {
   description: string;
 
   createdAt: string;
-  preview: { type: "image"; src: string } | { type: "video"; src: string } | { type: "custom" };
+  preview:
+    | { type: "image"; src: string }
+    | { type: "video"; src: string }
+    | { type: "custom"; component: "placeholder"; props?: Record<string, unknown> };
   content: { type: "component" } | { type: "external"; href: string };
 };

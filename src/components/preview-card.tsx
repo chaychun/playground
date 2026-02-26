@@ -1,8 +1,9 @@
+import { LazyPreviewComponent } from "@/lib/lazy-preview";
 import type { Item } from "@/lib/types";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
-function PreviewImage({ item }: { item: Item }) {
+function PreviewContent({ item }: { item: Item }) {
   if (item.preview.type === "video") {
     return (
       <video
@@ -23,19 +24,18 @@ function PreviewImage({ item }: { item: Item }) {
     );
   }
 
-  // custom preview — placeholder for now
-  return null;
+  return <LazyPreviewComponent name={item.preview.component} props={item.preview.props} />;
 }
 
 export function PreviewCard({ item }: { item: Item }) {
-  const isExternal = item.content.type === "external";
   const href =
     item.content.type === "external" ? item.content.href : `/playground/${item.slug}`;
+  const isExternal = item.content.type === "external";
 
   const card = (
     <article className="group">
       <div className="aspect-[16/10] overflow-hidden rounded-lg bg-surface transition-shadow duration-300 group-hover:shadow-lg">
-        <PreviewImage item={item} />
+        <PreviewContent item={item} />
       </div>
       <div className="mt-3 flex items-baseline justify-between">
         <h3 className="text-sm font-medium text-ink">{item.title}</h3>
