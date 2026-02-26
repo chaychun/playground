@@ -20,13 +20,11 @@ export default async function PlaygroundPage({ params }: { params: Promise<{ slu
   if (index === -1) notFound();
 
   const item = componentItems[index];
-  const prev = componentItems[index - 1];
-  const next = componentItems[index + 1];
 
   return (
     <div className="flex min-h-svh bg-paper">
       <Sidebar>
-        <SidebarDetail item={item} prev={prev} next={next} />
+        <SidebarDetail item={item} />
       </Sidebar>
       <main className="h-svh min-w-0 flex-1 overflow-hidden">
         <LazyPlaygroundComponent

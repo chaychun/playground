@@ -40,7 +40,6 @@ export function PreviewCard({ item }: { item: Item }) {
       <div className="mt-3 flex items-baseline justify-between">
         <h3 className="text-sm font-medium text-ink">{item.title}</h3>
         <div className="flex items-center gap-2">
-          {item.tags[0] && <span className="font-mono text-2xs text-muted">{item.tags[0]}</span>}
           {isExternal && (
             <ArrowUpRight
               weight="bold"
