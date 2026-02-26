@@ -7,6 +7,6 @@ export type Item = {
   preview:
     | { type: "image"; src: string }
     | { type: "video"; src: string }
-    | { type: "custom"; component: "placeholder"; props?: Record<string, unknown> };
+    | { type: "custom"; component?: string; props?: Record<string, unknown> };
   content: { type: "component" } | { type: "external"; href: string };
 };

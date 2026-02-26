@@ -24,7 +24,12 @@ function PreviewContent({ item }: { item: Item }) {
     );
   }
 
-  return <LazyPreviewComponent name={item.preview.component} props={item.preview.props} />;
+  return (
+    <LazyPreviewComponent
+      name={item.preview.component ?? "placeholder"}
+      props={item.preview.component ? item.preview.props : { name: item.title, ...item.preview.props }}
+    />
+  );
 }
 
 export function PreviewCard({ item }: { item: Item }) {
