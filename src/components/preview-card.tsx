@@ -29,7 +29,8 @@ function PreviewImage({ item }: { item: Item }) {
 
 export function PreviewCard({ item }: { item: Item }) {
   const isExternal = item.content.type === "external";
-  const href = isExternal ? item.content.href : `/playground/${item.slug}`;
+  const href =
+    item.content.type === "external" ? item.content.href : `/playground/${item.slug}`;
 
   const card = (
     <article className="group">
