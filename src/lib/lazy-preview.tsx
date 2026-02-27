@@ -14,10 +14,7 @@ function getLazyPreview(name: string) {
   return component;
 }
 
-class PreviewErrorBoundary extends ReactComponent<
-  { children: ReactNode },
-  { hasError: boolean }
-> {
+class PreviewErrorBoundary extends ReactComponent<{ children: ReactNode }, { hasError: boolean }> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {

@@ -27,14 +27,15 @@ function PreviewContent({ item }: { item: Item }) {
   return (
     <LazyPreviewComponent
       name={item.preview.component ?? "placeholder"}
-      props={item.preview.component ? item.preview.props : { name: item.title, ...item.preview.props }}
+      props={
+        item.preview.component ? item.preview.props : { name: item.title, ...item.preview.props }
+      }
     />
   );
 }
 
 export function PreviewCard({ item }: { item: Item }) {
-  const href =
-    item.content.type === "external" ? item.content.href : `/playground/${item.slug}`;
+  const href = item.content.type === "external" ? item.content.href : `/playground/${item.slug}`;
   const isExternal = item.content.type === "external";
 
   const card = (

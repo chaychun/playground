@@ -29,9 +29,7 @@ export function SidebarDetail({ item }: { item: Item }) {
           <h1 className="text-xl font-semibold tracking-tight text-ink">{item.title}</h1>
           <p className="mt-1 font-mono text-2xs text-muted">{formatDate(item.createdAt)}</p>
 
-          <p className="mt-6 max-w-[240px] text-xs leading-relaxed text-dim">
-            {item.description}
-          </p>
+          <p className="mt-6 max-w-[240px] text-xs leading-relaxed text-dim">{item.description}</p>
         </div>
       </div>
 
