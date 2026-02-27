@@ -69,6 +69,7 @@ src/playground/
 ```
 
 **Conventions:**
+
 - Folder name = slug (must match `slug` in `items.ts`)
 - `component.tsx` MUST use `"use client"` and export a single default component
 
@@ -83,6 +84,7 @@ src/preview/
 ```
 
 **Conventions:**
+
 - File name = `name` field in item config
 - Must use `"use client"` and export a single default component
 

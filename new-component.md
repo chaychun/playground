@@ -19,6 +19,7 @@ export default function MyComponent() {
 ```
 
 Requirements:
+
 - Must have `"use client"` directive
 - Must have a single **default export**
 - The component receives no props — it manages its own state
