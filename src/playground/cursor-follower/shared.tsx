@@ -36,7 +36,7 @@ export function useCursorFollower(config: SpringConfig = DEFAULT_SPRING) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [data, setData] = useState<HoverData | null>(null);
-  const hideTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const hideTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const x = useSpring(0, config);
   const y = useSpring(0, config);
