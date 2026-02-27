@@ -1,22 +1,17 @@
 "use client";
 
+import { isActiveLink, NAV_LINKS } from "@/data/nav";
 import { cn } from "@/lib/cn";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const links = [
-  { href: "/", label: "Experiments" },
-  { href: "/about", label: "About" },
-  { href: "/now", label: "Now" },
-];
 
 export function SidebarNav() {
   const pathname = usePathname();
 
   return (
     <nav className="flex flex-col gap-1">
-      {links.map(({ href, label }) => {
-        const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
+      {NAV_LINKS.map(({ href, label }) => {
+        const isActive = isActiveLink(href, pathname);
         return (
           <Link
             key={href}

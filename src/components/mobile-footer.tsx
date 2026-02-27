@@ -1,22 +1,4 @@
-import { XLogo, GithubLogo, EnvelopeSimple } from "@phosphor-icons/react/dist/ssr";
-
-const SOCIAL_LINKS = [
-  {
-    icon: XLogo,
-    href: "https://x.com/chunchayut",
-    label: "X (Twitter)",
-  },
-  {
-    icon: GithubLogo,
-    href: "https://github.com/chaychun",
-    label: "GitHub",
-  },
-  {
-    icon: EnvelopeSimple,
-    href: "mailto:chun.chayut@gmail.com",
-    label: "Email",
-  },
-] as const;
+import { SOCIAL_LINKS } from "@/data/social";
 
 export function MobileFooter() {
   return (
