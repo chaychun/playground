@@ -86,9 +86,9 @@ function MonoLabel({ children }: { children: React.ReactNode }) {
 export default function DesignSystemPage() {
   return (
     <div className="min-h-svh bg-paper text-ink">
-      <div className="mx-auto max-w-3xl px-6 py-16">
+      <div className="mx-auto max-w-3xl px-5 py-10 md:px-6 md:py-16">
         {/* Header */}
-        <header className="mb-16">
+        <header className="mb-10 md:mb-16">
           <div className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
             Design System
           </div>
@@ -122,7 +122,7 @@ export default function DesignSystemPage() {
             </p>
 
             <MonoLabel>Weights</MonoLabel>
-            <div className="mb-6 flex gap-10">
+            <div className="mb-6 flex flex-wrap gap-6 md:gap-10">
               {(["font-normal", "font-medium", "font-semibold", "font-bold"] as const).map(
                 (w, i) => (
                   <div key={w}>
@@ -151,7 +151,7 @@ export default function DesignSystemPage() {
             </p>
 
             <MonoLabel>Weights</MonoLabel>
-            <div className="mb-6 flex gap-10">
+            <div className="mb-6 flex flex-wrap gap-6 md:gap-10">
               {(["font-light", "font-normal", "font-medium"] as const).map((w, i) => (
                 <div key={w}>
                   <div className={`font-mono text-xl text-ink ${w} mb-1`}>Ag</div>
@@ -233,29 +233,29 @@ export default function DesignSystemPage() {
           {/* Swatch strip */}
           <div className="mb-10">
             <MonoLabel>Light</MonoLabel>
-            <div className="mb-6 flex gap-1">
+            <div className="mb-6 grid grid-cols-5 gap-1 md:grid-cols-9">
               {neutrals.map((n) => (
-                <div key={n.token} className="flex flex-1 flex-col items-center gap-2">
+                <div key={n.token} className="flex flex-col items-center gap-2">
                   <div
                     className="h-12 w-full border border-border"
                     style={{ backgroundColor: n.light }}
                   />
                   <div className="font-mono text-2xs text-muted">{n.token}</div>
-                  <div className="font-mono text-2xs text-muted">{n.light}</div>
+                  <div className="hidden font-mono text-2xs text-muted md:block">{n.light}</div>
                 </div>
               ))}
             </div>
 
             <MonoLabel>Dark</MonoLabel>
-            <div className="mb-6 flex gap-1">
+            <div className="mb-6 grid grid-cols-5 gap-1 md:grid-cols-9">
               {neutrals.map((n) => (
-                <div key={n.token} className="flex flex-1 flex-col items-center gap-2">
+                <div key={n.token} className="flex flex-col items-center gap-2">
                   <div
                     className="h-12 w-full border border-border"
                     style={{ backgroundColor: n.dark }}
                   />
                   <div className="font-mono text-2xs text-muted">{n.token}</div>
-                  <div className="font-mono text-2xs text-muted">{n.dark}</div>
+                  <div className="hidden font-mono text-2xs text-muted md:block">{n.dark}</div>
                 </div>
               ))}
             </div>
@@ -266,16 +266,20 @@ export default function DesignSystemPage() {
             <MonoLabel>Token Reference</MonoLabel>
             <div className="flex flex-col gap-4">
               {neutrals.map((n) => (
-                <div key={n.token} className="flex items-center gap-4">
+                <div key={n.token} className="flex items-center gap-3 md:gap-4">
                   <div
                     className="h-8 w-8 shrink-0 border border-border"
                     style={{ backgroundColor: n.light }}
                   />
-                  <div className="w-20 shrink-0">
+                  <div className="w-14 shrink-0 md:w-20">
                     <code className="font-mono text-2xs text-ink">{n.token}</code>
                   </div>
-                  <div className="w-20 shrink-0 font-mono text-2xs text-muted">{n.light}</div>
-                  <div className="w-20 shrink-0 font-mono text-2xs text-muted">{n.dark}</div>
+                  <div className="hidden w-20 shrink-0 font-mono text-2xs text-muted md:block">
+                    {n.light}
+                  </div>
+                  <div className="hidden w-20 shrink-0 font-mono text-2xs text-muted md:block">
+                    {n.dark}
+                  </div>
                   <div className="text-sm text-dim">{n.role}</div>
                 </div>
               ))}
@@ -287,7 +291,7 @@ export default function DesignSystemPage() {
         <section className="mb-20">
           <SectionHeading>Quick Reference</SectionHeading>
 
-          <div className="grid grid-cols-[120px_1fr] gap-x-6 gap-y-5">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-[120px_1fr]">
             <div className="pt-0.5 font-mono text-2xs text-muted">Headings</div>
             <p className="text-sm leading-[1.6] text-dim">
               <code className="font-mono text-2xs text-ink">text-ink</code>. Use medium (500) or

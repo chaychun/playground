@@ -2,10 +2,10 @@ import Image from "next/image";
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col-reverse gap-10 py-8 pr-8 md:flex-row">
+    <div className="flex flex-col-reverse gap-8 px-5 py-6 md:flex-row lg:gap-10 lg:py-8 lg:pr-8 lg:pl-0">
       {/* Text content */}
       <div className="max-w-xl">
-        <h1 className="text-4xl font-semibold tracking-tight text-ink">
+        <h1 className="text-2xl font-semibold tracking-tight text-ink lg:text-4xl">
           I&apos;m Chayut, a design engineer based in Thailand.
         </h1>
 
@@ -29,7 +29,7 @@ export default function AboutPage() {
         </div>
 
         {/* Education */}
-        <section className="mt-40">
+        <section className="mt-16 lg:mt-40">
           <h2 className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">Education</h2>
           <div className="mt-4">
             <p className="text-sm font-medium text-ink">B.Sc. in Physics (First Class Honours)</p>
@@ -46,7 +46,7 @@ export default function AboutPage() {
           alt="Chayut"
           width={280}
           height={280}
-          className="aspect-square w-full max-w-[280px] rounded-lg object-cover"
+          className="aspect-square w-full max-w-[200px] rounded-lg object-cover md:max-w-[280px]"
         />
       </div>
     </div>

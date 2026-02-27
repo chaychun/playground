@@ -1,5 +1,5 @@
-import { LazyMount } from "@/lib/lazy-mount";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
+import { LazyMount } from "@/lib/lazy-mount";
 import { LazyPreviewComponent } from "@/lib/lazy-preview";
 import type { Item } from "@/lib/types";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
@@ -53,7 +53,7 @@ export function PreviewCard({ item }: { item: Item }) {
         )}
       </div>
       <div className="mt-3">
-        <div className="flex items-baseline gap-2">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <h3 className="text-sm font-medium text-ink">{item.title}</h3>
           {item.links &&
             item.links.length > 0 &&
@@ -76,9 +76,7 @@ export function PreviewCard({ item }: { item: Item }) {
             })}
           </time>
         </div>
-        {item.description && (
-          <p className="mt-2 max-w-xl text-sm text-dim">{item.description}</p>
-        )}
+        {item.description && <p className="mt-2 max-w-xl text-sm text-dim">{item.description}</p>}
       </div>
     </article>
   );
