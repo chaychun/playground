@@ -16,6 +16,7 @@ interface InfoModalProps {
 function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const toggleModal = (e: React.MouseEvent) => {
@@ -70,12 +71,17 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
           layout
           ref={panelRef}
           animate={{ borderRadius: isOpen ? "16px" : "28px" }}
+          onLayoutAnimationStart={() => setIsLayoutAnimating(true)}
+          onLayoutAnimationComplete={() => setIsLayoutAnimating(false)}
         >
           <AnimatePresence mode="popLayout">
             {isOpen && (
               <motion.div
                 key="content"
-                className="min-h-0 flex-1 overflow-y-auto"
+                className={cn(
+                  "min-h-0 flex-1",
+                  isLayoutAnimating ? "overflow-hidden" : "overflow-y-auto",
+                )}
                 layout
                 initial={{ opacity: 0 }}
                 animate={{
@@ -160,12 +166,35 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
             onClick={toggleModal}
             whileTap={{ scale: 0.9 }}
             layout
+            {...(showDetails && {
+              transition: { layout: { duration: 0 } },
+            })}
           >
-            {isOpen ? (
-              <X className="h-6 w-6 text-muted" weight="light" />
-            ) : (
-              <Info className="h-6 w-6 text-muted" weight="light" />
-            )}
+            <AnimatePresence mode="popLayout" initial={false}>
+              {isOpen ? (
+                <motion.span
+                  key="close"
+                  className="flex items-center justify-center"
+                  initial={{ opacity: 0, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(4px)" }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <X className="h-6 w-6 text-muted" weight="light" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="open"
+                  className="flex items-center justify-center"
+                  initial={{ opacity: 0, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(4px)" }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Info className="h-6 w-6 text-muted" weight="light" />
+                </motion.span>
+              )}
+            </AnimatePresence>
           </motion.button>
         </motion.div>
       </div>
