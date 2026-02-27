@@ -30,6 +30,11 @@
   --text-3xl--line-height: 1.1;
   --text-4xl: 2.5rem;
   --text-4xl--line-height: 1.1;
+
+  --animate-fade-in-up: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-expand-line: expand-line 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-in: fade-in 0.5s ease-out both;
+  --animate-slide-in-down: slide-in-down 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 :root {
@@ -54,6 +59,69 @@
   --dim: #a8a7a2;
   --ink: #e8e7e3;
   --ink-inv: #141312;
+}
+
+/* Sidebar entrance animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes expand-line {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Sidebar nav hover underline */
+.sidebar-nav a {
+  position: relative;
+}
+
+.sidebar-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-expand-line,
+  .animate-fade-in,
+  .animate-slide-in-down {
+    animation: none !important;
+  }
+
+  .sidebar-nav a::after {
+    transition: none !important;
+  }
 }
 
 html,
