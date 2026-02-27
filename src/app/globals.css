@@ -28,6 +28,8 @@
   --text-2xl--line-height: 1.1;
   --text-3xl: 2rem;
   --text-3xl--line-height: 1.1;
+  --text-4xl: 2.5rem;
+  --text-4xl--line-height: 1.1;
 }
 
 :root {

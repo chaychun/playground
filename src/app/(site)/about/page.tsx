@@ -1,23 +1,54 @@
+import Image from "next/image";
+
 export default function AboutPage() {
   return (
-    <div className="max-w-xl pr-8 py-8">
-      <h1 className="text-2xl font-semibold tracking-tight text-ink">
-        Lorem ipsum dolor sit amet.
-      </h1>
+    <div className="flex flex-col-reverse gap-10 pr-8 py-8 md:flex-row">
+      {/* Text content */}
+      <div className="max-w-xl">
+        <h1 className="text-4xl font-semibold tracking-tight text-ink">
+          I&apos;m Chayut, a design engineer based in Thailand.
+        </h1>
 
-      <div className="mt-8 space-y-4 text-sm leading-relaxed text-dim">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-        </p>
-        <p>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-          nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-        </p>
+        <div className="mt-8 space-y-4 text-sm leading-relaxed text-dim">
+          <p>
+            I design and build cool things with code, focusing on motion-led interactions and
+            interface patterns that improve the experience of the user. I believe deeply in calm
+            technology: tools that assists humans while remaining unintrusive. That&apos;s always the
+            goal when I build anything.
+          </p>
+          <p>
+            I work with both web (React) and Native (SwiftUI) platforms. My interest is more in the
+            visible layer, not in the implementation, and I embrace AI coding tools in my workflow
+            without compromising on quality.
+          </p>
+          <p>
+            Outside of code, I&apos;m probably rearranging my room for the third time this month,
+            deep in a rabbit hole about how people think and learn, or just enjoying a quiet moment
+            with people I care about.
+          </p>
+        </div>
+
+        {/* Education */}
+        <section className="mt-40">
+          <h2 className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">Education</h2>
+          <div className="mt-4">
+            <p className="text-sm font-medium text-ink">B.Sc. in Physics (First Class Honours)</p>
+            <p className="mt-1 text-sm text-dim">Mahidol University International College</p>
+            <p className="mt-0.5 font-mono text-2xs text-muted">Graduated 2024</p>
+          </div>
+        </section>
       </div>
 
-      {/* Photo placeholder */}
-      <div className="mt-10 aspect-[4/3] w-full max-w-sm rounded-lg bg-surface" />
+      {/* Photo */}
+      <div className="shrink-0">
+        <Image
+          src="/images/profile.jpeg"
+          alt="Chayut"
+          width={280}
+          height={280}
+          className="aspect-square w-full max-w-[280px] rounded-lg object-cover"
+        />
+      </div>
     </div>
   );
 }
