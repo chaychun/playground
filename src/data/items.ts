@@ -11,13 +11,6 @@ export const items: Item[] = [
     links: [{ label: "GitHub", href: "https://github.com/chaychun/polaroid-stack" }],
   },
   {
-    slug: "location-pin",
-    type: "interactive",
-    title: "Location Pin",
-    description: "An animated location card with morphing pin and bounce-in entrance.",
-    createdAt: "2026-02-10",
-  },
-  {
     slug: "info-modal",
     type: "interactive",
     title: "Info Modal",
