@@ -16,7 +16,7 @@ export default function NowPage() {
   const data = timelineData as MonthEntry[];
 
   return (
-    <div className="max-w-xl py-8 pr-8">
+    <div className="max-w-xl px-5 py-6 lg:py-8 lg:pr-8 lg:pl-0">
       <h1 className="font-sans text-2xl font-semibold tracking-tight text-ink">Now</h1>
       <p className="mt-2 text-xs text-muted">
         What I&apos;m doing, thinking about, and working on — updated monthly.
@@ -43,7 +43,7 @@ export default function NowPage() {
             <div className="ml-[31px] space-y-5">
               {month.entries.map((entry) => (
                 <div key={entry.title}>
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                     <h3 className="text-sm font-medium text-ink">{entry.title}</h3>
                     {entry.tags?.map((tag) => (
                       <span
