@@ -1,33 +1,65 @@
+import timelineData from "@/data/now-timeline.json";
+
+type TimelineEntry = {
+  title: string;
+  body: string;
+  tags?: string[];
+};
+
+type MonthEntry = {
+  month: string;
+  year: number;
+  entries: TimelineEntry[];
+};
+
 export default function NowPage() {
+  const data = timelineData as MonthEntry[];
+
   return (
     <div className="max-w-xl py-8 pr-8">
-      <h1 className="text-2xl font-semibold tracking-tight text-ink">Now</h1>
-      <p className="mt-2 text-xs text-muted">Lorem ipsum dolor sit amet.</p>
+      <h1 className="font-sans text-2xl font-semibold tracking-tight text-ink">Now</h1>
+      <p className="mt-2 text-xs text-muted">
+        What I&apos;m doing, thinking about, and working on — updated monthly.
+      </p>
 
-      <div className="mt-10 space-y-8">
-        <section>
-          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">Lorem</h2>
-          <p className="text-sm leading-relaxed text-dim">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
-          </p>
-        </section>
+      <div className="relative mt-10">
+        {data.map((month) => (
+          <div key={`${month.month}-${month.year}`} className="relative pb-10 last:pb-0">
+            {/* Vertical line segment above the circle */}
+            <div className="absolute top-0 left-[7px] h-[3px] w-px bg-border" />
+            {/* Circle */}
+            <div className="absolute top-[7px] left-0 z-10 size-[15px] rounded-full border-2 border-ink bg-paper" />
+            {/* Vertical line segment below the circle */}
+            <div className="absolute top-[26px] bottom-0 left-[7px] w-px bg-border" />
 
-        <section>
-          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">Ipsum</h2>
-          <p className="text-sm leading-relaxed text-dim">
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo consequat.
-          </p>
-        </section>
+            {/* Month label */}
+            <div className="pb-5 pl-[31px]">
+              <span className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">
+                {month.month} {month.year}
+              </span>
+            </div>
 
-        <section>
-          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">Dolor</h2>
-          <p className="text-sm leading-relaxed text-dim">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur.
-          </p>
-        </section>
+            {/* Entries */}
+            <div className="ml-[31px] space-y-5">
+              {month.entries.map((entry) => (
+                <div key={entry.title}>
+                  <div className="flex items-baseline gap-2">
+                    <h3 className="text-sm font-medium text-ink">{entry.title}</h3>
+                    {entry.tags?.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-surface px-2 py-0.5 font-mono text-2xs text-muted"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-dim">{entry.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="mt-12 border-t border-border pt-6">
