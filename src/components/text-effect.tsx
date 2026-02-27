@@ -118,6 +118,7 @@ const AnimationComponent: React.FC<{
       </motion.span>
     ) : (
       <motion.span className="inline-block whitespace-pre">
+        {/* eslint-disable react/no-array-index-key */}
         {segment.split("").map((char, charIndex) => (
           <motion.span
             key={`char-${charIndex}`}
@@ -128,6 +129,7 @@ const AnimationComponent: React.FC<{
             {char}
           </motion.span>
         ))}
+        {/* eslint-enable react/no-array-index-key */}
       </motion.span>
     );
 
@@ -211,12 +213,13 @@ export function TextEffect({
 
   const baseDuration = 0.3 / speedSegment;
 
-  const customStagger = hasTransition(variants?.container?.visible ?? {})
-    ? (variants?.container?.visible as TargetAndTransition).transition?.staggerChildren
+  const containerVisible = variants?.container?.visible;
+  const customStagger = hasTransition(containerVisible)
+    ? containerVisible.transition?.staggerChildren
     : undefined;
 
-  const customDelay = hasTransition(variants?.container?.visible ?? {})
-    ? (variants?.container?.visible as TargetAndTransition).transition?.delayChildren
+  const customDelay = hasTransition(containerVisible)
+    ? containerVisible.transition?.delayChildren
     : undefined;
 
   const computedVariants = {
@@ -249,6 +252,7 @@ export function TextEffect({
           style={style}
         >
           {per !== "line" ? <span className="sr-only">{children}</span> : null}
+          {/* eslint-disable react/no-array-index-key */}
           {segments.map((segment, index) => (
             <AnimationComponent
               key={`${per}-${index}-${segment}`}
@@ -258,6 +262,7 @@ export function TextEffect({
               segmentWrapperClassName={segmentWrapperClassName}
             />
           ))}
+          {/* eslint-enable react/no-array-index-key */}
         </MotionTag>
       )}
     </AnimatePresence>

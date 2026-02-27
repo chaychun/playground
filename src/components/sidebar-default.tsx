@@ -12,8 +12,8 @@ export function SidebarDefault() {
         </div>
 
         <p className="mb-8 max-w-[220px] text-xs leading-relaxed text-dim">
-          Welcome! I&apos;m Chayut, and you&apos;re in my digital playground. It&apos;s a
-          collection of my experiments on interaction and interface design. Feel free to explore!
+          Welcome! I&apos;m Chayut, and you&apos;re in my digital playground. It&apos;s a collection
+          of my experiments on interaction and interface design. Feel free to explore!
         </p>
 
         {/* Separator */}

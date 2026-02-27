@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { TextEffect } from "@/components/text-effect";
 import { XLogo, GithubLogo, EnvelopeSimple, Sun, Moon, Monitor } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "next-themes";
-import { TextEffect } from "@/components/text-effect";
+import { useEffect, useState } from "react";
 
 const SOCIAL_LINKS = [
   {
@@ -57,7 +57,7 @@ function SocialLink({ link }: { link: (typeof SOCIAL_LINKS)[number] }) {
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
             transition={springTransition}
-            className="overflow-hidden whitespace-nowrap text-xs"
+            className="overflow-hidden text-xs whitespace-nowrap"
           >
             <span className="ml-1">{link.prefix}</span>
             <TextEffect

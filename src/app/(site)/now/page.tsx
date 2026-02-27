@@ -1,14 +1,12 @@
 export default function NowPage() {
   return (
-    <div className="max-w-xl pr-8 py-8">
+    <div className="max-w-xl py-8 pr-8">
       <h1 className="text-2xl font-semibold tracking-tight text-ink">Now</h1>
       <p className="mt-2 text-xs text-muted">Lorem ipsum dolor sit amet.</p>
 
       <div className="mt-10 space-y-8">
         <section>
-          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
-            Lorem
-          </h2>
+          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">Lorem</h2>
           <p className="text-sm leading-relaxed text-dim">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua.
@@ -16,9 +14,7 @@ export default function NowPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
-            Ipsum
-          </h2>
+          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">Ipsum</h2>
           <p className="text-sm leading-relaxed text-dim">
             Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
             commodo consequat.
@@ -26,9 +22,7 @@ export default function NowPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">
-            Dolor
-          </h2>
+          <h2 className="mb-3 font-mono text-2xs tracking-[0.08em] text-muted uppercase">Dolor</h2>
           <p className="text-sm leading-relaxed text-dim">
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
             nulla pariatur.
