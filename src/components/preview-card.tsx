@@ -1,13 +1,14 @@
+import { LazyMount } from "@/lib/lazy-mount";
+import { LazyPlaygroundComponent } from "@/lib/lazy-component";
 import { LazyPreviewComponent } from "@/lib/lazy-preview";
 import type { Item } from "@/lib/types";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
-import Link from "next/link";
 
-function PreviewContent({ item }: { item: Item }) {
-  if (item.preview.type === "video") {
+function ItemContent({ item }: { item: Item }) {
+  if (item.type === "video") {
     return (
       <video
-        src={item.preview.src}
+        src={item.src}
         autoPlay
         loop
         muted
@@ -17,58 +18,68 @@ function PreviewContent({ item }: { item: Item }) {
     );
   }
 
-  if (item.preview.type === "image") {
+  if (item.type === "image") {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={item.preview.src} alt={item.title} className="h-full w-full object-cover" />
+      <img src={item.src} alt={item.title} className="h-full w-full object-cover" />
     );
   }
 
+  if (item.type === "preview") {
+    return <LazyPreviewComponent name={item.name} props={item.props} />;
+  }
+
+  // interactive — full component
   return (
-    <LazyPreviewComponent
-      name={item.preview.component ?? "placeholder"}
-      props={item.preview.component ? item.preview.props : { name: item.title, ...item.preview.props }}
+    <LazyPlaygroundComponent
+      slug={item.slug}
+      fallback={<div className="h-full w-full bg-surface" />}
     />
   );
 }
 
 export function PreviewCard({ item }: { item: Item }) {
-  const href =
-    item.content.type === "external" ? item.content.href : `/playground/${item.slug}`;
-  const isExternal = item.content.type === "external";
+  const needsLazyMount = item.type === "interactive" || item.type === "preview";
 
-  const card = (
-    <article className="group">
-      <div className="aspect-[16/10] overflow-hidden rounded-lg bg-surface transition-shadow duration-300 group-hover:shadow-lg">
-        <PreviewContent item={item} />
+  return (
+    <article>
+      <div className="aspect-[16/10] overflow-hidden rounded-lg bg-surface">
+        {needsLazyMount ? (
+          <LazyMount className="h-full w-full">
+            <ItemContent item={item} />
+          </LazyMount>
+        ) : (
+          <ItemContent item={item} />
+        )}
       </div>
-      <div className="mt-3 flex items-baseline justify-between">
-        <h3 className="text-sm font-medium text-ink">{item.title}</h3>
-        <div className="flex items-center gap-2">
-          <time className="font-mono text-2xs text-muted">
+      <div className="mt-3">
+        <div className="flex items-baseline gap-2">
+          <h3 className="text-sm font-medium text-ink">{item.title}</h3>
+          {item.links &&
+            item.links.length > 0 &&
+            item.links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-0.5 rounded-full bg-surface px-2 py-0.5 text-2xs font-medium text-dim transition-colors hover:bg-border hover:text-ink"
+              >
+                {link.label}
+                <ArrowUpRight weight="bold" className="size-2.5" />
+              </a>
+            ))}
+          <time className="ml-auto font-mono text-2xs text-muted">
             {new Date(item.createdAt).toLocaleDateString("en-US", {
               month: "short",
               year: "numeric",
             })}
           </time>
-          {isExternal && (
-            <ArrowUpRight
-              weight="bold"
-              className="size-3 text-muted transition-colors group-hover:text-ink"
-            />
-          )}
         </div>
+        {item.description && (
+          <p className="mt-2 max-w-xl text-sm text-dim">{item.description}</p>
+        )}
       </div>
     </article>
   );
-
-  if (isExternal) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        {card}
-      </a>
-    );
-  }
-
-  return <Link href={href}>{card}</Link>;
 }
