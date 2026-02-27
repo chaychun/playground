@@ -166,7 +166,7 @@ export default function PolaroidStack() {
                 alt={photo.alt}
                 fill
                 sizes="(max-width: 999px) 14rem, 21rem"
-                className="select-none object-cover"
+                className="object-cover select-none"
                 draggable={false}
               />
             </div>

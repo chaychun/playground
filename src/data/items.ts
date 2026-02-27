@@ -5,8 +5,7 @@ export const items: Item[] = [
     slug: "polaroid-carousel",
     type: "interactive",
     title: "Polaroid Carousel",
-    description:
-      "A stack of cards that expands into a gesture-based carousel modal.",
+    description: "A stack of cards that expands into a gesture-based carousel modal.",
     createdAt: "2026-02-25",
   },
   {
