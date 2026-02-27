@@ -1,0 +1,13 @@
+[
+  {
+    "month": "February",
+    "year": 2026,
+    "entries": [
+      {
+        "title": "Redesigning the portfolio",
+        "body": "Spent a lot of time rethinking how I present my work. Moved away from a project-list format to an interactive grid where each cell is a living component. Much more fun to browse.",
+        "tags": ["design", "code"]
+      }
+    ]
+  }
+]

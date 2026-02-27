@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col-reverse gap-10 pr-8 py-8 md:flex-row">
+    <div className="flex flex-col-reverse gap-10 py-8 pr-8 md:flex-row">
       {/* Text content */}
       <div className="max-w-xl">
         <h1 className="text-4xl font-semibold tracking-tight text-ink">
@@ -13,8 +13,8 @@ export default function AboutPage() {
           <p>
             I design and build cool things with code, focusing on motion-led interactions and
             interface patterns that improve the experience of the user. I believe deeply in calm
-            technology: tools that assists humans while remaining unintrusive. That&apos;s always the
-            goal when I build anything.
+            technology: tools that assists humans while remaining unintrusive. That&apos;s always
+            the goal when I build anything.
           </p>
           <p>
             I work with both web (React) and Native (SwiftUI) platforms. My interest is more in the
