@@ -2,13 +2,11 @@ import type { Item } from "@/lib/types";
 
 export const items: Item[] = [
   {
-    slug: "polaroid-stack",
+    slug: "polaroid-carousel",
     type: "interactive",
-    title: "Polaroid Stack",
-    description:
-      "A draggable stack of polaroid photos with spring physics. Flick cards to shuffle the deck. Each card responds to pointer velocity and direction, creating a natural tossing gesture that cycles through the stack.",
+    title: "Polaroid Carousel",
+    description: "A stack of cards that expands into a gesture-based carousel modal.",
     createdAt: "2026-02-25",
-    links: [{ label: "GitHub", href: "https://github.com/chaychun/polaroid-stack" }],
   },
   {
     slug: "info-modal",

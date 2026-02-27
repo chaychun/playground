@@ -2,22 +2,18 @@
 
 import { cn } from "@/lib/cn";
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
+import Image, { type StaticImageData } from "next/image";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 
-const PHOTOS = [
-  {
-    bg: "linear-gradient(135deg, #c9a87c 0%, #e6c9a0 50%, #a88a5e 100%)",
-    alt: "Warm sand tones",
-  },
-  {
-    bg: "linear-gradient(135deg, #7a9eb8 0%, #a8c8dd 50%, #5b7d94 100%)",
-    alt: "Cool ocean hues",
-  },
-  {
-    bg: "linear-gradient(135deg, #8aab7a 0%, #b5d4a0 50%, #6b8c5b 100%)",
-    alt: "Forest greens",
-  },
+import boutiqueImg from "./assets/Charming Boutique Storefront.webp";
+import clothesPileImg from "./assets/Person Under Clothes Pile.webp";
+import telephoneImg from "./assets/Retro Pink Telephone Scene.webp";
+
+const PHOTOS: { src: StaticImageData; alt: string }[] = [
+  { src: boutiqueImg, alt: "Charming boutique storefront" },
+  { src: telephoneImg, alt: "Retro pink telephone scene" },
+  { src: clothesPileImg, alt: "Person under clothes pile" },
 ];
 
 function useMediaQuery(query: string) {
@@ -78,8 +74,8 @@ export default function PolaroidStack() {
     return {
       className:
         position === "center"
-          ? "relative bg-white shadow-lg p-2 pb-8 z-[1] ring-1 ring-black/10"
-          : "absolute cursor-pointer top-0 left-0 bg-white shadow-lg p-2 pb-8 ring-1 ring-black/10",
+          ? "relative bg-white shadow-lg p-3 pb-12 z-[1]"
+          : "absolute cursor-pointer top-0 left-0 bg-white shadow-lg p-3 pb-12",
       initial:
         position === "center"
           ? {
@@ -164,12 +160,16 @@ export default function PolaroidStack() {
             }}
             whileDrag={{ scale: 1.05 }}
           >
-            <div
-              className="relative h-full w-full select-none"
-              style={{ background: photo.bg }}
-              role="img"
-              aria-label={photo.alt}
-            />
+            <div className="relative h-full w-full">
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(max-width: 999px) 14rem, 21rem"
+                className="object-cover select-none"
+                draggable={false}
+              />
+            </div>
           </motion.div>
         );
       })}
@@ -192,7 +192,7 @@ export default function PolaroidStack() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="fixed inset-0 z-50 bg-ink/40"
+                  className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
                   onClick={() => setIsOpen(false)}
                 />
                 <Dialog.Content
