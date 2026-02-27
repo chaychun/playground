@@ -2,13 +2,16 @@
 
 ## Project Overview
 
-A portfolio site that renders a custom grid of interactive components and links. Each grid item can be portrait or landscape orientation, sorted by creation date (newest first).
+A portfolio site that renders a vertical feed of interactive components and media items, all displayed directly on the home page. Items are sorted by creation date (newest first).
 
-### Grid Item Types
+### Item Types
 
-- **Inline Interactive** — component renders directly in the grid, immediately interactive
-- **Preview Interactive** — shows a preview (image/video) in the grid, links to a dedicated page with the full interactive component
-- **External Link** — preview card linking to an external URL
+- **Interactive** — full component rendered inline on the home page (loaded from `src/playground/<slug>/component.tsx`)
+- **Preview** — lightweight visual component for external projects (loaded from `src/preview/<name>.tsx`)
+- **Image** — static image
+- **Video** — autoplaying looped video
+
+All items can optionally include named external links (displayed as pills below the description).
 
 ## Tech Stack
 
@@ -23,97 +26,100 @@ A portfolio site that renders a custom grid of interactive components and links.
 
 ## Architecture
 
-### Filesystem-Driven Component Registry
+### Centralized Item Registry
 
-No manual registry or items list. The filesystem IS the registry.
+All items are defined in `src/data/items.ts` as a single array. No filesystem scanning — the data file is the registry.
+
+### Types
+
+```ts
+type Item = {
+  slug: string;
+  title: string;
+  description?: string;
+  createdAt: string; // ISO date, e.g. "2026-02-25"
+  links?: { label: string; href: string }[];
+} & (
+  | { type: "interactive" }
+  | { type: "preview"; name: string; props?: Record<string, unknown> }
+  | { type: "image"; src: string }
+  | { type: "video"; src: string }
+);
+```
+
+### Rendering Flow
+
+1. Home page imports items from `src/data/items.ts`, sorts by `createdAt` (newest first)
+2. Feed renders each item in a vertical list:
+   - `interactive` → `LazyMount` + `React.lazy` loads the component from `src/playground/<slug>/component.tsx`
+   - `preview` → `LazyMount` + `React.lazy` loads a preview component from `src/preview/<name>.tsx`
+   - `image` / `video` → rendered directly
+3. `LazyMount` uses IntersectionObserver to defer mounting until the item is near the viewport. Once mounted, it stays mounted (state persists).
+
+### Interactive Components
 
 Each interactive component lives in its own folder under `src/playground/`:
 
 ```
 src/playground/
-├── spring-physics/
-│   ├── meta.ts           # ComponentMeta — title, orientation, display mode, createdAt
+├── polaroid-stack/
 │   └── component.tsx     # "use client", single default export
-├── hero-gradient/
-│   ├── meta.ts
+├── cursor-follower/
 │   └── component.tsx
 ```
 
-**Enforced conventions:**
+**Conventions:**
+- Folder name = slug (must match `slug` in `items.ts`)
+- `component.tsx` MUST use `"use client"` and export a single default component
 
-- Folder name = ID = route slug (e.g. `spring-physics` → `/playground/spring-physics`)
-- Every folder MUST have `meta.ts` and `component.tsx`
-- `component.tsx` MUST export a single default component
-- `meta.ts` is separate from the component to allow importing metadata without pulling in client code
+### Preview Components
 
-### Types
+Lightweight visual components for non-interactive items (e.g. external project thumbnails):
 
-```ts
-// ComponentMeta — defined in each playground component's meta.ts
-type ComponentMeta = {
-  title: string;
-  orientation: "portrait" | "landscape";
-  createdAt: string; // ISO date, e.g. "2025-06-15"
-} & (
-  | { display: "inline" }
-  | { display: "preview"; preview: { type: "image" | "video"; src: string } }
-);
-
-// LinkItem — defined in src/data/links.ts
-type LinkItem = {
-  type: "external-link";
-  id: string;
-  title: string;
-  orientation: "portrait" | "landscape";
-  createdAt: string;
-  preview: { type: "image" | "video"; src: string };
-  href: string;
-};
+```
+src/preview/
+├── placeholder.tsx       # Generic placeholder
+├── my-project.tsx        # Custom preview for an external project
 ```
 
-### Discovery & Rendering Flow
-
-1. Home page (server component) calls `getPlaygroundItems()` which scans `src/playground/` directories and imports their `meta.ts`
-2. External links are imported from `src/data/links.ts`
-3. Both are merged and sorted by `createdAt` (newest first)
-4. Grid renders each item:
-   - `display: "inline"` → `React.lazy` with `Suspense` (via `LazyPlaygroundComponent`) loads and renders the component live in the grid
-   - `display: "preview"` → renders preview image/video, wraps in link to `/playground/[slug]`
-   - `external-link` → renders preview image/video, wraps in external link
+**Conventions:**
+- File name = `name` field in item config
+- Must use `"use client"` and export a single default component
 
 ### Routes
 
 ```
 src/app/
-├── page.tsx                    # Grid — server component, discovers items
-└── playground/
-    └── [slug]/
-        └── page.tsx            # Full page view — uses generateStaticParams
+├── (site)/
+│   ├── page.tsx            # Home — vertical feed of all items
+│   ├── about/page.tsx
+│   └── now/page.tsx
+└── design-system/page.tsx
 ```
 
 ### File Organization
 
 ```
 src/
-├── app/                        # Next.js routes
-│   ├── globals.css             # Design tokens + Tailwind theme
-│   ├── layout.tsx              # Root layout (fonts, metadata)
-│   ├── page.tsx                # Home — portfolio grid
-│   └── playground/
-│       └── [slug]/
-│           └── page.tsx        # Full interactive component page
-├── playground/                 # Interactive components (filesystem = registry)
+├── app/                    # Next.js routes
+│   ├── globals.css         # Design tokens + Tailwind theme
+│   ├── layout.tsx          # Root layout (fonts, metadata)
+│   └── (site)/
+│       └── page.tsx        # Home — item feed
+├── playground/             # Interactive components
 │   └── <slug>/
-│       ├── meta.ts
 │       └── component.tsx
-├── components/                 # Shared UI components (grid, cells, etc.)
-│   └── grid/
-├── data/                       # External link definitions
-│   └── links.ts
-├── lib/                        # Utilities + types
+├── preview/                # Preview components
+│   └── <name>.tsx
+├── components/             # Shared UI components
+├── data/                   # Item definitions
+│   └── items.ts
+├── lib/                    # Utilities + types
 │   ├── cn.ts
 │   ├── types.ts
-│   └── get-playground-items.ts
+│   ├── lazy-component.tsx  # React.lazy wrapper for playground components
+│   ├── lazy-preview.tsx    # React.lazy wrapper for preview components
+│   └── lazy-mount.tsx      # IntersectionObserver-based deferred mounting
 ```
 
 ## Key Conventions
@@ -136,7 +142,6 @@ src/
 ### Component Patterns
 
 - Interactive components use `"use client"` directive
-- Dynamic imports via `React.lazy` with module-level cache (`src/lib/lazy-component.tsx`) for grid-embedded inline components
+- Dynamic imports via `React.lazy` with module-level cache for lazy loading
+- IntersectionObserver-based mounting (`LazyMount`) to avoid loading all components at once
 - Server components by default; client only when needed
-- `meta.ts` files are always server-safe (no "use client", no heavy deps)
-- See [new-component.md](./new-component.md) for step-by-step guide on adding a new playground component
