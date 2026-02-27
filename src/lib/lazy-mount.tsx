@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 export function LazyMount({
   children,
   className,
-  rootMargin = "200px",
+  rootMargin = "800px",
 }: {
   children: ReactNode;
   className?: string;
