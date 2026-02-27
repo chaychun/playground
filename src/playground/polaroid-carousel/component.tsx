@@ -6,9 +6,9 @@ import Image, { type StaticImageData } from "next/image";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 
-import boutiqueImg from "./assets/Charming Boutique Storefront.png";
-import clothesPileImg from "./assets/Person Under Clothes Pile.png";
-import telephoneImg from "./assets/Retro Pink Telephone Scene.png";
+import boutiqueImg from "./assets/Charming Boutique Storefront.webp";
+import clothesPileImg from "./assets/Person Under Clothes Pile.webp";
+import telephoneImg from "./assets/Retro Pink Telephone Scene.webp";
 
 const PHOTOS: { src: StaticImageData; alt: string }[] = [
   { src: boutiqueImg, alt: "Charming boutique storefront" },
