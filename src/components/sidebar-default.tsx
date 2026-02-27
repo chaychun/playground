@@ -7,16 +7,13 @@ export function SidebarDefault() {
       <div>
         {/* Identity */}
         <div className="mb-6">
-          <h1 className="text-xl font-semibold tracking-tight text-ink">
-            Chayut
-            <br />
-            Chunsamphran
-          </h1>
+          <h1 className="text-xl font-semibold tracking-tight text-ink">Chayut C.</h1>
           <p className="mt-1.5 text-xs text-muted">Design Engineer</p>
         </div>
 
         <p className="mb-8 max-w-[220px] text-xs leading-relaxed text-dim">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.
+          Welcome! I&apos;m Chayut, and you&apos;re in my digital playground. It&apos;s a
+          collection of my experiments on interaction and interface design. Feel free to explore!
         </p>
 
         {/* Separator */}
