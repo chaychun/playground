@@ -17,13 +17,10 @@ export default function NowPage() {
 
   return (
     <div className="max-w-xl px-5 py-6 lg:py-8 lg:pr-8 lg:pl-0">
-      <h1
-        className="animate-fade-in-up font-sans text-2xl font-semibold tracking-tight text-ink"
-        style={{ animationDelay: "0ms" }}
-      >
+      <h1 className="animate-in font-sans text-2xl font-semibold tracking-tight text-ink ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
         Now
       </h1>
-      <p className="mt-2 animate-fade-in-up text-xs text-muted" style={{ animationDelay: "60ms" }}>
+      <p className="mt-2 animate-in text-xs text-muted delay-[60ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
         What I&apos;m doing, thinking about, and working on — updated monthly.
       </p>
 
@@ -31,7 +28,7 @@ export default function NowPage() {
         {data.map((month, index) => (
           <div
             key={`${month.month}-${month.year}`}
-            className="relative animate-fade-in-up pb-10 last:pb-0"
+            className="relative animate-in pb-10 ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 last:pb-0"
             style={{ animationDelay: `${120 + index * 80}ms` }}
           >
             {/* Vertical line segment above the circle */}
@@ -72,7 +69,7 @@ export default function NowPage() {
       </div>
 
       <div
-        className="mt-12 animate-fade-in-up border-t border-border pt-6"
+        className="mt-12 animate-in border-t border-border pt-6 ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2"
         style={{ animationDelay: `${120 + data.length * 80}ms` }}
       >
         <p className="text-2xs text-muted">

@@ -5,17 +5,11 @@ export default function AboutPage() {
     <div className="flex flex-col-reverse gap-8 px-5 py-6 md:flex-row lg:gap-10 lg:py-8 lg:pr-8 lg:pl-0">
       {/* Text content */}
       <div className="max-w-xl">
-        <h1
-          className="animate-fade-in-up text-2xl font-semibold tracking-tight text-ink lg:text-4xl"
-          style={{ animationDelay: "0ms" }}
-        >
+        <h1 className="animate-in text-2xl font-semibold tracking-tight text-ink ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 lg:text-4xl">
           I&apos;m Chayut, a design engineer based in Thailand.
         </h1>
 
-        <div
-          className="mt-8 animate-fade-in-up space-y-4 text-sm leading-relaxed text-dim"
-          style={{ animationDelay: "80ms" }}
-        >
+        <div className="mt-8 animate-in space-y-4 text-sm leading-relaxed text-dim delay-[80ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
           <p>
             I design and build cool things with code, focusing on motion-led interactions and
             interface patterns that improve the experience of the user. I believe deeply in calm
@@ -35,7 +29,7 @@ export default function AboutPage() {
         </div>
 
         {/* Education */}
-        <section className="mt-16 animate-fade-in-up lg:mt-40" style={{ animationDelay: "160ms" }}>
+        <section className="mt-16 animate-in delay-[160ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 lg:mt-40">
           <h2 className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">Education</h2>
           <div className="mt-4">
             <p className="text-sm font-medium text-ink">B.Sc. in Physics (First Class Honours)</p>
@@ -46,7 +40,7 @@ export default function AboutPage() {
       </div>
 
       {/* Photo */}
-      <div className="shrink-0 animate-fade-in-up" style={{ animationDelay: "120ms" }}>
+      <div className="shrink-0 animate-in delay-[120ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
         <Image
           src="/images/profile.jpeg"
           alt="Chayut"

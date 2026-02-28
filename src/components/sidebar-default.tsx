@@ -6,15 +6,12 @@ export function SidebarDefault() {
     <>
       <div>
         {/* Identity */}
-        <div className="mb-6 animate-fade-in-up" style={{ animationDelay: "0ms" }}>
+        <div className="mb-6 animate-in ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
           <h1 className="text-xl font-semibold tracking-tight text-ink">Chayut C.</h1>
           <p className="mt-1.5 text-xs text-muted">Design Engineer</p>
         </div>
 
-        <p
-          className="mb-8 max-w-[220px] animate-fade-in-up text-xs leading-relaxed text-dim"
-          style={{ animationDelay: "80ms" }}
-        >
+        <p className="mb-8 max-w-[220px] animate-in text-xs leading-relaxed text-dim delay-[80ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
           Welcome! I&apos;m Chayut, and you&apos;re in my digital playground. It&apos;s a collection
           of my experiments on interaction and interface design. Feel free to explore!
         </p>
@@ -26,13 +23,13 @@ export function SidebarDefault() {
         />
 
         {/* Navigation */}
-        <div className="animate-fade-in-up" style={{ animationDelay: "240ms" }}>
+        <div className="animate-in delay-[240ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
           <SidebarNav />
         </div>
       </div>
 
       {/* Bottom */}
-      <div className="animate-fade-in-up" style={{ animationDelay: "400ms" }}>
+      <div className="animate-in delay-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
         <SidebarFooter />
       </div>
     </>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme inline {
   --color-paper: var(--paper);
@@ -31,10 +32,7 @@
   --text-4xl: 2.5rem;
   --text-4xl--line-height: 1.1;
 
-  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-expand-line: expand-line 1s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-fade-in: fade-in 0.7s ease-out both;
-  --animate-slide-in-down: slide-in-down 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 :root {
@@ -61,39 +59,17 @@
   --ink-inv: #141312;
 }
 
-/* Sidebar entrance animations */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
 @keyframes expand-line {
   from {
     transform: scaleX(0);
   }
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes slide-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-}
-
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-in-up,
-  .animate-expand-line,
-  .animate-fade-in,
-  .animate-slide-in-down {
+  .animate-in,
+  .animate-out,
+  .animate-expand-line {
     animation: none !important;
   }
 }
