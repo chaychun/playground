@@ -7,6 +7,7 @@ import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 
 import boutiqueImg from "./assets/Charming Boutique Storefront.webp";
+import meshGradientImg from "./assets/mesh-gradient.webp";
 import clothesPileImg from "./assets/Person Under Clothes Pile.webp";
 import telephoneImg from "./assets/Retro Pink Telephone Scene.webp";
 
@@ -180,7 +181,15 @@ export default function PolaroidStack() {
     <MotionConfig transition={{ type: "spring", duration: 0.6, bounce: 0.2 }}>
       <LayoutGroup>
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-          <div className="flex h-full w-full items-center justify-center">
+          <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl">
+            <Image
+              src={meshGradientImg}
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
+            />
             <motion.div layoutId="polaroid-stack" className={cn("relative", isOpen && "invisible")}>
               {cards}
             </motion.div>

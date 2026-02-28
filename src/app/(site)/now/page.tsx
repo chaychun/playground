@@ -17,11 +17,23 @@ export default function NowPage() {
 
   return (
     <div className="max-w-xl px-5 py-6 lg:py-8 lg:pr-8 lg:pl-0">
-      <h1 className="animate-in font-sans text-2xl font-semibold tracking-tight text-ink ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
+      <h1 className="animate-in font-mono text-2xs tracking-[0.08em] text-muted uppercase ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
         Now
       </h1>
-      <p className="mt-2 animate-in text-xs text-muted delay-[60ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
-        What I&apos;m doing, thinking about, and working on — updated monthly.
+      <h2 className="mt-3 animate-in text-xl font-semibold tracking-tight text-ink delay-[60ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 lg:text-2xl">
+        What I&apos;m doing, thinking about, and working on.
+      </h2>
+      <p className="mt-3 animate-in text-2xs text-muted delay-[120ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
+        This page is inspired by{" "}
+        <a
+          href="https://nownownow.com/about"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-link underline decoration-border underline-offset-2 transition-colors hover:text-ink"
+        >
+          the /now movement
+        </a>
+        .
       </p>
 
       <div className="relative mt-10">
@@ -66,24 +78,6 @@ export default function NowPage() {
             </div>
           </div>
         ))}
-      </div>
-
-      <div
-        className="mt-12 animate-in border-t border-border pt-6 ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2"
-        style={{ animationDelay: `${120 + data.length * 80}ms` }}
-      >
-        <p className="text-2xs text-muted">
-          This page is inspired by{" "}
-          <a
-            href="https://nownownow.com/about"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-link underline decoration-border underline-offset-2 transition-colors hover:text-ink"
-          >
-            the /now movement
-          </a>
-          .
-        </p>
       </div>
     </div>
   );
