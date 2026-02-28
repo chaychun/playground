@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/cn";
 import { X } from "@phosphor-icons/react";
-import { AnimatePresence, motion } from "motion/react";
 import type { ComponentType } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useMeasure from "react-use-measure";
@@ -489,9 +488,8 @@ const CARD_DEFS: Record<
 // --- StackCard ---
 
 function StackCard({
-  pos,
+  xPos,
   width,
-  containerWidth,
   isActive,
   darkBg,
   isCloseable,
@@ -499,13 +497,10 @@ function StackCard({
   onMouseLeave,
   onClick,
   onClose,
-  isReady,
-  transitionDelay = 0,
   children,
 }: {
-  pos: number;
+  xPos: number;
   width: number;
-  containerWidth: number;
   isActive: boolean;
   darkBg: boolean;
   isCloseable: boolean;
@@ -513,23 +508,14 @@ function StackCard({
   onMouseLeave: () => void;
   onClick: () => void;
   onClose: () => void;
-  isReady: boolean;
-  transitionDelay?: number;
   children: React.ReactNode;
 }) {
   return (
-    <motion.section
-      initial={{ x: "100vw", y: 0 }}
-      animate={isReady ? { x: pos, y: 0 } : { x: containerWidth, y: 0 }}
-      exit={{ x: containerWidth, y: 0 }}
-      transition={{
-        type: "tween",
-        duration: 1,
-        ease: [0.19, 1, 0.22, 1],
-        delay: transitionDelay,
-      }}
+    <section
+      role="group"
+      tabIndex={0}
       className={cn(
-        "group absolute top-0 bottom-0 transition-colors duration-300 ease-in-out",
+        "group absolute top-0 bottom-0",
         darkBg ? "bg-[#1a1a1e]" : isActive ? "bg-[#f3f3f5]" : "bg-[#eaeaed]",
         isActive ? "overflow-x-hidden overflow-y-auto" : "overflow-hidden",
         !isActive && "cursor-alias",
@@ -537,7 +523,16 @@ function StackCard({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       style={{
+        transform: `translateX(${xPos}px)`,
+        transition:
+          "transform 1s cubic-bezier(0.19, 1, 0.22, 1), background-color 300ms ease-in-out",
         width: width + CARD_BLEED,
         paddingRight: CARD_BLEED,
         boxShadow:
@@ -564,7 +559,7 @@ function StackCard({
         </button>
       )}
       {children}
-    </motion.section>
+    </section>
   );
 }
 
@@ -579,6 +574,24 @@ export default function PageStack() {
 
   const hasMeasured = bounds.width > 0 || bounds.height > 0;
   const isMobile = hasMeasured ? bounds.width < 768 : false;
+
+  const prevStackRef = useRef<CardId[]>([]);
+  const [enteredCards, setEnteredCards] = useState<Set<CardId>>(new Set());
+
+  useEffect(() => {
+    const prev = prevStackRef.current;
+    const hasNewCards = stack.some((id) => !prev.includes(id));
+    prevStackRef.current = [...stack];
+
+    if (hasNewCards) {
+      // New cards need one frame at their starting position before transitioning
+      requestAnimationFrame(() => {
+        setEnteredCards(new Set(stack));
+      });
+    } else {
+      setEnteredCards(new Set(stack));
+    }
+  }, [stack]);
 
   const basePositions = useMemo(
     () => getStackPositions(activeIndex, stack, bounds.width),
@@ -615,18 +628,27 @@ export default function PageStack() {
     });
   }, []);
 
-  // Collapse on outside click
+  // Collapse on click outside card stack (scoped to component frame)
+  const frameRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
     const handleClick = (event: Event) => {
       const target = event.target as HTMLElement | null;
       if (!stackRef.current?.contains(target)) setActiveIndex(-1);
     };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
+    frame.addEventListener("click", handleClick);
+    return () => frame.removeEventListener("click", handleClick);
   }, []);
 
   return (
-    <div ref={containerRef} className="relative h-full w-full bg-ink">
+    <div
+      ref={(el) => {
+        containerRef(el);
+        frameRef.current = el;
+      }}
+      className="relative h-full w-full bg-ink"
+    >
       {/* Background image — always visible */}
       <div className="absolute inset-0 select-none" aria-hidden="true">
         <img
@@ -698,17 +720,17 @@ export default function PageStack() {
             </div>
           </div>
           <div ref={stackRef}>
-            <AnimatePresence>
-              {stack.map((cardId, i) => {
+            {hasMeasured &&
+              stack.map((cardId, i) => {
                 const def = CARD_DEFS[cardId];
+                const isEntered = enteredCards.has(cardId);
+                const xPos = isEntered ? basePositions[i] + (peekOffsets[i] ?? 0) : bounds.width;
                 return (
                   <StackCard
                     key={cardId}
                     width={def.width}
-                    containerWidth={bounds.width}
                     darkBg={def.darkBg}
-                    isReady={hasMeasured}
-                    pos={basePositions[i] + (peekOffsets[i] ?? 0)}
+                    xPos={xPos}
                     isActive={i === activeIndex}
                     isCloseable={i !== 0}
                     onMouseEnter={() => setPeekedIndex(i)}
@@ -720,7 +742,6 @@ export default function PageStack() {
                   </StackCard>
                 );
               })}
-            </AnimatePresence>
           </div>
         </>
       )}

@@ -62,17 +62,17 @@ const presetVariants: Record<PresetType, { container: Variants; item: Variants }
   blur: {
     container: defaultContainerVariants,
     item: {
-      hidden: { opacity: 0, filter: "blur(12px)" },
-      visible: { opacity: 1, filter: "blur(0px)" },
-      exit: { opacity: 0, filter: "blur(12px)" },
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+      exit: { opacity: 0 },
     },
   },
   "fade-in-blur": {
     container: defaultContainerVariants,
     item: {
-      hidden: { opacity: 0, y: 20, filter: "blur(12px)" },
-      visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-      exit: { opacity: 0, y: 20, filter: "blur(12px)" },
+      hidden: { opacity: 0, y: 20 },
+      visible: { opacity: 1, y: 0 },
+      exit: { opacity: 0, y: 20 },
     },
   },
   scale: {
