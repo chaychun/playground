@@ -1,13 +1,21 @@
+import { type SocialLink, SOCIAL_LINKS } from "@/data/social";
 import Image from "next/image";
+
+const ABOUT_SOCIAL_LINKS: (SocialLink & { display: string })[] = [
+  { ...SOCIAL_LINKS[0], display: "/chunchayut" },
+  { ...SOCIAL_LINKS[1], display: "/chaychun" },
+  { ...SOCIAL_LINKS[2], display: "chun.chayut@gmail.com" },
+];
 
 export default function AboutPage() {
   return (
     <div className="flex flex-col-reverse gap-8 px-5 py-6 md:flex-row lg:gap-10 lg:py-8 lg:pr-8 lg:pl-0">
       {/* Text content */}
       <div className="max-w-xl">
-        <h1 className="text-2xl font-semibold tracking-tight text-ink lg:text-4xl">
+        <h1 className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">About</h1>
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight text-ink lg:text-4xl">
           I&apos;m Chayut, a design engineer based in Thailand.
-        </h1>
+        </h2>
 
         <div className="mt-8 space-y-4 text-sm leading-relaxed text-dim">
           <p>
@@ -39,15 +47,29 @@ export default function AboutPage() {
         </section>
       </div>
 
-      {/* Photo */}
-      <div className="shrink-0">
+      {/* Photo + Social */}
+      <div className="flex shrink-0 flex-row items-start gap-4 md:flex-col md:gap-0">
         <Image
           src="/images/profile.jpeg"
           alt="Chayut"
           width={280}
           height={280}
-          className="aspect-square w-full max-w-[200px] rounded-lg object-cover md:max-w-[280px]"
+          className="aspect-square w-full max-w-[120px] rounded-lg object-cover md:max-w-[280px]"
         />
+        <div className="flex flex-col gap-2 md:mt-4">
+          {ABOUT_SOCIAL_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs text-muted transition-colors hover:text-ink"
+            >
+              <link.icon className="size-3.5 shrink-0" />
+              <span>{link.display}</span>
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );
