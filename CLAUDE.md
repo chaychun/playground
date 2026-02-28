@@ -126,9 +126,23 @@ src/
 
 ## Key Conventions
 
+### Verification
+
+Before committing or claiming work is done, run `bun run check` to verify lint, format, and typecheck all pass. Zero warnings, zero errors — warnings are treated as errors via `--deny-warnings`. For non-trivial changes, also run `bun run build` to catch build errors. You may skip build for trivial changes (e.g. copy, comments, config tweaks).
+
+Individual commands:
+
+- `bun run lint` — oxlint (warnings denied)
+- `bun run fmt:check` — oxfmt
+- `bun run typecheck` — tsc --noEmit
+- `bun run build` — full Next.js build
+- `bun run check` — all three (lint + format + typecheck)
+
+CI runs these on every PR and push to main, and blocks merge on any failure. Also check for console.log/console.warn/console.error left in code — remove any that aren't intentional.
+
 ### Code Style
 
-- Run `bun run check` (oxlint + oxfmt) before committing
+- Run `bun run check` (oxlint + oxfmt + typecheck) before committing
 - Use `@/*` path alias for all imports from `src/`
 - Use the `cn()` utility from `@/lib/cn` for composing Tailwind classes
 - Prefer Radix UI primitives for accessible interactive elements
