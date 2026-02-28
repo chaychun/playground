@@ -17,14 +17,23 @@ export default function NowPage() {
 
   return (
     <div className="max-w-xl px-5 py-6 lg:py-8 lg:pr-8 lg:pl-0">
-      <h1 className="font-sans text-2xl font-semibold tracking-tight text-ink">Now</h1>
-      <p className="mt-2 text-xs text-muted">
+      <h1
+        className="animate-fade-in-up font-sans text-2xl font-semibold tracking-tight text-ink"
+        style={{ animationDelay: "0ms" }}
+      >
+        Now
+      </h1>
+      <p className="mt-2 animate-fade-in-up text-xs text-muted" style={{ animationDelay: "60ms" }}>
         What I&apos;m doing, thinking about, and working on — updated monthly.
       </p>
 
       <div className="relative mt-10">
-        {data.map((month) => (
-          <div key={`${month.month}-${month.year}`} className="relative pb-10 last:pb-0">
+        {data.map((month, index) => (
+          <div
+            key={`${month.month}-${month.year}`}
+            className="relative animate-fade-in-up pb-10 last:pb-0"
+            style={{ animationDelay: `${120 + index * 80}ms` }}
+          >
             {/* Vertical line segment above the circle */}
             <div className="absolute top-0 left-[7px] h-[3px] w-px bg-border" />
             {/* Circle */}
@@ -62,7 +71,10 @@ export default function NowPage() {
         ))}
       </div>
 
-      <div className="mt-12 border-t border-border pt-6">
+      <div
+        className="mt-12 animate-fade-in-up border-t border-border pt-6"
+        style={{ animationDelay: `${120 + data.length * 80}ms` }}
+      >
         <p className="text-2xs text-muted">
           This page is inspired by{" "}
           <a

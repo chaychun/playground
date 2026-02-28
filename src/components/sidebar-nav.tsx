@@ -9,7 +9,7 @@ export function SidebarNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="sidebar-nav flex flex-col gap-1">
+    <nav className="flex flex-col gap-1">
       {NAV_LINKS.map(({ href, label }) => {
         const isActive = isActiveLink(href, pathname);
         return (
@@ -17,10 +17,8 @@ export function SidebarNav() {
             key={href}
             href={href}
             className={cn(
-              "inline-flex items-center gap-2 py-0.5 text-sm transition-[color,transform] duration-300",
-              isActive
-                ? "font-medium text-ink"
-                : "text-muted hover:translate-x-0.5 hover:text-link",
+              "inline-flex items-center gap-2 py-0.5 text-sm transition-colors duration-300",
+              isActive ? "font-medium text-ink" : "text-muted hover:text-link",
             )}
           >
             <span
