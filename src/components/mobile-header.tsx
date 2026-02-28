@@ -10,7 +10,7 @@ export function MobileHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 flex h-12 items-center justify-between border-b border-border bg-paper/90 px-5 backdrop-blur-md lg:hidden">
+    <header className="sticky top-0 z-50 flex h-12 animate-in items-center justify-between border-b border-border bg-paper/90 px-5 backdrop-blur-md ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-550 fill-mode-both fade-in slide-in-from-top-2 lg:hidden">
       <Link href="/" className="text-sm font-semibold tracking-tight text-ink">
         Chayut C.
       </Link>

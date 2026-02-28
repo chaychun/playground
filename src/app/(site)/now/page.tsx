@@ -17,11 +17,13 @@ export default function NowPage() {
 
   return (
     <div className="max-w-xl px-5 py-6 lg:py-8 lg:pr-8 lg:pl-0">
-      <h1 className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">Now</h1>
-      <h2 className="mt-3 text-xl font-semibold tracking-tight text-ink lg:text-2xl">
+      <h1 className="animate-in font-mono text-2xs tracking-[0.08em] text-muted uppercase ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
+        Now
+      </h1>
+      <h2 className="mt-3 animate-in text-xl font-semibold tracking-tight text-ink delay-[60ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 lg:text-2xl">
         What I&apos;m doing, thinking about, and working on.
       </h2>
-      <p className="mt-3 text-2xs text-muted">
+      <p className="mt-3 animate-in text-2xs text-muted delay-[120ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
         This page is inspired by{" "}
         <a
           href="https://nownownow.com/about"
@@ -35,8 +37,12 @@ export default function NowPage() {
       </p>
 
       <div className="relative mt-10">
-        {data.map((month) => (
-          <div key={`${month.month}-${month.year}`} className="relative pb-10 last:pb-0">
+        {data.map((month, index) => (
+          <div
+            key={`${month.month}-${month.year}`}
+            className="relative animate-in pb-10 ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 last:pb-0"
+            style={{ animationDelay: `${120 + index * 80}ms` }}
+          >
             {/* Vertical line segment above the circle */}
             <div className="absolute top-0 left-[7px] h-[3px] w-px bg-border" />
             {/* Circle */}

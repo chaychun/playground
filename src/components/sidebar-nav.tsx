@@ -17,10 +17,16 @@ export function SidebarNav() {
             key={href}
             href={href}
             className={cn(
-              "text-sm transition-colors",
+              "inline-flex items-center gap-2 py-0.5 text-sm transition-colors duration-300",
               isActive ? "font-medium text-ink" : "text-muted hover:text-link",
             )}
           >
+            <span
+              className={cn(
+                "size-1 shrink-0 rounded-full bg-ink transition-[opacity,transform] duration-300",
+                isActive ? "scale-100 opacity-100" : "scale-0 opacity-0",
+              )}
+            />
             {label}
           </Link>
         );
