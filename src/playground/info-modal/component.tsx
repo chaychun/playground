@@ -18,6 +18,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
   const [showDetails, setShowDetails] = useState(false);
   const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const toggleModal = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -39,6 +40,8 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
 
   useEffect(() => {
     if (!isOpen) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
     function handleClick(event: MouseEvent | TouchEvent) {
       const target = event.target as Node;
       if (panelRef.current && !panelRef.current.contains(target)) {
@@ -46,17 +49,18 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
         setShowDetails(false);
       }
     }
-    document.addEventListener("mousedown", handleClick);
-    document.addEventListener("touchstart", handleClick);
+    wrapper.addEventListener("mousedown", handleClick);
+    wrapper.addEventListener("touchstart", handleClick);
     return () => {
-      document.removeEventListener("mousedown", handleClick);
-      document.removeEventListener("touchstart", handleClick);
+      wrapper.removeEventListener("mousedown", handleClick);
+      wrapper.removeEventListener("touchstart", handleClick);
     };
   }, [isOpen]);
 
   return (
     <MotionConfig transition={{ type: "spring", duration: 0.6, bounce: 0 }}>
       <div
+        ref={wrapperRef}
         className="pointer-events-auto flex h-full w-full items-end justify-end"
         role={isOpen ? "dialog" : undefined}
         aria-modal={isOpen ? "true" : undefined}
