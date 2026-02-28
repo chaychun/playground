@@ -10,7 +10,8 @@
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt --write .",
     "fmt:check": "oxfmt --check .",
-    "check": "oxlint && oxfmt --check ."
+    "typecheck": "tsc --noEmit",
+    "check": "oxlint --deny-warnings && oxfmt --check . && tsc --noEmit"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
