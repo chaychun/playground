@@ -13,11 +13,11 @@ Choose the right animation technique by understanding what the browser does with
 
 Each frame, browsers execute three steps in order:
 
-| Step | What it does | Triggered by | Cost |
-|------|-------------|--------------|------|
-| **Layout** | Calculate geometry (size, position) | width, height, margin, top, display, flex, grid | Highest |
-| **Paint** | Draw pixels into layers | background-color, color, border-radius, box-shadow, gradients | Medium |
-| **Composite** | Merge layers, apply transforms | transform, opacity, filter, clip-path | Lowest |
+| Step          | What it does                        | Triggered by                                                  | Cost    |
+| ------------- | ----------------------------------- | ------------------------------------------------------------- | ------- |
+| **Layout**    | Calculate geometry (size, position) | width, height, margin, top, display, flex, grid               | Highest |
+| **Paint**     | Draw pixels into layers             | background-color, color, border-radius, box-shadow, gradients | Medium  |
+| **Composite** | Merge layers, apply transforms      | transform, opacity, filter, clip-path                         | Lowest  |
 
 Triggering an earlier step forces all subsequent steps. Layout triggers paint AND composite.
 
@@ -55,10 +55,10 @@ One-time DOM read, then animate with transform/opacity. The **FLIP technique** (
 
 Redraws affected layers every frame. Acceptable on small, isolated surfaces.
 
-| Cheap paint | Expensive paint |
-|-------------|----------------|
-| `background-color`, `color` | `mask-image`, `background-image` gradients |
-| `border-radius` on small elements | Any paint property on large surfaces |
+| Cheap paint                       | Expensive paint                            |
+| --------------------------------- | ------------------------------------------ |
+| `background-color`, `color`       | `mask-image`, `background-image` gradients |
+| `border-radius` on small elements | Any paint property on large surfaces       |
 
 - **CSS variables always trigger paint** — even when used inside compositor properties like `opacity`. This silently downgrades S-Tier animations to C-Tier.
 - **SVG attributes** (`d`, `cx`, `cy`, `r`): repaint every frame. Prefer `transform` for move/resize.
@@ -78,8 +78,8 @@ Full pipeline every frame. Cost scales with tree size and complexity.
 
 ```js
 // F-TIER: forces layout between each read
-element.style.width = "100px";      // write
-const w = element.offsetWidth;       // read -> forced layout
+element.style.width = "100px"; // write
+const w = element.offsetWidth; // read -> forced layout
 element.style.width = w * 2 + "px"; // write again
 ```
 
@@ -91,7 +91,9 @@ element.style.width = w * 2 + "px"; // write again
 /* Animating a global variable forces style recalc on ALL descendants
    even if they don't use the variable.
    Real case: 1300+ elements, 8ms/frame — entire 120fps budget */
-html { --progress: 0; }
+html {
+  --progress: 0;
+}
 ```
 
 **Fix:** scope variable locally, or use `@property` with `inherits: false`:
@@ -106,19 +108,19 @@ html { --progress: 0; }
 
 ## Decision Guide
 
-| Want to animate... | Technique | Tier |
-|-------------------|-----------|------|
-| Position, scale, rotation, fade | `transform` + `opacity` via WAAPI/Motion | S |
-| Same properties via JS/GSAP | `transform` + `opacity` on promoted layer | A |
-| Layout change (size or position) | FLIP / Motion layout | B |
-| Color, appearance (small surface) | Direct property change | C |
-| Color, appearance (large surface) | Avoid — use opacity crossfade instead | S |
-| Scroll-linked | Scroll/View Timeline API | S |
-| Scroll-linked via JS scrollTop | **Avoid** — use timeline API instead | D |
-| CSS variable animation | `@property` + `inherits: false`, scope locally | C |
-| Global/inherited CSS variable | **Never** — use targeted `element.style` | F |
-| Page transition (non-interactive) | View Transitions | C |
-| Interactive layout transition | Motion layout | B |
+| Want to animate...                | Technique                                      | Tier |
+| --------------------------------- | ---------------------------------------------- | ---- |
+| Position, scale, rotation, fade   | `transform` + `opacity` via WAAPI/Motion       | S    |
+| Same properties via JS/GSAP       | `transform` + `opacity` on promoted layer      | A    |
+| Layout change (size or position)  | FLIP / Motion layout                           | B    |
+| Color, appearance (small surface) | Direct property change                         | C    |
+| Color, appearance (large surface) | Avoid — use opacity crossfade instead          | S    |
+| Scroll-linked                     | Scroll/View Timeline API                       | S    |
+| Scroll-linked via JS scrollTop    | **Avoid** — use timeline API instead           | D    |
+| CSS variable animation            | `@property` + `inherits: false`, scope locally | C    |
+| Global/inherited CSS variable     | **Never** — use targeted `element.style`       | F    |
+| Page transition (non-interactive) | View Transitions                               | C    |
+| Interactive layout transition     | Motion layout                                  | B    |
 
 ## Common Traps
 
