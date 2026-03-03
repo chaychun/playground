@@ -1,11 +1,16 @@
 import { AgentationOverlay } from "@/components/agentation";
 import { ThemeProvider } from "@/components/theme-provider";
-import { DialRoot } from "dialkit";
-import "dialkit/styles.css";
 import type { Metadata } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
 
 import "./globals.css";
+
+// Dev-only: DialKit for live animation parameter tuning
+import "dialkit/styles.css";
+const DialRoot =
+  process.env.NODE_ENV === "development"
+    ? require("dialkit").DialRoot
+    : () => null;
 
 const manrope = Manrope({
   variable: "--font-sans",
