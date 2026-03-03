@@ -11,7 +11,8 @@
     "fmt": "oxfmt --write .",
     "fmt:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit",
-    "check": "oxlint --deny-warnings && oxfmt --check . && tsc --noEmit"
+    "check": "oxlint --deny-warnings && oxfmt --check . && tsc --noEmit",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
