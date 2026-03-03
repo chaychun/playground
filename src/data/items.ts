@@ -19,8 +19,7 @@ export const items: Item[] = [
     slug: "page-stack",
     type: "interactive",
     title: "Page Stack",
-    description:
-      "An editorial page-turning interaction driven by scroll position with parallax imagery.",
+    description: "Experimental interface for networked information based on the pages of a book.",
     createdAt: "2026-02-02",
   },
   {

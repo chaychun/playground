@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import { X } from "@phosphor-icons/react";
+import { AnimatePresence, motion } from "motion/react";
 import type { ComponentType } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useMeasure from "react-use-measure";
@@ -10,7 +11,7 @@ import useMeasure from "react-use-measure";
 
 type CardId = "a" | "b" | "c" | "d" | "e" | "f" | "g";
 
-const ACCENT = "#4a7c59";
+const ACCENT = "#9c9c9e";
 
 const CARD_WIDTHS: Record<CardId, number> = {
   a: 600,
@@ -488,8 +489,9 @@ const CARD_DEFS: Record<
 // --- StackCard ---
 
 function StackCard({
-  xPos,
+  pos,
   width,
+  containerWidth,
   isActive,
   darkBg,
   isCloseable,
@@ -497,10 +499,12 @@ function StackCard({
   onMouseLeave,
   onClick,
   onClose,
+  isReady,
   children,
 }: {
-  xPos: number;
+  pos: number;
   width: number;
+  containerWidth: number;
   isActive: boolean;
   darkBg: boolean;
   isCloseable: boolean;
@@ -508,15 +512,25 @@ function StackCard({
   onMouseLeave: () => void;
   onClick: () => void;
   onClose: () => void;
+  isReady: boolean;
   children: React.ReactNode;
 }) {
+  const bg = darkBg ? "#1a1a1e" : isActive ? "#f3f3f5" : "#eaeaed";
+
   return (
-    <section
+    <motion.section
       role="group"
       tabIndex={0}
+      initial={{ x: containerWidth }}
+      animate={{ x: isReady ? pos : containerWidth }}
+      exit={{ x: containerWidth }}
+      transition={{
+        type: "tween",
+        duration: 1,
+        ease: [0.19, 1, 0.22, 1],
+      }}
       className={cn(
         "group absolute top-0 bottom-0",
-        darkBg ? "bg-[#1a1a1e]" : isActive ? "bg-[#f3f3f5]" : "bg-[#eaeaed]",
         isActive ? "overflow-x-hidden overflow-y-auto" : "overflow-hidden",
         !isActive && "cursor-alias",
       )}
@@ -530,13 +544,12 @@ function StackCard({
         }
       }}
       style={{
-        transform: `translateX(${xPos}px)`,
-        transition:
-          "transform 1s cubic-bezier(0.19, 1, 0.22, 1), background-color 300ms ease-in-out",
         width: width + CARD_BLEED,
         paddingRight: CARD_BLEED,
-        boxShadow:
-          "-8px 0 16px -2px rgba(0,0,0,0.08), 0 -8px 16px -2px rgba(0,0,0,0.08), -1px -1px 4px 0 rgba(0,0,0,0.06)",
+        backgroundColor: bg,
+        willChange: "transform",
+        contain: "layout style",
+        boxShadow: "-4px 0 12px -4px rgba(0,0,0,0.1), -1px 0 2px 0 rgba(0,0,0,0.06)",
       }}
     >
       {/* Close button */}
@@ -559,7 +572,7 @@ function StackCard({
         </button>
       )}
       {children}
-    </section>
+    </motion.section>
   );
 }
 
@@ -574,24 +587,6 @@ export default function PageStack() {
 
   const hasMeasured = bounds.width > 0 || bounds.height > 0;
   const isMobile = hasMeasured ? bounds.width < 768 : false;
-
-  const prevStackRef = useRef<CardId[]>([]);
-  const [enteredCards, setEnteredCards] = useState<Set<CardId>>(new Set());
-
-  useEffect(() => {
-    const prev = prevStackRef.current;
-    const hasNewCards = stack.some((id) => !prev.includes(id));
-    prevStackRef.current = [...stack];
-
-    if (hasNewCards) {
-      // New cards need one frame at their starting position before transitioning
-      requestAnimationFrame(() => {
-        setEnteredCards(new Set(stack));
-      });
-    } else {
-      setEnteredCards(new Set(stack));
-    }
-  }, [stack]);
 
   const basePositions = useMemo(
     () => getStackPositions(activeIndex, stack, bounds.width),
@@ -655,8 +650,8 @@ export default function PageStack() {
           src="/images/page-stack/bg-cover.jpg"
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ filter: "saturate(0) contrast(0.8) brightness(0.6)" }}
         />
+        <div className="absolute inset-0 bg-black/50" />
       </div>
       {isMobile ? (
         /* Mobile: just the background image + a centered message */
@@ -713,35 +708,38 @@ export default function PageStack() {
                 >
                   Architecture
                 </h2>
-                <p className="mt-2 text-[13px] leading-[20px] text-white/60">
-                  On restraint, stones, and the architecture of silence
+                <p className="mt-2 max-w-[420px] text-[13px] leading-[20px] text-white/60">
+                  On restraint, stones, and the architecture of silence. Demo content curated and
+                  written by Claude.
                 </p>
               </div>
             </div>
           </div>
           <div ref={stackRef}>
-            {hasMeasured &&
-              stack.map((cardId, i) => {
-                const def = CARD_DEFS[cardId];
-                const isEntered = enteredCards.has(cardId);
-                const xPos = isEntered ? basePositions[i] + (peekOffsets[i] ?? 0) : bounds.width;
-                return (
-                  <StackCard
-                    key={cardId}
-                    width={def.width}
-                    darkBg={def.darkBg}
-                    xPos={xPos}
-                    isActive={i === activeIndex}
-                    isCloseable={i !== 0}
-                    onMouseEnter={() => setPeekedIndex(i)}
-                    onMouseLeave={() => setPeekedIndex(null)}
-                    onClick={() => setActiveIndex(i)}
-                    onClose={() => handleClose(i)}
-                  >
-                    <def.Content onNavigate={(t) => handleNavigate(i, t)} />
-                  </StackCard>
-                );
-              })}
+            <AnimatePresence>
+              {hasMeasured &&
+                stack.map((cardId, i) => {
+                  const def = CARD_DEFS[cardId];
+                  return (
+                    <StackCard
+                      key={cardId}
+                      width={def.width}
+                      containerWidth={bounds.width}
+                      darkBg={def.darkBg}
+                      isReady={hasMeasured}
+                      pos={basePositions[i] + (peekOffsets[i] ?? 0)}
+                      isActive={i === activeIndex}
+                      isCloseable={i !== 0}
+                      onMouseEnter={() => setPeekedIndex(i)}
+                      onMouseLeave={() => setPeekedIndex(null)}
+                      onClick={() => setActiveIndex(i)}
+                      onClose={() => handleClose(i)}
+                    >
+                      <def.Content onNavigate={(t) => handleNavigate(i, t)} />
+                    </StackCard>
+                  );
+                })}
+            </AnimatePresence>
           </div>
         </>
       )}
