@@ -226,10 +226,11 @@ export default function VoiceCapture() {
             {/* Voice pill / expanded pane — single element, CSS-animated */}
             <motion.div
               className="absolute z-20 overflow-hidden bg-ink"
+              style={{ left: 155.5, top: 8 }}
               animate={
                 isExpanded
-                  ? { left: 16, top: -160, width: 343, height: 224, borderRadius: 20 }
-                  : { left: 155.5, top: 8, width: 64, height: 48, borderRadius: 24 }
+                  ? { x: -139.5, y: -168, width: 343, height: 224, borderRadius: 20 }
+                  : { x: 0, y: 0, width: 64, height: 48, borderRadius: 24 }
               }
               onClick={() => !isExpanded && setIsExpanded(true)}
               aria-label={isExpanded ? undefined : "Open voice capture"}
@@ -255,7 +256,7 @@ export default function VoiceCapture() {
                 className="flex h-full flex-col items-center justify-between px-6 py-5"
                 animate={{
                   opacity: isExpanded ? 1 : 0,
-                  filter: isExpanded ? "blur(0px)" : "blur(8px)",
+                  filter: isExpanded ? "blur(0px)" : "blur(6px)",
                 }}
                 transition={{
                   duration: isExpanded ? 0.25 * t : 0.1 * t,
