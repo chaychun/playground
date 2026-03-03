@@ -2,6 +2,13 @@ import type { Item } from "@/lib/types";
 
 export const items: Item[] = [
   {
+    slug: "voice-capture",
+    type: "interactive",
+    title: "Voice Capture",
+    description: "A mobile navigation pattern with an expandable voice capture pane.",
+    createdAt: "2026-03-02",
+  },
+  {
     slug: "polaroid-carousel",
     type: "interactive",
     title: "Polaroid Carousel",
