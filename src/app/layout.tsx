@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
 
 import "./globals.css";
+// Dev-only: DialKit for live animation parameter tuning
+import "dialkit/styles.css";
+const DialRoot = process.env.NODE_ENV === "development" ? require("dialkit").DialRoot : () => null;
 
 const manrope = Manrope({
   variable: "--font-sans",
@@ -30,6 +33,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${manrope.variable} ${ibmPlexMono.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
+        <DialRoot position="top-right" />
         <AgentationOverlay />
       </body>
     </html>
