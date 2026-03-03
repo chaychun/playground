@@ -1,5 +1,7 @@
 import { AgentationOverlay } from "@/components/agentation";
 import { ThemeProvider } from "@/components/theme-provider";
+import { DialRoot } from "dialkit";
+import "dialkit/styles.css";
 import type { Metadata } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
 
@@ -30,6 +32,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${manrope.variable} ${ibmPlexMono.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
+        <DialRoot position="top-right" />
         <AgentationOverlay />
       </body>
     </html>

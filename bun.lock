@@ -8,6 +8,7 @@
         "@gsap/react": "^2.1.2",
         "@phosphor-icons/react": "^2.1.10",
         "clsx": "^2.1.1",
+        "dialkit": "^1.0.0",
         "gsap": "^3.14.2",
         "motion": "^12.34.3",
         "next": "16.1.6",
@@ -390,6 +391,8 @@
     "detect-libc": ["detect-libc@2.1.2", "", {}, "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="],
 
     "detect-node-es": ["detect-node-es@1.1.0", "", {}, "sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ=="],
+
+    "dialkit": ["dialkit@1.0.0", "", { "peerDependencies": { "motion": ">=11.0.0", "react": ">=18.0.0", "react-dom": ">=18.0.0", "solid-js": ">=1.6.0" }, "optionalPeers": ["react", "react-dom", "solid-js"] }, "sha512-jCIBcdoRzO/g5O+r+LzffoRW8YBGq7kWjs3FQM54z7MHneQ8B44MGZG6OVoHhC10EgEmVLXHa2qtWpf3Mp8d4g=="],
 
     "enhanced-resolve": ["enhanced-resolve@5.19.0", "", { "dependencies": { "graceful-fs": "^4.2.4", "tapable": "^2.3.0" } }, "sha512-phv3E1Xl4tQOShqSte26C7Fl84EwUdZsyOuSSk9qtAGyyQs2s3jJzComh+Abf4g187lUUAvH+H26omrqia2aGg=="],
 
