@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function MicIcon({ className }: { className?: string }) {
   return (
@@ -163,29 +163,36 @@ const NAV_ICONS = [
   { key: "profile", icon: ProfileIcon, label: "Profile" },
 ];
 
-const BARS = [
-  { id: "a", h: 0.3 },
-  { id: "b", h: 0.6 },
-  { id: "c", h: 0.45 },
-  { id: "d", h: 0.8 },
-  { id: "e", h: 0.5 },
-  { id: "f", h: 0.7 },
-  { id: "g", h: 0.35 },
-  { id: "h", h: 0.9 },
-  { id: "i", h: 0.55 },
-  { id: "j", h: 0.4 },
-  { id: "k", h: 0.75 },
-  { id: "l", h: 0.6 },
-];
+const BAR_KEYS = ["a", "b", "c", "d", "e", "f", "g"];
+const BAR_MIN_H = 12;
+const BAR_MAX_H = 108;
+const BAR_INTERVAL = 150;
+const BAR_SPRING = { type: "spring" as const, visualDuration: 0.3, bounce: 0 };
 
-function VisualizationPlaceholder() {
+function AudioVisualizer({ paused }: { paused: boolean }) {
+  const [bars, setBars] = useState(() => BAR_KEYS.map((key) => ({ key, h: BAR_MIN_H })));
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      setBars((prev) =>
+        prev.map((bar) => ({
+          ...bar,
+          h: BAR_MIN_H + Math.random() * (BAR_MAX_H - BAR_MIN_H),
+        })),
+      );
+    }, BAR_INTERVAL);
+    return () => clearInterval(id);
+  }, [paused]);
+
   return (
-    <div className="flex h-16 items-end justify-center gap-[3px] px-4">
-      {BARS.map(({ id, h }) => (
-        <div
-          key={id}
-          className="w-1.5 rounded-full bg-ink-inv/30"
-          style={{ height: `${h * 100}%` }}
+    <div className="flex flex-1 items-center justify-center gap-2">
+      {bars.map(({ key, h }) => (
+        <motion.div
+          key={key}
+          className="w-7 rounded-full bg-ink-inv/30"
+          animate={{ height: h }}
+          transition={BAR_SPRING}
         />
       ))}
     </div>
@@ -216,7 +223,7 @@ export default function VoiceCapture() {
             {/* Phone frame — minimal bottom portion */}
             <div className="w-[375px] overflow-hidden rounded-[2rem] border border-border bg-paper shadow-[0_8px_24px_-4px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.04)]">
               {/* Screen content area — just enough to suggest a phone */}
-              <div className="h-48" />
+              <div className="h-72" />
 
               {/* Navigation bar area */}
               <div className="relative px-4 pb-6">
@@ -283,7 +290,7 @@ export default function VoiceCapture() {
 
                   {/* Expanded content — visible when expanded */}
                   <motion.div
-                    className="flex h-full flex-col items-center justify-between px-6 py-5"
+                    className="flex h-full flex-col items-center justify-end gap-4 px-6 pb-5"
                     animate={{
                       opacity: isExpanded ? 1 : 0,
                       filter: isExpanded ? "blur(0px)" : "blur(6px)",
@@ -295,7 +302,7 @@ export default function VoiceCapture() {
                     style={{ pointerEvents: isExpanded ? "auto" : "none" }}
                   >
                     {/* Visualization area */}
-                    <VisualizationPlaceholder />
+                    <AudioVisualizer paused={paused} />
 
                     {/* Action buttons */}
                     <div className="flex w-full items-center justify-center gap-6">
