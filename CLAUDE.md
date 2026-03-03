@@ -138,7 +138,7 @@ Individual commands:
 - `bun run build` — full Next.js build
 - `bun run check` — all three (lint + format + typecheck)
 
-CI runs these on every PR and push to main, and blocks merge on any failure. Also check for console.log/console.warn/console.error left in code — remove any that aren't intentional.
+CI runs lint, format, and typecheck on every PR and push to main, and blocks merge on any failure. A local pre-commit hook (`.githooks/pre-commit`) also enforces these checks before each commit — it is auto-configured via the `prepare` script in `package.json`. Also check for console.log/console.warn/console.error left in code — remove any that aren't intentional.
 
 ### Code Style
 

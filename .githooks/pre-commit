@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+
+echo "Running pre-commit checks..."
+
+echo "→ Lint"
+bun run lint --deny-warnings
+
+echo "→ Format"
+bun run fmt:check
+
+echo "→ Typecheck"
+bun run typecheck
+
+echo "All checks passed."
