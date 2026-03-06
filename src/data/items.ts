@@ -29,12 +29,4 @@ export const items: Item[] = [
     description: "Experimental interface for networked information based on the pages of a book.",
     createdAt: "2026-02-02",
   },
-  {
-    slug: "cursor-follower",
-    type: "interactive",
-    title: "Cursor Follower",
-    description:
-      "A smooth cursor-tracking element with elastic easing across three interactive zones.",
-    createdAt: "2026-01-20",
-  },
 ];
