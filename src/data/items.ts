@@ -2,6 +2,13 @@ import type { Item } from "@/lib/types";
 
 export const items: Item[] = [
   {
+    slug: "modifier-keys",
+    type: "interactive",
+    title: "Modifier Keys",
+    description: "Hold modifier keys to see what Enter does",
+    createdAt: "2026-03-06",
+  },
+  {
     slug: "voice-capture",
     type: "interactive",
     title: "Voice Capture",
