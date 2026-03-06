@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark, .dark *));
+
 @theme inline {
   --color-paper: var(--paper);
   --color-surface: var(--surface);
