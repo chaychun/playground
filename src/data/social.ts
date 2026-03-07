@@ -3,7 +3,7 @@ import { EnvelopeSimple, GithubLogo, XLogo } from "@phosphor-icons/react/dist/ss
 export const SOCIAL_LINKS = [
   {
     icon: XLogo,
-    href: "https://x.com/chunchayut",
+    href: "https://x.com/chayutc_",
     label: "X (Twitter)",
   },
   {
