@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const SIDEBAR_SOCIAL_LINKS = SOCIAL_LINKS.map((link) => {
   const extra = {
-    "X (Twitter)": { prefix: "/", username: "chunchayut" },
+    "X (Twitter)": { prefix: "/", username: "chayutc_" },
     GitHub: { prefix: "/", username: "chaychun" },
     Email: { prefix: " ", username: "chun.chayut@gmail.com" },
   } as const;
