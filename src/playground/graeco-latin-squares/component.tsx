@@ -1,16 +1,57 @@
 "use client";
 
+/* ─────────────────────────────────────────────────────────
+ * ANIMATION STORYBOARD
+ *
+ *    0ms   mount — controls slide up, grid appears
+ *          tiles scale 0.85→1 + fade from upper-left (i+j diagonal, 20ms/step)
+ *
+ * On size change: grid remounts, tiles re-stagger from upper-left
+ * On randomize: rapid shuffle (4 intermediate states, 60ms apart) then settle
+ * On n=6: selector turns destructive, impossible msg fades in
+ * ───────────────────────────────────────────────────────── */
+
 import { cn } from "@/lib/cn";
 import { ArrowsClockwise, DownloadSimple } from "@phosphor-icons/react";
-import { useCallback, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { generateRandom } from "./core";
 import { selectRandomColors } from "./palette";
 
-const SIZES = [3, 4, 5, 7, 8, 9, 10, 11, 12, 13];
+const SIZES = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+const IMPOSSIBLE = new Set([6]);
 const CELL = 60;
 const INNER = 24;
 const DEFAULT_SIZE = 5;
+
+// ── Animation config ──────────────────────────────────────
+
+const GRID = {
+  spring: { type: "spring" as const, visualDuration: 0.2, bounce: 0 },
+};
+
+const TILE = {
+  staggerStep: 0.02, // seconds per diagonal step (i + j)
+  initialScale: 0.85, // scale before appearing
+  duration: 0.2, // seconds for CSS entrance animation
+};
+
+const SHUFFLE = {
+  steps: 4, // intermediate random states before final
+  interval: 60, // ms between each shuffle step
+};
+
+const CONTROLS = {
+  offsetY: 6,
+  spring: { type: "spring" as const, visualDuration: 0.25, bounce: 0 },
+};
+
+const DESTRUCTIVE = "#c45b52";
+
+// CSS keyframes for tile entrance — replaces per-tile motion springs
+// (169 fewer JS spring instances at n=13; browser animation engine handles stagger)
+const TILE_KEYFRAMES = `@keyframes tile-in{from{opacity:0;transform:scale(${TILE.initialScale})}}`;
 
 function initState(size: number) {
   return {
@@ -20,25 +61,123 @@ function initState(size: number) {
   };
 }
 
+// ── Size selector ────────────────────────────────────────────────
+
+function SizeSelector({ value, onChange }: { value: number; onChange: (s: number) => void }) {
+  const isDestructive = IMPOSSIBLE.has(value);
+  const idx = SIZES.indexOf(value);
+  const accentColor = isDestructive ? DESTRUCTIVE : "var(--color-accent)";
+
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "ArrowRight" && idx < SIZES.length - 1) {
+        e.preventDefault();
+        onChange(SIZES[idx + 1]);
+      } else if (e.key === "ArrowLeft" && idx > 0) {
+        e.preventDefault();
+        onChange(SIZES[idx - 1]);
+      }
+    },
+    [idx, onChange],
+  );
+
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Grid size"
+      onKeyDown={onKeyDown}
+      className="flex items-center"
+    >
+      {SIZES.map((s) => {
+        const impossible = IMPOSSIBLE.has(s);
+        const active = s === value;
+        return (
+          <button
+            key={s}
+            role="radio"
+            aria-checked={active}
+            tabIndex={active ? 0 : -1}
+            onClick={() => onChange(s)}
+            className={cn(
+              "relative flex h-8 flex-1 items-center justify-center font-mono text-2xs transition-colors duration-100 outline-none",
+              impossible && "line-through decoration-muted/30",
+              active ? "text-ink" : impossible ? "text-muted/30" : "text-muted hover:text-ink/60",
+            )}
+          >
+            {active && (
+              <motion.span
+                layoutId="size-indicator"
+                className="absolute h-7 w-7 rounded-full"
+                style={{ backgroundColor: `color-mix(in oklch, ${accentColor}, transparent 85%)` }}
+                transition={{ type: "spring", visualDuration: 0.15, bounce: 0 }}
+              />
+            )}
+            <span className="relative">{s}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Main component ───────────────────────────────────────────────
+
 export default function GraecoLatinSquares() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [size, setSize] = useState(DEFAULT_SIZE);
-  const [{ square, bgColors, fgColors }, setState] = useState(() => initState(DEFAULT_SIZE));
+  const sizeRef = useRef(DEFAULT_SIZE);
+  const [state, setState] = useState<ReturnType<typeof initState> | null>(null);
+  const [gridKey, setGridKey] = useState(0);
+  const shuffleTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  const randomize = useCallback((newSize?: number) => {
-    const s = newSize ?? size;
-    if (newSize !== undefined) setSize(s);
-    setState(initState(s));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Generate initial state client-side only to avoid hydration mismatch (Math.random)
+  useEffect(() => {
+    setState(initState(DEFAULT_SIZE));
+  }, []);
+
+  const handleSizeChange = useCallback((newSize: number) => {
+    if (newSize === sizeRef.current) return;
+    sizeRef.current = newSize;
+    setSize(newSize);
+    if (!IMPOSSIBLE.has(newSize)) {
+      setState(initState(newSize));
+      setGridKey((k) => k + 1);
+    }
+  }, []);
+
+  const randomize = useCallback(() => {
+    // Clear any in-progress shuffle
+    shuffleTimers.current.forEach(clearTimeout);
+    shuffleTimers.current = [];
+
+    const s = sizeRef.current;
+    for (let step = 0; step < SHUFFLE.steps; step++) {
+      shuffleTimers.current.push(
+        setTimeout(() => {
+          setState(initState(s));
+        }, step * SHUFFLE.interval),
+      );
+    }
+    // Final settle
+    shuffleTimers.current.push(
+      setTimeout(() => {
+        setState(initState(s));
+      }, SHUFFLE.steps * SHUFFLE.interval),
+    );
+  }, []);
+
+  // Cleanup shuffle timers on unmount
+  useEffect(() => {
+    return () => shuffleTimers.current.forEach(clearTimeout);
   }, []);
 
   const handleSavePng = useCallback(() => {
     const svg = svgRef.current;
     if (!svg) return;
-
-    const svgSize = size * CELL;
-    const scale = Math.max(1, Math.ceil(1200 / svgSize));
-    const canvasSize = svgSize * scale;
+    const s = sizeRef.current;
+    const svgPx = s * CELL;
+    const scale = Math.max(1, Math.ceil(1200 / svgPx));
+    const canvasSize = svgPx * scale;
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -61,7 +200,7 @@ export default function GraecoLatinSquares() {
         const pngUrl = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = pngUrl;
-        a.download = `graeco-latin-${size}x${size}.png`;
+        a.download = `graeco-latin-${s}x${s}.png`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -70,81 +209,123 @@ export default function GraecoLatinSquares() {
       URL.revokeObjectURL(svgUrl);
     });
     img.src = svgUrl;
-  }, [size]);
+  }, []);
 
+  const impossible = IMPOSSIBLE.has(size);
   const svgSize = size * CELL;
   const insetOffset = (CELL - INNER) / 2;
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4 p-4">
-      <div className="flex min-h-0 w-full flex-1 items-center justify-center">
-        <svg
-          ref={svgRef}
-          viewBox={`0 0 ${svgSize} ${svgSize}`}
-          className="aspect-square max-h-full max-w-full"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {square.latin.map((row: number[], i: number) =>
-            row.map((latinVal: number, j: number) => {
-              const greekVal = square.greek[i][j];
-              return (
-                <g key={`${latinVal}-${greekVal}`}>
-                  <rect
-                    x={j * CELL}
-                    y={i * CELL}
-                    width={CELL}
-                    height={CELL}
-                    fill={bgColors[latinVal]}
-                  />
-                  <rect
-                    x={j * CELL + insetOffset}
-                    y={i * CELL + insetOffset}
-                    width={INNER}
-                    height={INNER}
-                    fill={fgColors[greekVal]}
-                  />
-                </g>
-              );
-            }),
-          )}
-        </svg>
+    <div className="flex h-full flex-col items-center justify-center px-5 py-4 sm:px-8 sm:py-6">
+      <style>{TILE_KEYFRAMES}</style>
+      {/* Artwork */}
+      <div className="flex min-h-0 w-full max-w-2xl flex-1 items-center justify-center">
+        <AnimatePresence mode="wait">
+          {impossible ? (
+            <motion.div
+              key="impossible"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={GRID.spring}
+              className="flex flex-col items-center gap-2 text-center"
+            >
+              <span className="font-serif text-4xl font-light text-muted italic">n = 6</span>
+              <p className="max-w-[22ch] font-sans text-sm leading-relaxed text-muted/70">
+                No orthogonal Latin square pair exists. Proved by Gaston Tarry, 1901.
+              </p>
+            </motion.div>
+          ) : state ? (
+            <motion.div
+              key={`grid-${size}-${gridKey}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              className="aspect-square h-full max-w-full"
+            >
+              <svg
+                ref={svgRef}
+                viewBox={`0 0 ${svgSize} ${svgSize}`}
+                className="h-full w-full"
+                style={{ contain: "content" }}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {Array.from({ length: size }, (_row, i) =>
+                  Array.from({ length: size }, (_col, j) => {
+                    const latinVal = state.square.latin[i][j];
+                    const greekVal = state.square.greek[i][j];
+                    const diag = i + j;
+                    const cx = j * CELL + CELL / 2;
+                    const cy = i * CELL + CELL / 2;
+                    return (
+                      <g
+                        key={`cell-${i * size + j}`}
+                        style={{
+                          animation: `tile-in ${TILE.duration}s ease-out ${diag * TILE.staggerStep}s backwards`,
+                          transformOrigin: `${cx}px ${cy}px`,
+                        }}
+                      >
+                        <rect
+                          x={j * CELL}
+                          y={i * CELL}
+                          width={CELL}
+                          height={CELL}
+                          fill={state.bgColors[latinVal]}
+                        />
+                        <rect
+                          x={j * CELL + insetOffset}
+                          y={i * CELL + insetOffset}
+                          width={INNER}
+                          height={INNER}
+                          fill={state.fgColors[greekVal]}
+                        />
+                      </g>
+                    );
+                  }),
+                )}
+              </svg>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
 
-      <div className="flex flex-col items-center gap-3">
-        <div className="flex flex-wrap justify-center gap-1.5">
-          {SIZES.map((s) => (
-            <button
-              key={s}
-              onClick={() => randomize(s)}
-              className={cn(
-                "rounded-md px-2.5 py-1 font-mono text-xs transition-colors",
-                s === size
-                  ? "bg-accent font-medium text-ink-inv"
-                  : "bg-surface text-muted hover:text-ink",
-              )}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
+      {/* Controls */}
+      <motion.div
+        initial={{ opacity: 0, y: CONTROLS.offsetY }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={CONTROLS.spring}
+        className="mt-4 w-full max-w-md sm:mt-6"
+      >
+        <SizeSelector value={size} onChange={handleSizeChange} />
 
-        <div className="flex gap-2">
+        <div className="mt-4 flex items-center justify-center gap-3">
           <button
-            onClick={() => randomize()}
-            className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:border-mid hover:text-ink"
+            onClick={randomize}
+            disabled={impossible}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2.5 font-sans text-sm font-medium transition-opacity",
+              impossible
+                ? "cursor-not-allowed bg-mid/50 text-muted/50"
+                : "bg-accent text-ink-inv hover:opacity-85 active:opacity-75",
+            )}
           >
-            <ArrowsClockwise size={14} weight="bold" />
+            <ArrowsClockwise size={16} weight="bold" />
             Randomize
           </button>
           <button
             onClick={handleSavePng}
-            className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:border-mid hover:text-ink"
+            disabled={impossible}
+            className={cn(
+              "flex items-center gap-1.5 px-2 py-2.5 font-sans text-sm transition-colors",
+              impossible ? "cursor-not-allowed text-muted/30" : "text-muted hover:text-ink",
+            )}
           >
-            <DownloadSimple size={14} weight="bold" />
+            <DownloadSimple size={16} />
             Save PNG
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

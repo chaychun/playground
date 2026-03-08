@@ -353,8 +353,9 @@ function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function randomInt(max: number): number {
-  return Math.floor(Math.random() * max);
+/** Random integer in [1, max-1] — ensures non-zero matrix entries */
+function randomNonZero(max: number): number {
+  return 1 + Math.floor(Math.random() * (max - 1));
 }
 
 export function generateRandom(size: number): GraecoLatinSquare {
@@ -378,8 +379,8 @@ export function generateRandom(size: number): GraecoLatinSquare {
       if (k === 1) {
         for (let attempt = 0; attempt < 100; attempt++) {
           const mat: [[number, number], [number, number]] = [
-            [randomInt(p), randomInt(p)],
-            [randomInt(p), randomInt(p)],
+            [randomNonZero(p), randomNonZero(p)],
+            [randomNonZero(p), randomNonZero(p)],
           ];
           const result = generateFiniteFieldGraecoLatin(size, mat);
           if (result) return result;
@@ -388,8 +389,8 @@ export function generateRandom(size: number): GraecoLatinSquare {
       } else {
         for (let attempt = 0; attempt < 100; attempt++) {
           const mat: [[number, number], [number, number]] = [
-            [randomInt(size), randomInt(size)],
-            [randomInt(size), randomInt(size)],
+            [randomNonZero(size), randomNonZero(size)],
+            [randomNonZero(size), randomNonZero(size)],
           ];
           const result = generateFiniteFieldGraecoLatin(size, mat);
           if (result) return result;
@@ -417,8 +418,8 @@ export function generateRandom(size: number): GraecoLatinSquare {
         () => {
           for (let attempt = 0; attempt < 20; attempt++) {
             const mat: [[number, number], [number, number]] = [
-              [randomInt(4), randomInt(4)],
-              [randomInt(4), randomInt(4)],
+              [randomNonZero(4), randomNonZero(4)],
+              [randomNonZero(4), randomNonZero(4)],
             ];
             const result = generateFiniteFieldGraecoLatin(4, mat);
             if (result) return result;

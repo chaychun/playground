@@ -10,6 +10,7 @@ export const items: Item[] = [
     description: "Randomized patterns from orthogonal Latin square constructions",
     createdAt: "2026-03-09",
     category: "exploration",
+    panelWidth: { minPanelPx: 360, panelPercent: 40 },
   },
   {
     slug: "modifier-keys",
