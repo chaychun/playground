@@ -4,6 +4,15 @@ export const DEFAULT_PANEL_WIDTH = { minPanelPx: 400, panelPercent: 50 };
 
 export const items: Item[] = [
   {
+    slug: "graeco-latin-squares",
+    type: "interactive",
+    title: "Graeco-Latin Squares",
+    description: "Randomized patterns from orthogonal Latin square constructions",
+    createdAt: "2026-03-09",
+    category: "exploration",
+    panelWidth: { minPanelPx: 360, panelPercent: 40 },
+  },
+  {
     slug: "modifier-keys",
     type: "interactive",
     title: "Modifier Keys",
