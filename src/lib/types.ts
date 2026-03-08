@@ -1,4 +1,5 @@
 export type ItemCategory = "exploration" | "pattern" | "case study";
+export const DEFAULT_CATEGORY: ItemCategory = "exploration";
 
 export type Item = {
   slug: string;

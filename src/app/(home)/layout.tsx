@@ -1,5 +1,4 @@
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
-import { MobileFooter } from "@/components/mobile-footer";
 
 export default function HomeLayout({
   children,
@@ -13,7 +12,6 @@ export default function HomeLayout({
         <BreadcrumbNav />
       </div>
       <main className="min-w-0 flex-1 lg:overflow-hidden">{children}</main>
-      <MobileFooter />
     </div>
   );
 }

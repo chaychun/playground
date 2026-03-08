@@ -1,11 +1,40 @@
 "use client";
 
-import { WorkFeed } from "@/components/work-feed";
 import { cn } from "@/lib/cn";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
-import type { Item } from "@/lib/types";
+import { DEFAULT_CATEGORY, type Item } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
+
+// ─── Intro ───────────────────────────────────────────────────────
+function Intro() {
+  return (
+    <div>
+      <h1 className="font-serif text-[20px] leading-[28px] font-extralight text-ink xl:text-[24px] xl:leading-[32px]">
+        I&apos;m Chayut, a designer and builder exploring{" "}
+        <em className="text-accent italic">interface craft</em>.
+      </h1>
+      <p className="mt-4 max-w-lg text-[13px] leading-relaxed text-dim">
+        This site is a collection of my experiments, studies, and writings on software design. Feel
+        free to explore! You can also read{" "}
+        <Link
+          href="/about"
+          className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
+        >
+          about me
+        </Link>{" "}
+        and see what I&apos;m{" "}
+        <Link
+          href="/now"
+          className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
+        >
+          currently up to
+        </Link>
+        .
+      </p>
+    </div>
+  );
+}
 
 // ─── Preview Panel (left) ────────────────────────────────────────
 function PreviewPanel({ item }: { item: Item | null }) {
@@ -32,7 +61,7 @@ function PreviewPanel({ item }: { item: Item | null }) {
           }}
         >
           <span className="font-mono text-[10px] leading-[12px] tracking-[0.06em] text-muted uppercase">
-            {item.category || "exploration"}
+            {item.category || DEFAULT_CATEGORY}
           </span>
           <h2 className="mt-1.5 font-serif text-[24px] leading-[30px] font-extralight text-ink xl:text-[32px] xl:leading-[38px]">
             {item.title}
@@ -43,7 +72,7 @@ function PreviewPanel({ item }: { item: Item | null }) {
   );
 }
 
-// ─── Work Table (right panel, bottom) ────────────────────────────
+// ─── Work Table (right panel, desktop) ───────────────────────────
 function WorkTable({
   items,
   selectedSlug,
@@ -104,11 +133,34 @@ function WorkTable({
                 isActive ? "text-ink-inv/50" : "text-muted",
               )}
             >
-              {item.category || "exploration"}
+              {item.category || DEFAULT_CATEGORY}
             </span>
           </button>
         );
       })}
+    </div>
+  );
+}
+
+// ─── Mobile Item List ────────────────────────────────────────────
+function MobileList({ items }: { items: Item[] }) {
+  return (
+    <div className="stagger-entrance">
+      {items.map((item) => (
+        <div key={item.slug} className="border-b border-border py-4">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-serif text-[16px] leading-[20px] font-light text-ink">
+              {item.title}
+            </span>
+            <span className="shrink-0 font-mono text-[10px] tracking-[0.04em] text-muted uppercase">
+              {item.category || DEFAULT_CATEGORY}
+            </span>
+          </div>
+          {item.description && (
+            <p className="mt-1.5 text-[13px] leading-relaxed text-dim">{item.description}</p>
+          )}
+        </div>
+      ))}
     </div>
   );
 }
@@ -120,9 +172,12 @@ export function HomePage({ items }: { items: Item[] }) {
 
   return (
     <>
-      {/* Mobile: card feed */}
-      <div className="px-5 lg:hidden">
-        <WorkFeed items={items} />
+      {/* Mobile: intro + list */}
+      <div className="entrance flex flex-col px-5 pt-10 pb-6 lg:hidden">
+        <Intro />
+        <div className="mt-10">
+          <MobileList items={items} />
+        </div>
       </div>
 
       {/* Desktop: two-panel layout */}
@@ -132,28 +187,7 @@ export function HomePage({ items }: { items: Item[] }) {
 
         {/* Right: Content */}
         <div className="stagger-entrance flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12">
-          <h1 className="font-serif text-[20px] leading-[28px] font-extralight text-ink xl:text-[24px] xl:leading-[32px]">
-            I&apos;m Chayut, a designer and builder exploring{" "}
-            <em className="text-accent italic">interface craft</em>.
-          </h1>
-          <p className="mt-4 max-w-lg text-[13px] leading-relaxed text-dim">
-            This site is a collection of my experiments, studies, and writings on software design.
-            Feel free to explore! You can also read{" "}
-            <Link
-              href="/about"
-              className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
-            >
-              about me
-            </Link>{" "}
-            and see what I&apos;m{" "}
-            <Link
-              href="/now"
-              className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
-            >
-              currently up to
-            </Link>
-            .
-          </p>
+          <Intro />
           <div className="mt-auto">
             <WorkTable items={items} selectedSlug={selectedSlug} onSelect={setSelectedSlug} />
           </div>
