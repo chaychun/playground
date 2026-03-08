@@ -1,0 +1,289 @@
+/* Resume page — screen and print styles */
+/* Scoped under .resume-page to avoid conflicts with site styles */
+
+.resume-page {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-resume-sans), system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
+  width: 794px;
+  padding: 56px 56px 48px 56px;
+}
+
+/* ---- Header ---- */
+
+.resume-page .header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resume-page .name {
+  color: #2a2a28;
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 40px;
+}
+
+.resume-page .header-row {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.resume-page .subtitle {
+  color: #3a3a36;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 16px;
+  white-space: pre-wrap;
+}
+
+.resume-page .contact-row {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.resume-page .contact-item {
+  color: #9a9a94;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 14px;
+}
+
+/* ---- Section labels ---- */
+
+.resume-page .section-label {
+  color: #5a5a55;
+  font-family: var(--font-resume-mono), system-ui, sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 12px;
+  text-transform: uppercase;
+}
+
+/* ---- About ---- */
+
+.resume-page .about {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 520px;
+  padding-top: 32px;
+}
+
+.resume-page .about-tagline {
+  color: #3a3a36;
+  font-size: 15px;
+  line-height: 24px;
+  padding-bottom: 4px;
+}
+
+.resume-page .about-body {
+  color: #5a5a55;
+  font-size: 11px;
+  line-height: 18px;
+}
+
+/* ---- Columns ---- */
+
+.resume-page .columns {
+  display: flex;
+  flex: 1;
+  gap: 32px;
+  padding-top: 40px;
+}
+
+.resume-page .left-col {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 240px;
+}
+
+.resume-page .right-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ---- Skills ---- */
+
+.resume-page .skills-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resume-page .skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resume-page .skill-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resume-page .skill-title {
+  color: #2a2a28;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+.resume-page .skill-items {
+  color: #5a5a55;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+/* ---- Experience ---- */
+
+.resume-page .experience-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 40px;
+}
+
+.resume-page .exp-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resume-page .exp-title {
+  color: #2a2a28;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.resume-page .exp-date {
+  color: #8a8a84;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 14px;
+}
+
+.resume-page .exp-desc {
+  color: #5a5a55;
+  font-size: 11px;
+  line-height: 17px;
+  padding-top: 2px;
+}
+
+/* ---- Education ---- */
+
+.resume-page .education-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 40px;
+}
+
+.resume-page .edu-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* ---- Projects ---- */
+
+.resume-page .projects-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resume-page .project {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 22px;
+}
+
+.resume-page .project:first-of-type {
+  padding-top: 16px;
+}
+
+.resume-page .project-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.resume-page .project-name {
+  color: #2a2a28;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.resume-page .project-link {
+  color: #9a9a94;
+  font-size: 9px;
+  font-weight: 300;
+  line-height: 13px;
+}
+
+.resume-page .project-subtitle {
+  color: #6b6e73;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 14px;
+}
+
+.resume-page .project-desc {
+  color: #5a5a55;
+  font-size: 11px;
+  line-height: 17px;
+}
+
+.resume-page .project-tech {
+  color: #8a8a84;
+  font-family: var(--font-resume-mono), system-ui, sans-serif;
+  font-size: 9.5px;
+  line-height: 13px;
+  padding-top: 2px;
+}
+
+.resume-page .in-progress {
+  color: #8a7a6a;
+  font-family: var(--font-resume-mono), system-ui, sans-serif;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 12px;
+  text-transform: uppercase;
+}
+
+/* ---- Print ---- */
+
+@media print {
+  @page {
+    size: 794px 1123px;
+    margin: 0;
+  }
+
+  .resume-wrapper {
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  .resume-page {
+    height: 1123px;
+    overflow: clip;
+  }
+}

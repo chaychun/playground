@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
+import { inlineLink } from "@/lib/styles";
 import { DEFAULT_CATEGORY, type Item } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,17 +18,11 @@ function Intro() {
       <p className="mt-4 max-w-lg text-[13px] leading-relaxed text-dim">
         This site is a collection of my experiments, studies, and writings on software design. Feel
         free to explore! You can also read{" "}
-        <Link
-          href="/about"
-          className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
-        >
+        <Link href="/about" className={inlineLink}>
           about me
         </Link>{" "}
         and see what I&apos;m{" "}
-        <Link
-          href="/now"
-          className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
-        >
+        <Link href="/now" className={inlineLink}>
           currently up to
         </Link>
         .
