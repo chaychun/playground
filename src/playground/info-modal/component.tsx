@@ -61,7 +61,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
     <MotionConfig transition={{ type: "spring", duration: 0.6, bounce: 0 }}>
       <div
         ref={wrapperRef}
-        className="pointer-events-auto flex h-full w-full items-end justify-end"
+        className="pointer-events-auto flex h-full w-full items-start justify-end"
         role={isOpen ? "dialog" : undefined}
         aria-modal={isOpen ? "true" : undefined}
       >
@@ -170,6 +170,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
             onClick={toggleModal}
             whileTap={{ scale: 0.9 }}
             layout
+            initial={false}
             {...(showDetails && {
               transition: { layout: { duration: 0 } },
             })}
@@ -190,7 +191,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                 <motion.span
                   key="open"
                   className="flex items-center justify-center"
-                  initial={{ opacity: 0, filter: "blur(4px)" }}
+                  initial={{ opacity: 1, filter: "blur(0px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, filter: "blur(4px)" }}
                   transition={{ duration: 0.3 }}
@@ -208,7 +209,23 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
 
 export default function InfoModalDemo() {
   return (
-    <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+    <div
+      className="relative flex h-full w-full items-center justify-center overflow-hidden"
+      style={
+        {
+          // Lock to light mode palette regardless of parent theme
+          "--paper": "#f3f3ef",
+          "--surface": "#e9e9e5",
+          "--border": "#dcdcd8",
+          "--mid": "#c5c5c1",
+          "--muted": "#9c9c98",
+          "--link": "#696966",
+          "--dim": "#4a4a47",
+          "--ink": "#111110",
+          "--ink-inv": "#f3f3ef",
+        } as React.CSSProperties
+      }
+    >
       <img
         src="/images/near-glarus.webp"
         alt=""

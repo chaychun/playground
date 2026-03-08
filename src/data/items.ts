@@ -7,6 +7,7 @@ export const items: Item[] = [
     title: "Modifier Keys",
     description: "Hold modifier keys to see what Enter does",
     createdAt: "2026-03-06",
+    category: "pattern",
   },
   {
     slug: "voice-capture",
@@ -14,6 +15,7 @@ export const items: Item[] = [
     title: "Voice Capture",
     description: "A mobile navigation pattern with an expandable voice capture pane.",
     createdAt: "2026-03-02",
+    category: "exploration",
   },
   {
     slug: "polaroid-carousel",
@@ -21,6 +23,7 @@ export const items: Item[] = [
     title: "Polaroid Carousel",
     description: "A stack of cards that expands into a gesture-based carousel modal.",
     createdAt: "2026-02-25",
+    category: "exploration",
   },
   {
     slug: "info-modal",
@@ -28,12 +31,6 @@ export const items: Item[] = [
     title: "Info Modal",
     description: "An expandable info card with spring-animated entrance and backdrop blur.",
     createdAt: "2026-02-08",
-  },
-  {
-    slug: "page-stack",
-    type: "interactive",
-    title: "Page Stack",
-    description: "Experimental interface for networked information based on the pages of a book.",
-    createdAt: "2026-02-02",
+    category: "pattern",
   },
 ];

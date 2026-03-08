@@ -305,6 +305,7 @@ export default function VoiceCapture() {
                 <motion.div
                   className="absolute z-20 overflow-hidden bg-ink"
                   style={{ left: 155.5, top: 8 }}
+                  initial={false}
                   animate={
                     isExpanded
                       ? {

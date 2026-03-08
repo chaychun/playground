@@ -6,12 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
+    "lint": "oxlint --ignore-pattern .claude",
+    "lint:fix": "oxlint --fix --ignore-pattern .claude",
     "fmt": "oxfmt --write .",
     "fmt:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit",
-    "check": "oxlint --deny-warnings && oxfmt --check . && tsc --noEmit",
+    "check": "oxlint --deny-warnings --ignore-pattern .claude && oxfmt --check . && tsc --noEmit",
     "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
