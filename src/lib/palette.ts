@@ -1,0 +1,15 @@
+export const C = {
+  bg: "#141416",
+  text: "#C8C4BC",
+  textSecondary: "rgba(200, 196, 188, 0.6)",
+  textTertiary: "rgba(200, 196, 188, 0.5)",
+  textFaint: "rgba(200, 196, 188, 0.35)",
+  border: "rgba(200, 196, 188, 0.06)",
+  activeBg: "rgba(200, 196, 188, 0.78)",
+  activeFg: "#141416",
+  activeFgSecondary: "rgba(20, 20, 22, 0.7)",
+  activeFgTertiary: "rgba(20, 20, 22, 0.5)",
+  accent: "#A6CDD2",
+  accentSubtle: "rgba(166, 205, 210, 0.4)",
+  accentHover: "rgba(166, 205, 210, 0.8)",
+} as const;

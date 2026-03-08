@@ -3,23 +3,10 @@
 import { WorkFeed } from "@/components/work-feed";
 import { cn } from "@/lib/cn";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
+import { C } from "@/lib/palette";
 import type { Item } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
-
-// --- Colors scoped to the desktop homepage (from Paper design) ---
-const C = {
-  bg: "#141416",
-  text: "#C8C4BC",
-  textSecondary: "rgba(200, 196, 188, 0.6)",
-  textTertiary: "rgba(200, 196, 188, 0.5)",
-  textFaint: "rgba(200, 196, 188, 0.35)",
-  border: "rgba(200, 196, 188, 0.06)",
-  activeBg: "rgba(200, 196, 188, 0.78)",
-  activeFg: "#141416",
-  activeFgSecondary: "rgba(20, 20, 22, 0.7)",
-  activeFgTertiary: "rgba(20, 20, 22, 0.5)",
-} as const;
 
 // ─── Preview Panel (left) ────────────────────────────────────────
 function PreviewPanel({ item }: { item: Item | null }) {
@@ -185,7 +172,7 @@ export function HomePage({ items }: { items: Item[] }) {
                 style={{ color: C.text }}
               >
                 I&apos;m Chayut, a designer and builder exploring{" "}
-                <em className="italic" style={{ color: "#A6CDD2" }}>
+                <em className="italic" style={{ color: C.accent }}>
                   interface craft
                 </em>
                 .
