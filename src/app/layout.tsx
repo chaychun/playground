@@ -1,19 +1,19 @@
 import { AgentationOverlay } from "@/components/agentation";
-import { ThemeProvider } from "@/components/theme-provider";
+import { cn } from "@/lib/cn";
 import type { Metadata } from "next";
-import { DM_Mono, Fraunces, IBM_Plex_Mono, Manrope, Raleway } from "next/font/google";
+import { DM_Mono, Fraunces, Raleway } from "next/font/google";
 
 import "./globals.css";
 // Dev-only: DialKit for live animation parameter tuning
 import "dialkit/styles.css";
 const DialRoot = process.env.NODE_ENV === "development" ? require("dialkit").DialRoot : () => null;
 
-const manrope = Manrope({
+const raleway = Raleway({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
+const dmMono = DM_Mono({
   variable: "--font-mono",
   weight: ["300", "400", "500"],
   subsets: ["latin"],
@@ -21,17 +21,6 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 const fraunces = Fraunces({
   variable: "--font-serif",
-  subsets: ["latin"],
-});
-
-const dmMono = DM_Mono({
-  variable: "--font-dm-mono",
-  weight: ["300", "400", "500"],
-  subsets: ["latin"],
-});
-
-const raleway = Raleway({
-  variable: "--font-body",
   subsets: ["latin"],
 });
 
@@ -46,11 +35,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${manrope.variable} ${ibmPlexMono.variable} ${fraunces.variable} ${dmMono.variable} ${raleway.variable} antialiased`}
-      >
-        <ThemeProvider>{children}</ThemeProvider>
+    <html lang="en">
+      <body className={cn(raleway.variable, dmMono.variable, fraunces.variable, "antialiased")}>
+        {children}
         <DialRoot position="top-right" />
         <AgentationOverlay />
       </body>

@@ -1,4 +1,3 @@
-import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import timelineData from "@/data/now-timeline.json";
 
 type TimelineEntry = {
@@ -13,77 +12,74 @@ type MonthEntry = {
   entries: TimelineEntry[];
 };
 
+function TimelineContent({ data }: { data: MonthEntry[] }) {
+  return (
+    <div className="relative mt-10 max-w-xl">
+      {data.map((month, monthIndex) => (
+        <div
+          key={`${month.month}-${month.year}`}
+          className="entrance relative pb-10 last:pb-0"
+          style={{ animationDelay: `${200 + monthIndex * 80}ms` }}
+        >
+          <div className="absolute top-0 left-[7px] h-[3px] w-px bg-border" />
+          <div className="absolute top-[7px] left-0 z-10 size-[15px] rounded-full border-2 border-accent/40 bg-accent/20" />
+          <div className="absolute top-[26px] bottom-0 left-[7px] w-px bg-border" />
+
+          <div className="pb-5 pl-[31px]">
+            <span className="font-mono text-2xs tracking-[0.08em] text-muted uppercase">
+              {month.month} {month.year}
+            </span>
+          </div>
+
+          <div className="ml-[31px] space-y-5">
+            {month.entries.map((entry) => (
+              <div key={entry.title}>
+                <div className="flex items-baseline gap-x-2 gap-y-1">
+                  <h3 className="min-w-0 flex-1 font-serif text-sm font-light text-ink">
+                    {entry.title}
+                  </h3>
+                  {entry.tags?.map((tag) => (
+                    <span
+                      key={tag}
+                      className="shrink-0 rounded-full bg-surface px-2 py-0.5 font-mono text-2xs text-muted"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="mt-2 text-[13px] leading-relaxed text-dim">{entry.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function NowPage() {
   const data = timelineData as MonthEntry[];
 
   return (
-    <div className="mx-auto max-w-2xl px-5 py-6 lg:px-12 lg:py-10">
-      <BreadcrumbNav page="now" />
-
-      <header className="mt-6">
-        <span className="animate-in font-dm-mono text-2xs tracking-[0.08em] text-muted uppercase ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
-          NOW
-        </span>
-        <h1 className="mt-3 animate-in font-serif text-lg font-extralight text-ink delay-[60ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 lg:text-xl">
+    <div className="px-5 pt-10 pb-6 lg:ml-[var(--panel-split)] lg:h-full lg:overflow-y-auto lg:px-8 lg:pt-24 lg:pb-10 xl:px-12">
+      <header className="stagger-entrance">
+        <h1 className="font-serif text-lg font-extralight text-ink lg:text-xl">
           What I&apos;m doing, thinking about, and working on.
         </h1>
-        <p className="mt-3 animate-in text-2xs text-muted delay-[120ms] ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2">
+        <p className="mt-3 text-2xs text-muted">
           This page is inspired by{" "}
           <a
             href="https://nownownow.com/about"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline decoration-link underline-offset-2 transition-colors hover:text-ink"
+            className="underline decoration-accent/30 underline-offset-2 transition-colors hover:text-ink hover:decoration-accent"
           >
             the /now movement
           </a>
           .
         </p>
       </header>
-
-      <div className="relative mt-10 max-w-xl">
-        {data.map((month, monthIndex) => (
-          <div
-            key={`${month.month}-${month.year}`}
-            className="relative animate-in pb-10 ease-[cubic-bezier(0.16,1,0.3,1)] animation-duration-800 fill-mode-both fade-in slide-in-from-bottom-2 last:pb-0"
-            style={{ animationDelay: `${120 + monthIndex * 80}ms` }}
-          >
-            {/* Vertical line above circle */}
-            <div className="absolute top-0 left-[7px] h-[3px] w-px bg-border" />
-            {/* Circle dot */}
-            <div className="absolute top-[7px] left-0 z-10 size-[15px] rounded-full border-2 border-mid bg-paper" />
-            {/* Vertical line below circle */}
-            <div className="absolute top-[26px] bottom-0 left-[7px] w-px bg-border" />
-
-            {/* Month label */}
-            <div className="pb-5 pl-[31px]">
-              <span className="font-dm-mono text-2xs tracking-[0.08em] text-muted uppercase">
-                {month.month} {month.year}
-              </span>
-            </div>
-
-            {/* Entries */}
-            <div className="ml-[31px] space-y-5">
-              {month.entries.map((entry) => (
-                <div key={entry.title}>
-                  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                    <h3 className="font-serif text-sm font-light text-ink">{entry.title}</h3>
-                    {entry.tags?.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-surface px-2 py-0.5 font-dm-mono text-2xs text-muted"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <p className="mt-2 text-[13px] leading-relaxed text-dim">{entry.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      <TimelineContent data={data} />
     </div>
   );
 }

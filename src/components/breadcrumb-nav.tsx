@@ -1,19 +1,38 @@
-import Link from "next/link";
+"use client";
 
-export function BreadcrumbNav({ page }: { page: string }) {
+import { cn } from "@/lib/cn";
+import { entrance } from "@/lib/entrance";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+export function BreadcrumbNav() {
+  const pathname = usePathname();
+  const page = pathname.split("/").find(Boolean);
+
   return (
     <nav
-      className="hidden items-center gap-1.5 font-dm-mono text-[13px] tracking-[0.02em] lg:flex"
+      className="flex items-center gap-1.5 font-mono text-[13px] tracking-[0.02em]"
       aria-label="Breadcrumb"
     >
-      <Link
-        href="/"
-        className="text-ink underline-offset-2 transition-colors hover:underline hover:decoration-link"
-      >
-        chayut c.
+      <Link href="/" className="text-ink transition-colors hover:text-accent">
+        chayut.me
       </Link>
-      <span className="text-muted">/</span>
-      <span className="text-dim">{page}</span>
+      {page && (
+        <>
+          <span
+            key={`sep-${page}`}
+            className={cn("text-muted", entrance({ duration: 500, slide: false }))}
+          >
+            /
+          </span>
+          <span
+            key={page}
+            className={cn("text-dim", entrance({ delay: 50, duration: 500, slide: "left-1" }))}
+          >
+            {page}
+          </span>
+        </>
+      )}
     </nav>
   );
 }

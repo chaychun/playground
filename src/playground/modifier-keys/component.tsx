@@ -60,18 +60,16 @@ function Keycap({
         isEnterSize ? "min-w-[88px] px-5 py-2.5" : "min-w-[52px] px-4 py-2.5",
         isError
           ? [
-              "bg-[#f5e8e8] dark:bg-[#3a2828]",
-              "border border-[#d4a0a0] dark:border-[#5a3535]",
-              "text-[#b05050] dark:text-[#c47070]",
-              "shadow-[0_4px_0_0_#d4a0a0,0_4px_8px_rgba(180,80,80,0.15),inset_0_1px_0_rgba(255,255,255,0.9)]",
-              "dark:shadow-[0_4px_0_0_#2a1515,0_4px_8px_rgba(80,30,30,0.3),inset_0_1px_0_rgba(255,255,255,0.04)]",
+              "bg-[#3a2828]",
+              "border border-[#5a3535]",
+              "text-[#c47070]",
+              "shadow-[0_4px_0_0_#2a1515,0_4px_8px_rgba(80,30,30,0.3),inset_0_1px_0_rgba(255,255,255,0.04)]",
             ]
           : [
-              "bg-white dark:bg-[#3a3936]",
-              "border border-[#c5c5c1] dark:border-[#4a4947]",
+              "bg-[#3a3936]",
+              "border border-[#4a4947]",
               "text-ink",
-              "shadow-[0_4px_0_0_#c5c5c1,0_4px_8px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.9)]",
-              "dark:shadow-[0_4px_0_0_rgba(26,25,24,1),0_4px_8px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.06)]",
+              "shadow-[0_4px_0_0_rgba(26,25,24,1),0_4px_8px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.06)]",
             ],
       )}
     >
@@ -119,7 +117,7 @@ export default function ModifierKeys() {
   const hasModifiers = activeModifiers.length > 0;
 
   return (
-    <div className="flex h-full items-center justify-center rounded-2xl bg-[#e9e9e5] dark:bg-[#1a1918]">
+    <div className="flex h-full items-center justify-center rounded-2xl bg-[#1a1918]">
       <div className="flex h-[46px] items-center gap-4">
         {/* Modifier keys area — fixed width so Enter never moves */}
         <div className="flex w-[180px] items-center justify-end gap-3">

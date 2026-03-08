@@ -3,7 +3,6 @@
 import { WorkFeed } from "@/components/work-feed";
 import { cn } from "@/lib/cn";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
-import { C } from "@/lib/palette";
 import type { Item } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
@@ -11,10 +10,7 @@ import { useState } from "react";
 // ─── Preview Panel (left) ────────────────────────────────────────
 function PreviewPanel({ item }: { item: Item | null }) {
   return (
-    <div
-      className="relative flex h-full w-[40%] shrink-0 flex-col overflow-hidden"
-      style={{ backgroundColor: C.bg }}
-    >
+    <div className="relative flex h-full w-[var(--panel-split)] shrink-0 flex-col overflow-hidden bg-paper">
       {/* Component preview */}
       {item && item.type === "interactive" && (
         <div className="flex flex-1 items-center justify-center overflow-hidden">
@@ -32,19 +28,13 @@ function PreviewPanel({ item }: { item: Item | null }) {
         <div
           className="pointer-events-none absolute inset-x-0 bottom-0 p-6 xl:p-10"
           style={{
-            background: `linear-gradient(to top, ${C.bg} 0%, ${C.bg}cc 40%, transparent 100%)`,
+            background: `linear-gradient(to top, var(--paper) 0%, color-mix(in srgb, var(--paper) 80%, transparent) 40%, transparent 100%)`,
           }}
         >
-          <span
-            className="font-dm-mono text-[10px] leading-[12px] tracking-[0.06em] uppercase"
-            style={{ color: C.textSecondary }}
-          >
+          <span className="font-mono text-[10px] leading-[12px] tracking-[0.06em] text-muted uppercase">
             {item.category || "exploration"}
           </span>
-          <h2
-            className="mt-1.5 font-serif text-[24px] leading-[30px] font-extralight xl:text-[32px] xl:leading-[38px]"
-            style={{ color: C.text }}
-          >
+          <h2 className="mt-1.5 font-serif text-[24px] leading-[30px] font-extralight text-ink xl:text-[32px] xl:leading-[38px]">
             {item.title}
           </h2>
         </div>
@@ -66,26 +56,14 @@ function WorkTable({
   return (
     <div>
       {/* Header row */}
-      <div
-        className="flex items-baseline px-3 pb-3"
-        style={{ borderBottom: `1px solid ${C.border}` }}
-      >
-        <span
-          className="w-[160px] shrink-0 font-dm-mono text-[10px] tracking-[0.04em] uppercase xl:w-[220px]"
-          style={{ color: C.textFaint }}
-        >
+      <div className="flex items-baseline border-b border-border px-3 pb-3">
+        <span className="w-[160px] shrink-0 font-mono text-[10px] tracking-[0.04em] text-muted uppercase xl:w-[220px]">
           Name
         </span>
-        <span
-          className="hidden min-w-0 flex-1 font-dm-mono text-[10px] tracking-[0.04em] uppercase xl:block"
-          style={{ color: C.textFaint }}
-        >
+        <span className="hidden min-w-0 flex-1 font-mono text-[10px] tracking-[0.04em] text-muted uppercase xl:block">
           Description
         </span>
-        <span
-          className="hidden shrink-0 font-dm-mono text-[10px] tracking-[0.04em] uppercase 2xl:block"
-          style={{ color: C.textFaint }}
-        >
+        <span className="hidden shrink-0 font-mono text-[10px] tracking-[0.04em] text-muted uppercase 2xl:block">
           Type
         </span>
       </div>
@@ -100,29 +78,31 @@ function WorkTable({
             type="button"
             onClick={() => onSelect(isActive ? null : item.slug)}
             className={cn(
-              "flex w-full cursor-pointer items-baseline px-3 py-[14px] text-left",
-              !isActive && "hover:bg-[#C8C4BC10]",
+              "flex w-full cursor-pointer items-baseline border-b border-border px-3 py-[14px] text-left",
+              isActive ? "bg-ink" : "hover:bg-ink/[0.06]",
             )}
-            style={{
-              backgroundColor: isActive ? C.activeBg : undefined,
-              borderBottom: `1px solid ${C.border}`,
-            }}
           >
             <span
-              className="w-[160px] shrink-0 font-serif text-[16px] leading-[20px] font-light xl:w-[220px]"
-              style={{ color: isActive ? C.activeFg : C.text }}
+              className={cn(
+                "w-[160px] shrink-0 font-serif text-[16px] leading-[20px] font-light xl:w-[220px]",
+                isActive ? "text-ink-inv" : "text-ink",
+              )}
             >
               {item.title}
             </span>
             <span
-              className="hidden min-w-0 flex-1 truncate pr-4 font-body text-[11px] leading-[14px] font-normal xl:block"
-              style={{ color: isActive ? C.activeFgSecondary : C.textTertiary }}
+              className={cn(
+                "hidden min-w-0 flex-1 truncate pr-4 font-sans text-xs leading-[16px] font-normal xl:block",
+                isActive ? "text-ink-inv/70" : "text-muted",
+              )}
             >
               {item.description}
             </span>
             <span
-              className="hidden shrink-0 font-dm-mono text-[10px] tracking-[0.04em] uppercase 2xl:block"
-              style={{ color: isActive ? C.activeFgTertiary : C.textFaint }}
+              className={cn(
+                "hidden shrink-0 font-mono text-[10px] tracking-[0.04em] uppercase 2xl:block",
+                isActive ? "text-ink-inv/50" : "text-muted",
+              )}
             >
               {item.category || "exploration"}
             </span>
@@ -140,71 +120,43 @@ export function HomePage({ items }: { items: Item[] }) {
 
   return (
     <>
-      {/* Mobile: existing card feed */}
-      <div className="lg:hidden">
+      {/* Mobile: card feed */}
+      <div className="px-5 lg:hidden">
         <WorkFeed items={items} />
       </div>
 
       {/* Desktop: two-panel layout */}
-      <div className="hidden h-full lg:flex" style={{ backgroundColor: C.bg }}>
+      <div className="hidden h-full bg-paper lg:flex">
         {/* Left: Preview */}
         <PreviewPanel item={selectedItem} />
 
-        {/* Right: Content — space-between pushes table to bottom */}
-        <div
-          className="flex min-w-0 flex-1 flex-col justify-between overflow-x-hidden overflow-y-auto px-8 py-10 xl:px-12"
-          style={{ backgroundColor: C.bg }}
-        >
-          {/* Top: Identity + Intro */}
-          <div>
-            <div className="flex h-10 items-center">
-              <span
-                className="font-dm-mono text-[13px] tracking-[0.02em]"
-                style={{ color: C.text }}
-              >
-                chayut c.
-              </span>
-            </div>
-
-            <div className="mt-10">
-              <h1
-                className="font-serif text-[20px] leading-[28px] font-extralight xl:text-[24px] xl:leading-[32px]"
-                style={{ color: C.text }}
-              >
-                I&apos;m Chayut, a designer and builder exploring{" "}
-                <em className="italic" style={{ color: C.accent }}>
-                  interface craft
-                </em>
-                .
-              </h1>
-              <p
-                className="mt-4 font-body text-[13px] leading-[20px] font-light"
-                style={{ color: C.textSecondary }}
-              >
-                This site is a collection of my experiments, studies, and writings on software
-                design. Feel free to explore! You can also read{" "}
-                <Link
-                  href="/about"
-                  className="underline decoration-[rgba(166,205,210,0.4)] underline-offset-[2px] transition-colors hover:decoration-[rgba(166,205,210,0.8)]"
-                  style={{ color: C.text }}
-                >
-                  about me
-                </Link>{" "}
-                and see what I&apos;m{" "}
-                <Link
-                  href="/now"
-                  className="underline decoration-[rgba(166,205,210,0.4)] underline-offset-[2px] transition-colors hover:decoration-[rgba(166,205,210,0.8)]"
-                  style={{ color: C.text }}
-                >
-                  currently up to
-                </Link>
-                .
-              </p>
-            </div>
+        {/* Right: Content */}
+        <div className="stagger-entrance flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12">
+          <h1 className="font-serif text-[20px] leading-[28px] font-extralight text-ink xl:text-[24px] xl:leading-[32px]">
+            I&apos;m Chayut, a designer and builder exploring{" "}
+            <em className="text-accent italic">interface craft</em>.
+          </h1>
+          <p className="mt-4 max-w-lg text-[13px] leading-relaxed text-dim">
+            This site is a collection of my experiments, studies, and writings on software design.
+            Feel free to explore! You can also read{" "}
+            <Link
+              href="/about"
+              className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
+            >
+              about me
+            </Link>{" "}
+            and see what I&apos;m{" "}
+            <Link
+              href="/now"
+              className="text-ink underline decoration-accent/30 underline-offset-2 transition-colors hover:decoration-accent"
+            >
+              currently up to
+            </Link>
+            .
+          </p>
+          <div className="mt-auto">
+            <WorkTable items={items} selectedSlug={selectedSlug} onSelect={setSelectedSlug} />
           </div>
-
-          {/* Bottom: Work table */}
-          <WorkTable items={items} selectedSlug={selectedSlug} onSelect={setSelectedSlug} />
         </div>
       </div>
     </>
