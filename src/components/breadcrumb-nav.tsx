@@ -2,21 +2,29 @@
 
 import { cn } from "@/lib/cn";
 import { entrance } from "@/lib/entrance";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export function BreadcrumbNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const page = pathname.split("/").find(Boolean);
 
   return (
     <nav
-      className="flex items-center gap-1.5 font-mono text-[13px] tracking-[0.02em]"
+      className="flex items-center gap-1.5 font-mono text-[13px] tracking-[0.02em] select-none"
       aria-label="Breadcrumb"
     >
-      <Link href="/" className="text-ink transition-colors hover:text-accent">
-        chayut.me
-      </Link>
+      {page ? (
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="cursor-pointer text-ink transition-colors hover:text-accent"
+        >
+          chayut.me
+        </button>
+      ) : (
+        <span className="text-ink transition-colors hover:text-accent">chayut.me</span>
+      )}
       {page && (
         <>
           <span

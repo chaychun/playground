@@ -8,6 +8,8 @@ export type Item = {
   createdAt: string;
   category?: ItemCategory;
   links?: { label: string; href: string }[];
+  panelWidth?: { minPanelPx: number; panelPercent: number };
+  previewSrc?: string;
 } & (
   | { type: "interactive" }
   | { type: "preview"; name: string; props?: Record<string, unknown> }
