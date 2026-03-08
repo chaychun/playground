@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/cn";
-import { entrance } from "@/lib/entrance";
+import { AnimatePresence, motion } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
+
+const transition = { duration: 0.3, ease: "easeInOut" as const };
 
 export function BreadcrumbNav() {
   const pathname = usePathname();
@@ -25,22 +26,22 @@ export function BreadcrumbNav() {
       ) : (
         <span className="text-ink transition-colors hover:text-accent">chayut.me</span>
       )}
-      {page && (
-        <>
-          <span
-            key={`sep-${page}`}
-            className={cn("text-muted", entrance({ duration: 500, slide: false }))}
-          >
-            /
-          </span>
-          <span
+      <span className="text-muted">/</span>
+      <AnimatePresence mode="popLayout">
+        {page && (
+          <motion.span
             key={page}
-            className={cn("text-dim", entrance({ delay: 50, duration: 500, slide: "left-1" }))}
+            className="text-dim"
+            layout
+            initial={{ opacity: 0, filter: "blur(4px)", x: -8 }}
+            animate={{ opacity: 1, filter: "blur(0px)", x: 0 }}
+            exit={{ opacity: 0, filter: "blur(4px)", x: -8 }}
+            transition={transition}
           >
             {page}
-          </span>
-        </>
-      )}
+          </motion.span>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
