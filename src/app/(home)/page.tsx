@@ -35,6 +35,9 @@ export default async function Home() {
       {/* Mobile: intro + linked list */}
       <div className="entrance flex flex-col px-5 pt-10 pb-6 lg:hidden">
         <Intro />
+        <p className="mt-4 text-[11px] leading-relaxed text-muted">
+          Mobile layout is in progress — for the best experience, visit on desktop.
+        </p>
         <div className="stagger-entrance mt-10">
           {items.map((item) => (
             <Link
