@@ -26,12 +26,11 @@ export function ScrollEdgeBlur({
 
   return (
     <div className={cn("relative", className)} aria-hidden="true" {...props}>
-      {/* Subtle color fade to blend scrolled content into the background */}
+      {/* Color fade — paper drops off quickly toward transparent */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `linear-gradient(${GRADIENT_ANGLES[direction]}deg, var(--paper) 0%, transparent 100%)`,
-          opacity: 0.8,
+          background: `linear-gradient(${(GRADIENT_ANGLES[direction] + 180) % 360}deg, var(--paper) 0%, color-mix(in oklch, var(--paper) 40%, transparent) 30%, transparent 70%)`,
         }}
       />
       {Array.from({ length: layers }, (_, index) => {
