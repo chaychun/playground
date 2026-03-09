@@ -1,4 +1,5 @@
 import { PreviewPanel } from "@/components/preview-panel";
+import { StaggerEntrance } from "@/components/stagger-entrance";
 import { getAllItems, getPreviewBySlug } from "@/lib/content";
 import { inlineLink } from "@/lib/styles";
 import { DEFAULT_CATEGORY } from "@/lib/types";
@@ -38,7 +39,7 @@ export default async function Home() {
         <p className="mt-4 text-[11px] leading-relaxed text-muted">
           Mobile layout is in progress — for the best experience, visit on desktop.
         </p>
-        <div className="stagger-entrance mt-10">
+        <StaggerEntrance className="mt-10">
           {items.map((item) => (
             <Link
               key={item.slug}
@@ -58,7 +59,7 @@ export default async function Home() {
               )}
             </Link>
           ))}
-        </div>
+        </StaggerEntrance>
       </div>
 
       {/* Desktop: two-panel layout */}
@@ -67,7 +68,7 @@ export default async function Home() {
         <PreviewPanel previewMap={previewMap} />
 
         {/* Right: content */}
-        <div className="stagger-entrance flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12">
+        <StaggerEntrance className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12">
           <Intro />
           <div className="mt-auto">
             {/* Header row */}
@@ -103,7 +104,7 @@ export default async function Home() {
               </Link>
             ))}
           </div>
-        </div>
+        </StaggerEntrance>
       </div>
     </>
   );

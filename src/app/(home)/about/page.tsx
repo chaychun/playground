@@ -1,3 +1,4 @@
+import { StaggerEntrance } from "@/components/stagger-entrance";
 import { type SocialLink, SOCIAL_LINKS } from "@/data/social";
 import { inlineLink } from "@/lib/styles";
 import Link from "next/link";
@@ -10,7 +11,7 @@ const ABOUT_SOCIAL_LINKS: (SocialLink & { display: string })[] = [
 
 export default function AboutPage() {
   return (
-    <div className="stagger-entrance px-5 pt-10 pb-6 lg:ml-[var(--panel-split)] lg:h-full lg:overflow-y-auto lg:px-8 lg:pt-24 lg:pb-10 xl:px-12">
+    <StaggerEntrance className="px-5 pt-10 pb-6 lg:ml-[var(--panel-split)] lg:h-full lg:overflow-y-auto lg:px-8 lg:pt-24 lg:pb-10 xl:px-12">
       <div className="max-w-lg space-y-4 text-[13px] leading-relaxed text-dim">
         <p>
           I design and build cool things with code, focusing on motion-led interactions and
@@ -52,6 +53,6 @@ export default function AboutPage() {
           </a>
         ))}
       </div>
-    </div>
+    </StaggerEntrance>
   );
 }

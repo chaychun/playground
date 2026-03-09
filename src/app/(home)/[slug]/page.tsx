@@ -1,3 +1,4 @@
+import { StaggerEntrance } from "@/components/stagger-entrance";
 import { cn } from "@/lib/cn";
 import { getAllItems, getItemBySlug } from "@/lib/content";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
@@ -57,14 +58,14 @@ export default async function ItemPage({ params }: { params: Promise<Params> }) 
           </div>
         )}
 
-        <div
+        <StaggerEntrance
           className={cn(
-            "entrance flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12",
+            "flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12",
             !hasPanel && "lg:ml-[var(--panel-split)]",
           )}
         >
           {content}
-        </div>
+        </StaggerEntrance>
       </div>
     </>
   );
