@@ -242,7 +242,7 @@ export default function GraecoLatinSquares() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              className="aspect-square h-full max-w-full"
+              className="aspect-square max-h-full w-full"
             >
               <svg
                 ref={svgRef}
