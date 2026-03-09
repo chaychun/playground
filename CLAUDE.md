@@ -22,7 +22,7 @@ Pre-commit hook enforces these checks automatically.
 
 ## Adding Items
 
-All items defined in `src/data/items.ts`. Interactive components go in `src/playground/<slug>/component.tsx` (`"use client"`, single default export). Preview components go in `src/preview/<name>.tsx`.
+Each item lives in `src/playground/<slug>/` with a `content.mdx` frontmatter file defining metadata (title, description, type, panelWidth, etc.). Interactive components go in `src/playground/<slug>/component.tsx` (`"use client"`, single default export). Preview components go in `src/preview/<name>.tsx`. Item loading is handled by `src/lib/content.ts`.
 
 ## Design
 

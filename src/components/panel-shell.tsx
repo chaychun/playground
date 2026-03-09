@@ -25,7 +25,7 @@ export function PanelShell({
 
   return (
     <div
-      className="relative flex min-h-svh flex-col bg-paper lg:h-svh lg:overflow-hidden"
+      className="relative flex h-svh flex-col overflow-hidden bg-paper"
       style={{ "--panel-split": panelSplit } as CSSProperties}
     >
       {children}
