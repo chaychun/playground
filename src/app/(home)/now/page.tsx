@@ -1,3 +1,4 @@
+import { StaggerEntrance } from "@/components/stagger-entrance";
 import timelineData from "@/data/now-timeline.json";
 
 type TimelineEntry = {
@@ -62,7 +63,7 @@ export default function NowPage() {
 
   return (
     <div className="px-5 pt-10 pb-6 lg:ml-[var(--panel-split)] lg:h-full lg:overflow-y-auto lg:px-8 lg:pt-24 lg:pb-10 xl:px-12">
-      <header className="stagger-entrance">
+      <StaggerEntrance>
         <h1 className="font-serif text-lg font-extralight text-ink lg:text-xl">
           What I&apos;m doing, thinking about, and working on.
         </h1>
@@ -78,7 +79,7 @@ export default function NowPage() {
           </a>
           .
         </p>
-      </header>
+      </StaggerEntrance>
       <TimelineContent data={data} />
     </div>
   );
