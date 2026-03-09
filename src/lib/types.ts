@@ -1,7 +1,7 @@
+import type { StaticImageData } from "next/image";
+
 export type ItemCategory = "exploration" | "pattern" | "case study";
 export const DEFAULT_CATEGORY: ItemCategory = "exploration";
-
-import type { StaticImageData } from "next/image";
 
 export type PreviewSrc = string | StaticImageData;
 

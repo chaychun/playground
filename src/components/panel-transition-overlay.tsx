@@ -17,10 +17,10 @@ import { flushSync } from "react-dom";
  * the video keeps playing seamlessly (like Astro transition:persist).
  *
  *    0ms   overlay captures snapshot + media size
- *          panel width CSS transition starts (500ms expo)
- *  550ms   panel width settled
- *  600ms   clip transition begins: inset(0) → inset(100% 0 0 0)
- * 1100ms   clip complete, overlay unmounts
+ *          panel width CSS transition starts (700ms expo)
+ *  800ms   panel width settled → clip transition begins
+ *          inset(0) → inset(100% 0 0 0) over 600ms
+ * 1400ms   clip complete, overlay unmounts
  * ───────────────────────────────────────────────────────── */
 
 const TIMING = {
@@ -115,6 +115,11 @@ function PreviewMedia({
   const srcs = Array.isArray(preview.src) ? preview.src : [preview.src];
   const [cycleIndex, setCycleIndex] = useState(0);
 
+  // Reset cycle when switching to a different preview
+  useEffect(() => {
+    setCycleIndex(0);
+  }, [preview]);
+
   useEffect(() => {
     if (srcs.length <= 1 || !preview.interval) return;
     const ms = preview.interval * 1000;
@@ -136,7 +141,9 @@ function PreviewMedia({
         clipPath: clipping ? "inset(100% 0 0 0)" : "inset(0 0 0 0)",
         transition: clipping ? `clip-path ${TIMING.clipDuration}ms ${EASE}` : "none",
       }}
-      onTransitionEnd={onTransitionEnd}
+      onTransitionEnd={(e) => {
+        if (e.propertyName === "clip-path") onTransitionEnd();
+      }}
     >
       <div
         ref={innerRef}

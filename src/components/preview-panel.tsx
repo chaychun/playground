@@ -9,28 +9,30 @@ export function PreviewPanel({ previewMap }: { previewMap: Record<string, Previe
   mapRef.current = previewMap;
 
   useEffect(() => {
-    function handlePointerEnter(e: PointerEvent) {
+    function handlePointerOver(e: PointerEvent) {
       const el = e.target instanceof Element ? e.target : (e.target as Node).parentElement;
       const target = el?.closest("[data-preview-slug]");
-      if (target) {
-        const slug = target.getAttribute("data-preview-slug");
-        transitionStore.setActive(slug ? (mapRef.current[slug] ?? null) : null);
-      }
+      const slug = target?.getAttribute("data-preview-slug");
+      transitionStore.setActive(slug ? (mapRef.current[slug] ?? null) : null);
     }
 
-    function handlePointerLeave(e: PointerEvent) {
+    function handlePointerOut(e: PointerEvent) {
       const el = e.target instanceof Element ? e.target : (e.target as Node).parentElement;
-      const target = el?.closest("[data-preview-slug]");
-      if (target) {
-        transitionStore.setActive(null);
-      }
+      const related =
+        e.relatedTarget instanceof Element
+          ? e.relatedTarget
+          : (e.relatedTarget as Node | null)?.parentElement;
+      const from = el?.closest("[data-preview-slug]");
+      const to = related?.closest("[data-preview-slug]");
+      // Only clear when leaving a row without entering another
+      if (from && !to) transitionStore.setActive(null);
     }
 
-    document.addEventListener("pointerenter", handlePointerEnter, true);
-    document.addEventListener("pointerleave", handlePointerLeave, true);
+    document.addEventListener("pointerover", handlePointerOver);
+    document.addEventListener("pointerout", handlePointerOut);
     return () => {
-      document.removeEventListener("pointerenter", handlePointerEnter, true);
-      document.removeEventListener("pointerleave", handlePointerLeave, true);
+      document.removeEventListener("pointerover", handlePointerOver);
+      document.removeEventListener("pointerout", handlePointerOut);
       transitionStore.setActive(null);
     };
   }, []);
