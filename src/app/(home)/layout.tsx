@@ -1,18 +1,29 @@
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
 import { PanelShell } from "@/components/panel-shell";
+import { ScrollEdgeBlur } from "@/components/scroll-edge-blur";
+import { getPanelWidthBySlug } from "@/lib/content";
 
-export default function HomeLayout({
+export default async function HomeLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const panelWidthMap = await getPanelWidthBySlug();
+
   return (
-    <PanelShell>
+    <PanelShell panelWidthMap={panelWidthMap}>
       {/* Persistent breadcrumb — stays mounted across page navigations */}
-      <div className="shrink-0 px-5 pt-6 lg:absolute lg:top-0 lg:right-0 lg:left-[var(--panel-split)] lg:z-20 lg:bg-paper lg:px-8 lg:pt-10 lg:pb-4 xl:px-12 print:hidden">
-        <BreadcrumbNav />
+      <div className="relative z-20 shrink-0 lg:absolute lg:top-0 lg:right-0 lg:left-[var(--panel-split)] print:hidden">
+        <div className="bg-paper/80 px-5 pt-4 pb-1 backdrop-blur-xl lg:px-8 lg:pt-10 xl:px-12">
+          <BreadcrumbNav />
+        </div>
+        <ScrollEdgeBlur
+          direction="top"
+          blurIntensity={0.5}
+          className="absolute inset-x-0 top-full h-8"
+        />
       </div>
-      <main className="min-w-0 flex-1 lg:overflow-hidden">{children}</main>
+      <main className="min-w-0 flex-1 overflow-y-auto lg:overflow-hidden">{children}</main>
     </PanelShell>
   );
 }

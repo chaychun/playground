@@ -12,6 +12,7 @@ export type Item = {
   previewSrc?: string;
 } & (
   | { type: "interactive" }
+  | { type: "content" }
   | { type: "preview"; name: string; props?: Record<string, unknown> }
   | { type: "image"; src: string }
   | { type: "video"; src: string }

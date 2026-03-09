@@ -15,7 +15,7 @@ export default function AboutPage() {
         <p>
           I design and build cool things with code, focusing on motion-led interactions and
           interface patterns that improve the experience of the user. I believe deeply in calm
-          technology: tools that assists humans while remaining unintrusive. That&apos;s always the
+          technology: tools that assist humans while remaining unintrusive. That&apos;s always the
           goal when I build anything.
         </p>
         <p>

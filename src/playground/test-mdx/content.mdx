@@ -1,0 +1,62 @@
+---
+title: "MDX Test Page"
+description: "A test page demonstrating all MDX rendering capabilities."
+createdAt: "2026-03-09"
+category: "exploration"
+type: "content"
+---
+
+# Heading One
+
+This is a paragraph of body text. It should render in the dim color at 13px with relaxed line height, capped at `max-w-lg`. Here's a [link to something](#) to test inline link styling.
+
+## Heading Two
+
+Another paragraph under a second-level heading. The spacing between headings and body should feel natural and editorial.
+
+### Heading Three
+
+The smallest heading level we style. Still uses the serif typeface but at a more modest size.
+
+---
+
+## Lists
+
+Here's an unordered list:
+
+- First item in the list
+- Second item, slightly longer to see how wrapping works across multiple lines of content
+- Third item
+
+And an ordered list:
+
+1. Step one of something
+2. Step two follows naturally
+3. Step three completes the sequence
+
+## Code
+
+Inline code looks like `const x = 42` within a sentence.
+
+A fenced code block:
+
+```tsx
+function greet(name: string) {
+  return `Hello, ${name}!`;
+}
+```
+
+## Blockquote
+
+> Calm technology: tools that assist humans while remaining unintrusive. That's always the goal when I build anything.
+
+## Custom Component
+
+<Callout>
+  This is a custom Callout component rendered from MDX. It demonstrates that arbitrary React
+  components can be used alongside standard markdown syntax.
+</Callout>
+
+## Mixed Content
+
+A final paragraph that ties everything together. The MDX system supports **bold**, _italic_, and `inline code` alongside [links](#), all inheriting the design system's typography and color tokens.

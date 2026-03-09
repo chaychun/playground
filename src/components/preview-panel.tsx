@@ -1,9 +1,8 @@
 "use client";
 
-import { previewSrcBySlug } from "@/data/items";
 import { useEffect, useState } from "react";
 
-export function PreviewPanel() {
+export function PreviewPanel({ previewSrcMap }: { previewSrcMap: Record<string, string> }) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,7 +28,7 @@ export function PreviewPanel() {
     };
   }, []);
 
-  const previewSrc = hoveredSlug ? previewSrcBySlug[hoveredSlug] : null;
+  const previewSrc = hoveredSlug ? previewSrcMap[hoveredSlug] : null;
 
   return (
     <div className="relative flex h-full w-[var(--panel-split)] shrink-0 flex-col overflow-hidden bg-paper">

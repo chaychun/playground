@@ -1,5 +1,5 @@
 import { PreviewPanel } from "@/components/preview-panel";
-import { items } from "@/data/items";
+import { getAllItems, getPreviewSrcBySlug } from "@/lib/content";
 import { inlineLink } from "@/lib/styles";
 import { DEFAULT_CATEGORY } from "@/lib/types";
 import Link from "next/link";
@@ -27,8 +27,8 @@ function Intro() {
   );
 }
 
-export default function Home() {
-  const sorted = items.toSorted((a, b) => b.createdAt.localeCompare(a.createdAt));
+export default async function Home() {
+  const [items, previewSrcMap] = await Promise.all([getAllItems(), getPreviewSrcBySlug()]);
 
   return (
     <>
@@ -36,7 +36,7 @@ export default function Home() {
       <div className="entrance flex flex-col px-5 pt-10 pb-6 lg:hidden">
         <Intro />
         <div className="stagger-entrance mt-10">
-          {sorted.map((item) => (
+          {items.map((item) => (
             <Link
               key={item.slug}
               href={`/${item.slug}`}
@@ -61,7 +61,7 @@ export default function Home() {
       {/* Desktop: two-panel layout */}
       <div className="hidden h-full bg-paper lg:flex">
         {/* Left: static preview on hover */}
-        <PreviewPanel />
+        <PreviewPanel previewSrcMap={previewSrcMap} />
 
         {/* Right: content */}
         <div className="stagger-entrance flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12">
@@ -81,7 +81,7 @@ export default function Home() {
             </div>
 
             {/* Data rows */}
-            {sorted.map((item) => (
+            {items.map((item) => (
               <Link
                 key={item.slug}
                 href={`/${item.slug}`}
