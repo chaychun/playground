@@ -1,5 +1,5 @@
 import { PreviewPanel } from "@/components/preview-panel";
-import { getAllItems, getPreviewSrcBySlug } from "@/lib/content";
+import { getAllItems, getPreviewBySlug } from "@/lib/content";
 import { inlineLink } from "@/lib/styles";
 import { DEFAULT_CATEGORY } from "@/lib/types";
 import Link from "next/link";
@@ -28,7 +28,7 @@ function Intro() {
 }
 
 export default async function Home() {
-  const [items, previewSrcMap] = await Promise.all([getAllItems(), getPreviewSrcBySlug()]);
+  const [items, previewMap] = await Promise.all([getAllItems(), getPreviewBySlug()]);
 
   return (
     <>
@@ -64,7 +64,7 @@ export default async function Home() {
       {/* Desktop: two-panel layout */}
       <div className="hidden h-full bg-paper lg:flex">
         {/* Left: static preview on hover */}
-        <PreviewPanel previewSrcMap={previewSrcMap} />
+        <PreviewPanel previewMap={previewMap} />
 
         {/* Right: content */}
         <div className="stagger-entrance flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12">
