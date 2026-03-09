@@ -6,25 +6,20 @@ export function PreviewPanel({ previewSrcMap }: { previewSrcMap: Record<string, 
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
 
   useEffect(() => {
-    function handlePointerEnter(e: PointerEvent) {
-      const target = (e.target as HTMLElement).closest("[data-preview-slug]");
-      if (target) {
-        setHoveredSlug(target.getAttribute("data-preview-slug"));
-      }
+    function handlePointerOver(e: PointerEvent) {
+      const target = (e.target as HTMLElement).closest?.("[data-preview-slug]");
+      setHoveredSlug(target?.getAttribute("data-preview-slug") ?? null);
     }
 
-    function handlePointerLeave(e: PointerEvent) {
-      const target = (e.target as HTMLElement).closest("[data-preview-slug]");
-      if (target) {
-        setHoveredSlug(null);
-      }
+    function handlePointerLeave() {
+      setHoveredSlug(null);
     }
 
-    document.addEventListener("pointerenter", handlePointerEnter, true);
-    document.addEventListener("pointerleave", handlePointerLeave, true);
+    document.addEventListener("pointerover", handlePointerOver);
+    document.addEventListener("pointerleave", handlePointerLeave);
     return () => {
-      document.removeEventListener("pointerenter", handlePointerEnter, true);
-      document.removeEventListener("pointerleave", handlePointerLeave, true);
+      document.removeEventListener("pointerover", handlePointerOver);
+      document.removeEventListener("pointerleave", handlePointerLeave);
     };
   }, []);
 
