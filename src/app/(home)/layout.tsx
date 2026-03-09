@@ -12,7 +12,7 @@ export default function HomeLayout({
     <PanelShell>
       {/* Persistent breadcrumb — stays mounted across page navigations */}
       <div className="relative z-20 shrink-0 lg:absolute lg:top-0 lg:right-0 lg:left-[var(--panel-split)] print:hidden">
-        <div className="bg-paper/80 px-5 pt-4 pb-1 backdrop-blur-xl lg:px-8 lg:pt-10 xl:px-12">
+        <div className="bg-paper px-5 pt-4 pb-1 lg:px-8 lg:pt-10 xl:px-12">
           <BreadcrumbNav />
         </div>
         <ScrollEdgeBlur

@@ -140,6 +140,7 @@ function PreviewMedia({
         background: preview.bg ?? "var(--color-paper)",
         clipPath: clipping ? "inset(100% 0 0 0)" : "inset(0 0 0 0)",
         transition: clipping ? `clip-path ${TIMING.clipDuration}ms ${EASE}` : "none",
+        willChange: isTransitioning ? "clip-path" : "auto",
       }}
       onTransitionEnd={(e) => {
         if (e.propertyName === "clip-path") onTransitionEnd();
