@@ -1,46 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { transitionStore } from "@/lib/transition-store";
+import type { PreviewConfig } from "@/lib/types";
+import { useEffect, useRef } from "react";
 
-export function PreviewPanel({ previewSrcMap }: { previewSrcMap: Record<string, string> }) {
-  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+export function PreviewPanel({ previewMap }: { previewMap: Record<string, PreviewConfig> }) {
+  const mapRef = useRef(previewMap);
+  mapRef.current = previewMap;
 
   useEffect(() => {
-    function handlePointerOver(e: PointerEvent) {
-      const target = (e.target as HTMLElement).closest?.("[data-preview-slug]");
-      setHoveredSlug(target?.getAttribute("data-preview-slug") ?? null);
+    function handlePointerEnter(e: PointerEvent) {
+      const el = e.target instanceof Element ? e.target : (e.target as Node).parentElement;
+      const target = el?.closest("[data-preview-slug]");
+      if (target) {
+        const slug = target.getAttribute("data-preview-slug");
+        transitionStore.setActive(slug ? (mapRef.current[slug] ?? null) : null);
+      }
     }
 
-    function handlePointerLeave() {
-      setHoveredSlug(null);
+    function handlePointerLeave(e: PointerEvent) {
+      const el = e.target instanceof Element ? e.target : (e.target as Node).parentElement;
+      const target = el?.closest("[data-preview-slug]");
+      if (target) {
+        transitionStore.setActive(null);
+      }
     }
 
-    document.addEventListener("pointerover", handlePointerOver);
-    document.addEventListener("pointerleave", handlePointerLeave);
+    document.addEventListener("pointerenter", handlePointerEnter, true);
+    document.addEventListener("pointerleave", handlePointerLeave, true);
     return () => {
-      document.removeEventListener("pointerover", handlePointerOver);
-      document.removeEventListener("pointerleave", handlePointerLeave);
+      document.removeEventListener("pointerenter", handlePointerEnter, true);
+      document.removeEventListener("pointerleave", handlePointerLeave, true);
+      transitionStore.setActive(null);
     };
   }, []);
 
-  const previewSrc = hoveredSlug ? previewSrcMap[hoveredSlug] : null;
-
-  return (
-    <div className="relative flex h-full w-[var(--panel-split)] shrink-0 flex-col overflow-hidden bg-paper">
-      {previewSrc &&
-        (previewSrc.endsWith(".mp4") || previewSrc.endsWith(".webm") ? (
-          <video
-            src={previewSrc}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={previewSrc} alt="" className="h-full w-full object-cover" />
-        ))}
-    </div>
-  );
+  return <div className="relative h-full w-[var(--panel-split)] shrink-0 bg-paper" />;
 }

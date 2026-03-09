@@ -1,6 +1,19 @@
 export type ItemCategory = "exploration" | "pattern" | "case study";
 export const DEFAULT_CATEGORY: ItemCategory = "exploration";
 
+import type { StaticImageData } from "next/image";
+
+export type PreviewSrc = string | StaticImageData;
+
+export type PreviewConfig = {
+  src: PreviewSrc | PreviewSrc[];
+  interval?: number;
+  fit?: "cover" | "contain";
+  position?: string;
+  padding?: number;
+  bg?: string;
+};
+
 export type Item = {
   slug: string;
   title: string;
@@ -8,8 +21,7 @@ export type Item = {
   createdAt: string;
   category?: ItemCategory;
   links?: { label: string; href: string }[];
-  panelWidth?: { minPanelPx: number; panelPercent: number };
-  previewSrc?: string;
+  preview?: PreviewConfig;
 } & (
   | { type: "interactive" }
   | { type: "content" }

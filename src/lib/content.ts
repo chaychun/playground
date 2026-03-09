@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { mdxComponents } from "@/lib/mdx-components";
-import type { Item } from "@/lib/types";
+import type { Item, PreviewConfig } from "@/lib/types";
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
 
@@ -22,10 +22,24 @@ function getContentSlugs(): string[] {
     });
 }
 
-function parseItem(slug: string): { item: Item; raw: string } {
+async function loadLocalPreview(slug: string): Promise<PreviewConfig | null> {
+  try {
+    const mod = (await import(`@/playground/${slug}/preview`)) as {
+      default: PreviewConfig;
+    };
+    return mod.default;
+  } catch {
+    return null;
+  }
+}
+
+async function parseItem(slug: string): Promise<{ item: Item; raw: string }> {
   const filePath = join(PLAYGROUND_DIR, slug, "content.mdx");
   const source = readFileSync(filePath, "utf-8");
   const { data, content } = matter(source);
+
+  const localPreview = await loadLocalPreview(slug);
+  const preview = localPreview ?? data.preview;
 
   const item: Item = {
     slug,
@@ -35,8 +49,7 @@ function parseItem(slug: string): { item: Item; raw: string } {
     category: data.category,
     type: data.type ?? "content",
     links: data.links,
-    panelWidth: data.panelWidth,
-    previewSrc: data.previewSrc,
+    preview,
     ...(data.type === "preview" ? { name: data.name, props: data.props } : {}),
     ...(data.type === "image" ? { src: data.src } : {}),
     ...(data.type === "video" ? { src: data.src } : {}),
@@ -47,16 +60,15 @@ function parseItem(slug: string): { item: Item; raw: string } {
 
 export async function getAllItems(): Promise<Item[]> {
   const slugs = getContentSlugs();
-  return slugs
-    .map((slug) => parseItem(slug).item)
-    .toSorted((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const items = await Promise.all(slugs.map(async (slug) => (await parseItem(slug)).item));
+  return items.toSorted((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export async function getItemBySlug(
   slug: string,
 ): Promise<{ item: Item; content: React.ReactElement } | null> {
   try {
-    const { item, raw } = parseItem(slug);
+    const { item, raw } = await parseItem(slug);
     const { content } = await compileMDX({
       source: raw,
       components: mdxComponents,
@@ -67,14 +79,7 @@ export async function getItemBySlug(
   }
 }
 
-export async function getPanelWidthBySlug(): Promise<
-  Record<string, { minPanelPx: number; panelPercent: number }>
-> {
+export async function getPreviewBySlug(): Promise<Record<string, PreviewConfig>> {
   const items = await getAllItems();
-  return Object.fromEntries(items.filter((i) => i.panelWidth).map((i) => [i.slug, i.panelWidth!]));
-}
-
-export async function getPreviewSrcBySlug(): Promise<Record<string, string>> {
-  const items = await getAllItems();
-  return Object.fromEntries(items.filter((i) => i.previewSrc).map((i) => [i.slug, i.previewSrc!]));
+  return Object.fromEntries(items.filter((i) => i.preview).map((i) => [i.slug, i.preview!]));
 }
