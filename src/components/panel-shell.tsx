@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import type { CSSProperties, ReactNode } from "react";
 
-const HOME_SPLIT = "40%";
+const HOME_PANEL = { panelPercent: 40, minPanelPx: 0 };
 const DEFAULT_PANEL_WIDTH = { minPanelPx: 400, panelPercent: 50 };
 const STATIC_PAGES = new Set(["about", "now"]);
 
@@ -17,16 +17,19 @@ export function PanelShell({
   const pathname = usePathname();
   const slug = pathname.split("/").find(Boolean);
 
-  let panelSplit = HOME_SPLIT;
-  if (slug && !STATIC_PAGES.has(slug)) {
-    const config = panelWidthMap[slug] ?? DEFAULT_PANEL_WIDTH;
-    panelSplit = `max(${config.minPanelPx}px, ${config.panelPercent}%)`;
-  }
+  const config =
+    slug && !STATIC_PAGES.has(slug) ? (panelWidthMap[slug] ?? DEFAULT_PANEL_WIDTH) : HOME_PANEL;
 
   return (
     <div
-      className="relative flex h-svh flex-col overflow-hidden bg-paper"
-      style={{ "--panel-split": panelSplit } as CSSProperties}
+      className="panel-transition relative flex h-svh flex-col overflow-hidden bg-paper"
+      style={
+        {
+          "--panel-percent": `${config.panelPercent}%`,
+          "--panel-min-px": `${config.minPanelPx}px`,
+          "--panel-split": `max(var(--panel-min-px), var(--panel-percent))`,
+        } as CSSProperties
+      }
     >
       {children}
     </div>

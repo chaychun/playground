@@ -29,7 +29,7 @@ export function BreadcrumbNav() {
 
   return (
     <nav
-      className="flex items-center gap-1.5 font-mono text-[13px] tracking-[0.02em] select-none"
+      className="flex items-center gap-1.5 font-mono text-[13px] tracking-[0.02em] whitespace-nowrap select-none"
       aria-label="Breadcrumb"
     >
       {page ? (
@@ -49,7 +49,6 @@ export function BreadcrumbNav() {
           <motion.span
             key={page}
             className="text-dim"
-            layout
             initial={{ opacity: 0, filter: "blur(4px)", x: -8 }}
             animate={{ opacity: 1, filter: "blur(0px)", x: 0 }}
             exit={{ opacity: 0, filter: "blur(4px)", x: -8 }}
