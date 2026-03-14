@@ -30,7 +30,7 @@ export function ComponentFrame({
 
   return (
     <div
-      className={cn("relative my-6 overflow-hidden", !isBreakout && size < 1 && "mx-auto")}
+      className={cn("relative my-6 overflow-hidden", !isBreakout && "mx-auto")}
       style={{
         width: widthPercent,
         ...(isBreakout && { marginInline }),
