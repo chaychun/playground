@@ -23,7 +23,7 @@ export type Item = {
   links?: { label: string; href: string }[];
   preview?: PreviewConfig;
 } & (
-  | { type: "interactive" }
+  | { type: "interactive"; frame?: { aspectRatio?: string; size?: number; minHeight?: number } }
   | { type: "content" }
   | { type: "preview"; name: string; props?: Record<string, unknown> }
   | { type: "image"; src: string }

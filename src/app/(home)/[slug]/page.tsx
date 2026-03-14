@@ -43,7 +43,11 @@ export default async function ItemPage({ params }: { params: Promise<Params> }) 
 
       {/* Auto-inject interactive component above MDX content */}
       {item.type === "interactive" && (
-        <ComponentFrame>
+        <ComponentFrame
+          aspectRatio={item.frame?.aspectRatio}
+          size={item.frame?.size}
+          minHeight={item.frame?.minHeight}
+        >
           <LazyPlaygroundComponent
             slug={item.slug}
             fallback={<div className="h-full w-full bg-surface" />}
