@@ -55,6 +55,7 @@ function ItemPreview({ preview }: { preview?: PreviewConfig }) {
           src={src}
           alt=""
           fill
+          sizes="(max-width: 744px) 100vw, 680px"
           className={preview.fit === "contain" ? "object-contain" : "object-cover"}
           style={{
             ...(preview.position ? { objectPosition: preview.position } : undefined),
