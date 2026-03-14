@@ -1,18 +1,19 @@
-import { PreviewPanel } from "@/components/preview-panel";
 import { StaggerEntrance } from "@/components/stagger-entrance";
 import { getAllItems, getPreviewBySlug } from "@/lib/content";
 import { inlineLink } from "@/lib/styles";
 import { DEFAULT_CATEGORY } from "@/lib/types";
+import type { PreviewConfig } from "@/lib/types";
+import Image from "next/image";
 import Link from "next/link";
 
 function Intro() {
   return (
-    <div>
-      <h1 className="font-serif text-[20px] leading-[28px] font-extralight text-ink xl:text-[24px] xl:leading-[32px]">
+    <div className="pt-8 pb-12">
+      <h1 className="font-serif text-[36px] leading-[1.15] font-extralight text-ink xl:text-[40px]">
         I&apos;m Chayut, a designer and builder exploring{" "}
         <em className="text-accent italic">interface craft</em>.
       </h1>
-      <p className="mt-4 max-w-lg text-[13px] leading-relaxed text-dim">
+      <p className="mt-5 text-[18px] leading-[1.7] text-dim">
         This site is a collection of my experiments, studies, and writings on software design. Feel
         free to explore! You can also read{" "}
         <Link href="/about" className={inlineLink}>
@@ -28,84 +29,67 @@ function Intro() {
   );
 }
 
+function ItemPreview({ preview }: { preview?: PreviewConfig }) {
+  if (!preview?.src) return null;
+
+  const src = Array.isArray(preview.src) ? preview.src[0] : preview.src;
+  const isVideo = typeof src === "string" && (src.endsWith(".mp4") || src.endsWith(".webm"));
+
+  return (
+    <div
+      className="relative aspect-[16/10] w-full overflow-hidden rounded-lg"
+      style={{ background: preview.bg ?? "var(--color-surface)" }}
+    >
+      {isVideo ? (
+        <video
+          src={src as string}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={`h-full w-full ${preview.fit === "contain" ? "object-contain" : "object-cover"}`}
+          style={preview.position ? { objectPosition: preview.position } : undefined}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt=""
+          fill
+          className={preview.fit === "contain" ? "object-contain" : "object-cover"}
+          style={{
+            ...(preview.position ? { objectPosition: preview.position } : undefined),
+            ...(preview.padding ? { padding: `${preview.padding}%` } : undefined),
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
 export default async function Home() {
   const [items, previewMap] = await Promise.all([getAllItems(), getPreviewBySlug()]);
 
   return (
     <>
-      {/* Mobile: intro + linked list */}
-      <div className="entrance flex flex-col px-5 pt-10 pb-6 lg:hidden">
-        <Intro />
-        <p className="mt-4 text-[11px] leading-relaxed text-muted">
-          Mobile layout is in progress — for the best experience, visit on desktop.
-        </p>
-        <StaggerEntrance className="mt-10">
-          {items.map((item) => (
-            <Link
-              key={item.slug}
-              href={`/${item.slug}`}
-              className="block border-b border-border py-4"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="font-serif text-[16px] leading-[20px] font-light text-ink">
-                  {item.title}
-                </span>
-                <span className="shrink-0 font-mono text-[10px] tracking-[0.04em] text-muted uppercase">
-                  {item.category || DEFAULT_CATEGORY}
-                </span>
-              </div>
-              {item.description && (
-                <p className="mt-1.5 text-[13px] leading-relaxed text-dim">{item.description}</p>
-              )}
-            </Link>
-          ))}
-        </StaggerEntrance>
-      </div>
-
-      {/* Desktop: two-panel layout */}
-      <div className="hidden h-full bg-paper lg:flex">
-        {/* Left: static preview on hover */}
-        <PreviewPanel previewMap={previewMap} />
-
-        {/* Right: content */}
-        <StaggerEntrance className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12">
-          <Intro />
-          <div className="mt-auto">
-            {/* Header row */}
-            <div className="flex items-baseline border-b border-border px-3 pb-3">
-              <span className="w-[160px] shrink-0 font-mono text-[10px] tracking-[0.04em] text-muted uppercase xl:w-[220px]">
-                Name
+      <Intro />
+      <StaggerEntrance className="space-y-12 pb-16">
+        {items.map((item) => (
+          <Link key={item.slug} href={`/${item.slug}`} className="group block">
+            <ItemPreview preview={previewMap[item.slug]} />
+            <div className="mt-3 flex items-baseline justify-between gap-3">
+              <span className="font-serif text-[20px] leading-[1.3] font-light text-ink">
+                {item.title}
               </span>
-              <span className="hidden min-w-0 flex-1 font-mono text-[10px] tracking-[0.04em] text-muted uppercase xl:block">
-                Description
-              </span>
-              <span className="hidden shrink-0 font-mono text-[10px] tracking-[0.04em] text-muted uppercase 2xl:block">
-                Type
+              <span className="shrink-0 font-mono text-[13px] tracking-[0.04em] text-muted uppercase">
+                {item.category || DEFAULT_CATEGORY}
               </span>
             </div>
-
-            {/* Data rows */}
-            {items.map((item) => (
-              <Link
-                key={item.slug}
-                href={`/${item.slug}`}
-                data-preview-slug={item.slug}
-                className="flex w-full items-baseline border-b border-border px-3 py-[14px] text-left hover:bg-ink/[0.06]"
-              >
-                <span className="w-[160px] shrink-0 font-serif text-[16px] leading-[20px] font-light text-ink xl:w-[220px]">
-                  {item.title}
-                </span>
-                <span className="hidden min-w-0 flex-1 truncate pr-4 font-sans text-xs leading-[16px] font-normal text-muted xl:block">
-                  {item.description}
-                </span>
-                <span className="hidden shrink-0 font-mono text-[10px] tracking-[0.04em] text-muted uppercase 2xl:block">
-                  {item.category || DEFAULT_CATEGORY}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </StaggerEntrance>
-      </div>
+            {item.description && (
+              <p className="mt-1.5 text-[16px] leading-[1.6] text-dim">{item.description}</p>
+            )}
+          </Link>
+        ))}
+      </StaggerEntrance>
     </>
   );
 }
