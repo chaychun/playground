@@ -1,8 +1,8 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { mdxComponents } from "@/lib/mdx-components";
-import type { Item, PreviewConfig } from "@/lib/types";
+import type { Item } from "@/lib/types";
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
 
@@ -22,15 +22,9 @@ function getContentSlugs(): string[] {
     });
 }
 
-async function loadLocalPreview(slug: string): Promise<PreviewConfig | null> {
-  try {
-    const mod = (await import(`@/playground/${slug}/preview`)) as {
-      default: PreviewConfig;
-    };
-    return mod.default;
-  } catch {
-    return null;
-  }
+function hasBodyContent(raw: string): boolean {
+  const stripped = raw.replace(/^import\s+[^\n]*\n?/gm, "").trim();
+  return stripped.length > 0;
 }
 
 async function parseItem(slug: string): Promise<{ item: Item; raw: string }> {
@@ -38,8 +32,20 @@ async function parseItem(slug: string): Promise<{ item: Item; raw: string }> {
   const source = readFileSync(filePath, "utf-8");
   const { data, content } = matter(source);
 
-  const localPreview = await loadLocalPreview(slug);
-  const preview = localPreview ?? data.preview;
+  const previewTsxPath = join(PLAYGROUND_DIR, slug, "preview.tsx");
+  const hasPreview = existsSync(previewTsxPath);
+
+  let previewFrame: Item["previewFrame"];
+  if (hasPreview) {
+    try {
+      const mod = (await import(`@/playground/${slug}/preview`)) as {
+        frame?: Item["previewFrame"];
+      };
+      previewFrame = mod.frame;
+    } catch {
+      // preview.tsx exists but failed to import; hasPreview stays true
+    }
+  }
 
   const item: Item = {
     slug,
@@ -47,14 +53,11 @@ async function parseItem(slug: string): Promise<{ item: Item; raw: string }> {
     description: data.description,
     createdAt: data.createdAt ?? "",
     category: data.category,
-    type: data.type ?? "content",
     links: data.links,
-    preview,
-    ...(data.type === "interactive" && data.frame ? { frame: data.frame } : {}),
-    ...(data.type === "preview" ? { name: data.name, props: data.props } : {}),
-    ...(data.type === "image" ? { src: data.src } : {}),
-    ...(data.type === "video" ? { src: data.src } : {}),
-  } as Item;
+    hasPreview,
+    hasFullPage: hasBodyContent(content),
+    ...(previewFrame ? { previewFrame } : {}),
+  };
 
   return { item, raw: content };
 }
@@ -70,17 +73,21 @@ export async function getItemBySlug(
 ): Promise<{ item: Item; content: React.ReactElement } | null> {
   try {
     const { item, raw } = await parseItem(slug);
+
+    // Pass the item's interactive component as `Component` so MDX authors can use
+    // `import Component from "./component"` and `<Component />` without next-mdx-remote
+    // needing to resolve the import statement at runtime.
+    const compMod = await import(`@/playground/${slug}/component`).catch(() => null);
+    const components = compMod?.default
+      ? { ...mdxComponents, Component: compMod.default as React.ComponentType }
+      : mdxComponents;
+
     const { content } = await compileMDX({
       source: raw,
-      components: mdxComponents,
+      components,
     });
     return { item, content };
   } catch {
     return null;
   }
-}
-
-export async function getPreviewBySlug(): Promise<Record<string, PreviewConfig>> {
-  const items = await getAllItems();
-  return Object.fromEntries(items.filter((i) => i.preview).map((i) => [i.slug, i.preview!]));
 }

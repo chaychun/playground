@@ -3,13 +3,23 @@
 import { Component as ReactComponent, Suspense, lazy } from "react";
 import type { ComponentType, ReactNode } from "react";
 
-const cache = new Map<string, React.LazyExoticComponent<ComponentType>>();
+const componentCache = new Map<string, React.LazyExoticComponent<ComponentType>>();
+const previewCache = new Map<string, React.LazyExoticComponent<ComponentType>>();
 
 function getLazyComponent(slug: string) {
-  let component = cache.get(slug);
+  let component = componentCache.get(slug);
   if (!component) {
     component = lazy(() => import(`@/playground/${slug}/component`));
-    cache.set(slug, component);
+    componentCache.set(slug, component);
+  }
+  return component;
+}
+
+function getLazyPreview(slug: string) {
+  let component = previewCache.get(slug);
+  if (!component) {
+    component = lazy(() => import(`@/playground/${slug}/preview`));
+    previewCache.set(slug, component);
   }
   return component;
 }
@@ -46,6 +56,15 @@ export function LazyPlaygroundComponent({
       <Suspense fallback={fallback ?? null}>
         <Component />
       </Suspense>
+    </CellErrorBoundary>
+  );
+}
+
+export function LazyPreviewComponent({ slug }: { slug: string }) {
+  const Component = getLazyPreview(slug);
+  return (
+    <CellErrorBoundary>
+      <Component />
     </CellErrorBoundary>
   );
 }

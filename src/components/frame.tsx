@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { Suspense } from "react";
 import type { ReactNode } from "react";
 
 function parseAspectRatio(value: string): string | undefined {
@@ -9,28 +10,35 @@ function parseAspectRatio(value: string): string | undefined {
   return `${w}/${h}`;
 }
 
-export function ComponentFrame({
+function FrameSkeleton() {
+  return <div className="absolute inset-0 bg-surface" />;
+}
+
+export function Frame({
   size = 1,
   aspectRatio,
   minHeight,
+  className,
   children,
 }: {
   size?: number;
   aspectRatio?: string;
   minHeight?: number;
+  className?: string;
   children: ReactNode;
 }) {
   const parsedRatio = aspectRatio ? parseAspectRatio(aspectRatio) : undefined;
-
-  // size <= 1: percentage width, centered
-  // size > 1: break out of column via negative margins
   const isBreakout = size > 1;
   const widthPercent = `${size * 100}%`;
   const marginInline = isBreakout ? `${((size - 1) / 2) * -100}%` : undefined;
 
   return (
     <div
-      className={cn("relative my-6 overflow-hidden", !isBreakout && "mx-auto")}
+      className={cn(
+        "relative my-6 overflow-hidden rounded-lg",
+        !isBreakout && "mx-auto",
+        className,
+      )}
       style={{
         width: widthPercent,
         ...(isBreakout && { marginInline }),
@@ -38,7 +46,7 @@ export function ComponentFrame({
         ...(minHeight && { minHeight: `${minHeight}px` }),
       }}
     >
-      {children}
+      <Suspense fallback={<FrameSkeleton />}>{children}</Suspense>
     </div>
   );
 }

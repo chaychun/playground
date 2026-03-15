@@ -1,5 +1,5 @@
 import { Caption } from "@/components/caption";
-import { ComponentFrame } from "@/components/component-frame";
+import { Frame } from "@/components/frame";
 import { inlineLink } from "@/lib/styles";
 import type { MDXComponents } from "mdx/types";
 
@@ -45,6 +45,6 @@ export const mdxComponents: MDXComponents = {
       {children}
     </div>
   ),
-  ComponentFrame,
+  Frame,
   Caption,
 };
