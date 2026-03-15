@@ -20,8 +20,10 @@
 # production
 /build
 
-# claude code
-.claude/
+# AI stuff
+.claude/worktrees
+.claude/worktree
+.superpowers
 
 # misc
 .DS_Store
