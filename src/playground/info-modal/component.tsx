@@ -67,7 +67,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
       >
         <motion.div
           className={cn(
-            "relative overflow-hidden bg-ink",
+            "relative overflow-hidden bg-paper",
             isOpen
               ? "flex max-h-[calc(100%-32px)] w-[min(380px,calc(100%-32px))] flex-col"
               : "h-14 w-14",
@@ -105,7 +105,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                     </motion.span>
                   )}
 
-                  <motion.h1 className="text-2xl leading-tight font-medium text-ink-inv" layout>
+                  <motion.h1 className="text-2xl leading-tight font-medium text-ink" layout>
                     {title}
                   </motion.h1>
 
@@ -125,7 +125,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                       >
                         <div className="h-px bg-dim/50" />
 
-                        <p className="mt-4 text-sm leading-relaxed text-mid">{body}</p>
+                        <p className="mt-4 text-sm leading-relaxed text-dim">{body}</p>
 
                         {details && (
                           <>
@@ -153,7 +153,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                 e.stopPropagation();
                 setShowDetails(true);
               }}
-              className="absolute bottom-0 left-0 flex h-14 cursor-pointer items-center gap-1.5 px-6 font-mono text-2xs font-medium tracking-widest text-muted uppercase hover:text-ink-inv"
+              className="absolute bottom-0 left-0 flex h-14 cursor-pointer items-center gap-1.5 px-6 font-mono text-2xs font-medium tracking-widest text-muted uppercase hover:text-ink"
             >
               <span>Read more</span>
               <CaretDown className="h-3 w-3" weight="bold" />
@@ -164,7 +164,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
             aria-label={isOpen ? "Close info modal" : "Open info modal"}
             aria-expanded={isOpen}
             className={cn(
-              "flex h-14 w-14 cursor-pointer items-center justify-center text-ink-inv",
+              "flex h-14 w-14 cursor-pointer items-center justify-center text-ink",
               isOpen ? "absolute right-0 bottom-0" : "",
             )}
             onClick={toggleModal}
@@ -209,7 +209,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
 
 export default function InfoModalDemo() {
   return (
-    <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+    <div className="force-light relative flex h-full w-full items-center justify-center overflow-hidden">
       <img
         src="/images/near-glarus.webp"
         alt=""

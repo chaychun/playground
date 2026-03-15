@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme inline {
   --color-paper: var(--paper);
   --color-surface: var(--surface);
@@ -62,6 +64,60 @@
   --ink: #e8e7e3;
   --ink-inv: #141312;
   --accent: #a6cdd2;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --paper: #f5f4f0;
+    --surface: #eeede9;
+    --border: #e0deda;
+    --mid: #ccc9c4;
+    --muted: #8d8b87;
+    --link: #6b6966;
+    --dim: #575552;
+    --ink: #141312;
+    --ink-inv: #e8e7e3;
+    --accent: #3d8a96;
+  }
+}
+
+html.dark {
+  --paper: #141312;
+  --surface: #1e1d1b;
+  --border: #2c2b28;
+  --mid: #3d3c39;
+  --muted: #72716d;
+  --link: #949390;
+  --dim: #a8a7a2;
+  --ink: #e8e7e3;
+  --ink-inv: #141312;
+  --accent: #a6cdd2;
+}
+
+.force-dark {
+  --paper: #141312;
+  --surface: #1e1d1b;
+  --border: #2c2b28;
+  --mid: #3d3c39;
+  --muted: #72716d;
+  --link: #949390;
+  --dim: #a8a7a2;
+  --ink: #e8e7e3;
+  --ink-inv: #141312;
+  --accent: #a6cdd2;
+}
+
+.force-light {
+  --paper: #f5f4f0;
+  --surface: #eeede9;
+  --border: #e0deda;
+  --mid: #ccc9c4;
+  --muted: #8d8b87;
+  --link: #6b6966;
+  --dim: #575552;
+  --ink: #141312;
+  --ink-inv: #e8e7e3;
+  --accent: #3d8a96;
 }
 
 /* ── Entrance stagger system ──────────────────────────────────── */
