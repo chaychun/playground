@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 function MicIcon({ className }: { className?: string }) {
   return (
@@ -242,6 +242,23 @@ const FADE_MIC_IN = 0.1;
 const FADE_MIC_IN_DELAY = 0.15;
 
 export default function VoiceCapture() {
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const [phoneWidth, setPhoneWidth] = useState(375);
+
+  useLayoutEffect(() => {
+    const el = phoneRef.current;
+    if (!el) return;
+    setPhoneWidth(el.offsetWidth);
+    const ro = new ResizeObserver(() => setPhoneWidth(el.offsetWidth));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Derive pill/panel positions from actual rendered phone width
+  const pillLeft = phoneWidth / 2 - 32;
+  const expandedX = 16 - pillLeft;
+  const expandedWidth = phoneWidth - 32;
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [paused, setPaused] = useState(false);
   const [sent, setSent] = useState(false);
@@ -262,15 +279,18 @@ export default function VoiceCapture() {
   }, [sent]);
 
   return (
-    <div className="flex h-full w-full items-center justify-center bg-surface">
-      <div className="flex flex-col items-center gap-4">
-        <div className="relative">
+    <div className="flex w-full items-center justify-center py-12">
+      <div className="flex w-full flex-col items-center gap-4">
+        <div className="relative w-full max-w-[375px]">
           {/* Top fade — hides top border radius and shadow */}
-          <div className="pointer-events-none absolute -inset-x-8 -top-6 z-10 h-28 bg-[linear-gradient(to_bottom,var(--color-surface)_55%,transparent)]" />
+          <div className="pointer-events-none absolute -inset-x-8 -top-6 z-10 h-28 bg-[linear-gradient(to_bottom,var(--color-paper)_55%,transparent)]" />
 
           <MotionConfig transition={PANEL_SPRING}>
             {/* Phone frame — minimal bottom portion */}
-            <div className="w-[375px] overflow-hidden rounded-[2rem] border border-border bg-paper shadow-[0_8px_24px_-4px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.04)]">
+            <div
+              ref={phoneRef}
+              className="w-full overflow-hidden rounded-[2rem] border-2 border-border bg-paper shadow-[0_8px_24px_-4px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.04)]"
+            >
               {/* Screen content area — just enough to suggest a phone */}
               <div className="h-72" />
 
@@ -304,14 +324,14 @@ export default function VoiceCapture() {
                 {/* Voice pill / expanded pane — single element, CSS-animated */}
                 <motion.div
                   className="absolute z-20 overflow-hidden bg-ink"
-                  style={{ left: 155.5, top: 8 }}
+                  style={{ left: pillLeft, top: 8 }}
                   initial={false}
                   animate={
                     isExpanded
                       ? {
-                          x: -139.5,
+                          x: expandedX,
                           y: -168,
-                          width: 343,
+                          width: expandedWidth,
                           height: 224,
                           borderRadius: 16,
                         }
