@@ -34,11 +34,7 @@ export function Frame({
 
   return (
     <div
-      className={cn(
-        "relative my-6 overflow-hidden rounded-lg",
-        !isBreakout && "mx-auto",
-        className,
-      )}
+      className={cn("relative my-6 overflow-hidden", !isBreakout && "mx-auto", className)}
       style={{
         width: widthPercent,
         ...(isBreakout && { marginInline }),
