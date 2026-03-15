@@ -9,11 +9,11 @@ import Link from "next/link";
 function Intro() {
   return (
     <div className="pt-8 pb-12">
-      <h1 className="font-serif text-[36px] leading-[1.15] font-extralight text-ink xl:text-[40px]">
+      <h1 className="font-serif text-heading font-extralight text-ink">
         I&apos;m Chayut, a designer and builder exploring{" "}
         <em className="text-accent italic">interface craft</em>.
       </h1>
-      <p className="mt-5 text-[18px] leading-[1.7] text-dim">
+      <p className="mt-5 text-body text-dim">
         This site is a collection of my experiments, studies, and writings on software design. Feel
         free to explore! You can also read{" "}
         <Link href="/about" className={inlineLink}>
@@ -75,19 +75,15 @@ export default async function Home() {
       <Intro />
       <StaggerEntrance className="space-y-12 pb-16">
         {items.map((item) => (
-          <Link key={item.slug} href={`/${item.slug}`} className="group block">
+          <Link key={item.slug} href={`/${item.slug}`} className="block">
             <ItemPreview preview={previewMap[item.slug]} />
             <div className="mt-3 flex items-baseline justify-between gap-3">
-              <span className="font-serif text-[20px] leading-[1.3] font-light text-ink">
-                {item.title}
-              </span>
-              <span className="shrink-0 font-mono text-[13px] tracking-[0.04em] text-muted uppercase">
+              <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
+              <span className="shrink-0 font-mono text-meta tracking-[0.04em] text-muted uppercase">
                 {item.category || DEFAULT_CATEGORY}
               </span>
             </div>
-            {item.description && (
-              <p className="mt-1.5 text-[16px] leading-[1.6] text-dim">{item.description}</p>
-            )}
+            {item.description && <p className="mt-1.5 text-body-sm text-dim">{item.description}</p>}
           </Link>
         ))}
       </StaggerEntrance>

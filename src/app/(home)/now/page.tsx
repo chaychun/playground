@@ -27,7 +27,7 @@ function TimelineContent({ data }: { data: MonthEntry[] }) {
           <div className="absolute top-[26px] bottom-0 left-[7px] w-px bg-border" />
 
           <div className="pb-5 pl-[31px]">
-            <span className="font-mono text-[13px] tracking-[0.08em] text-muted uppercase">
+            <span className="font-mono text-meta tracking-[0.08em] text-muted uppercase">
               {month.month} {month.year}
             </span>
           </div>
@@ -36,19 +36,19 @@ function TimelineContent({ data }: { data: MonthEntry[] }) {
             {month.entries.map((entry) => (
               <div key={entry.title}>
                 <div className="flex items-baseline gap-x-2 gap-y-1">
-                  <h3 className="min-w-0 flex-1 font-serif text-[18px] leading-[1.4] font-light text-ink">
+                  <h3 className="min-w-0 flex-1 font-serif text-body font-light text-ink">
                     {entry.title}
                   </h3>
                   {entry.tags?.map((tag) => (
                     <span
                       key={tag}
-                      className="shrink-0 rounded-full bg-surface px-2 py-0.5 font-mono text-[13px] text-muted"
+                      className="shrink-0 rounded-full bg-surface px-2 py-0.5 font-mono text-meta text-muted"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <p className="mt-2 text-[16px] leading-[1.6] text-dim">{entry.body}</p>
+                <p className="mt-2 text-body-sm text-dim">{entry.body}</p>
               </div>
             ))}
           </div>
@@ -64,10 +64,10 @@ export default function NowPage() {
   return (
     <div className="pt-8 pb-16">
       <StaggerEntrance>
-        <h1 className="font-serif text-[28px] leading-[1.2] font-extralight text-ink">
+        <h1 className="font-serif text-h2 font-extralight text-ink">
           What I&apos;m doing, thinking about, and working on.
         </h1>
-        <p className="mt-3 text-[13px] text-muted">
+        <p className="mt-3 text-meta text-muted">
           This page is inspired by{" "}
           <a
             href="https://nownownow.com/about"

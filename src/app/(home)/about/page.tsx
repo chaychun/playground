@@ -12,7 +12,7 @@ const ABOUT_SOCIAL_LINKS: (SocialLink & { display: string })[] = [
 export default function AboutPage() {
   return (
     <StaggerEntrance className="pt-8 pb-16">
-      <div className="space-y-4 text-[18px] leading-[1.7] text-dim">
+      <div className="space-y-4 text-body text-dim">
         <p>
           I design and build cool things with code, focusing on motion-led interactions and
           interface patterns that improve the experience of the user. I believe deeply in calm
@@ -46,7 +46,7 @@ export default function AboutPage() {
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[14px] text-muted transition-colors hover:text-accent"
+            className="flex items-center gap-2 text-body-sm text-muted transition-colors hover:text-accent"
           >
             <link.icon className="size-3.5 shrink-0" />
             <span>{link.display}</span>
