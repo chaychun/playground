@@ -1,4 +1,5 @@
 import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import { StickyHeader } from "@/components/sticky-header";
 
 export default function HomeLayout({
   children,
@@ -7,9 +8,9 @@ export default function HomeLayout({
 }>) {
   return (
     <div className="mx-auto max-w-[680px] px-6">
-      <div className="pt-10 pb-1 print:hidden">
+      <StickyHeader>
         <BreadcrumbNav />
-      </div>
+      </StickyHeader>
       <main>{children}</main>
     </div>
   );
