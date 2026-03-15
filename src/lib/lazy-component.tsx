@@ -24,7 +24,7 @@ class CellErrorBoundary extends ReactComponent<{ children: ReactNode }, { hasErr
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex h-full items-center justify-center text-xs text-muted">
+        <div className="flex h-full items-center justify-center text-meta text-muted">
           Failed to load
         </div>
       );

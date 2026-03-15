@@ -8,7 +8,7 @@ import Link from "next/link";
 
 function Intro() {
   return (
-    <div className="pt-8 pb-12">
+    <div className="pt-8 pb-30">
       <h1 className="font-serif text-heading font-extralight text-ink">
         I&apos;m Chayut, a designer and builder exploring{" "}
         <em className="text-accent italic">interface craft</em>.
@@ -73,7 +73,7 @@ export default async function Home() {
   return (
     <>
       <Intro />
-      <StaggerEntrance className="space-y-12 pb-16">
+      <StaggerEntrance className="space-y-16 pb-16">
         {items.map((item) => (
           <Link key={item.slug} href={`/${item.slug}`} className="block">
             <ItemPreview preview={previewMap[item.slug]} />

@@ -36,7 +36,7 @@ function TimelineContent({ data }: { data: MonthEntry[] }) {
             {month.entries.map((entry) => (
               <div key={entry.title}>
                 <div className="flex items-baseline gap-x-2 gap-y-1">
-                  <h3 className="min-w-0 flex-1 font-serif text-body font-light text-ink">
+                  <h3 className="min-w-0 flex-1 font-serif text-h2 font-light text-ink">
                     {entry.title}
                   </h3>
                   {entry.tags?.map((tag) => (
@@ -48,7 +48,7 @@ function TimelineContent({ data }: { data: MonthEntry[] }) {
                     </span>
                   ))}
                 </div>
-                <p className="mt-2 text-body-sm text-dim">{entry.body}</p>
+                <p className="mt-2 text-body text-dim">{entry.body}</p>
               </div>
             ))}
           </div>
@@ -64,7 +64,7 @@ export default function NowPage() {
   return (
     <div className="pt-8 pb-16">
       <StaggerEntrance>
-        <h1 className="font-serif text-h2 font-extralight text-ink">
+        <h1 className="font-serif text-heading font-extralight text-ink">
           What I&apos;m doing, thinking about, and working on.
         </h1>
         <p className="mt-3 text-meta text-muted">

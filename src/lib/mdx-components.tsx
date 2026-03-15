@@ -7,7 +7,7 @@ import type { MDXComponents } from "mdx/types";
 export const mdxComponents: MDXComponents = {
   h1: (props) => <h1 className="font-serif text-heading font-extralight text-ink" {...props} />,
   h2: (props) => <h2 className="mt-10 mb-4 font-serif text-h2 font-light text-ink" {...props} />,
-  h3: (props) => <h3 className="mt-8 mb-3 font-serif text-h3 font-light text-ink" {...props} />,
+  h3: (props) => <h3 className="mt-8 mb-3 font-sans text-h3 font-light text-ink" {...props} />,
   p: (props) => <p className="mt-4 text-body text-dim" {...props} />,
   a: (props) => <a className={inlineLink} {...props} />,
   ul: (props) => (
@@ -25,7 +25,7 @@ export const mdxComponents: MDXComponents = {
   ),
   pre: (props) => (
     <pre
-      className="mt-5 overflow-x-auto rounded-md bg-surface p-4 font-mono text-[14px] leading-relaxed text-dim"
+      className="mt-5 overflow-x-auto rounded-md bg-surface p-4 font-mono text-body-sm text-dim"
       {...props}
     />
   ),

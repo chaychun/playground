@@ -29,7 +29,7 @@ export function BreadcrumbNav() {
 
   return (
     <nav
-      className="flex items-center gap-1.5 font-mono text-[13px] tracking-[0.02em] whitespace-nowrap select-none"
+      className="flex items-center gap-1.5 font-mono text-body-sm tracking-[0.02em] whitespace-nowrap select-none"
       aria-label="Breadcrumb"
     >
       {page ? (
