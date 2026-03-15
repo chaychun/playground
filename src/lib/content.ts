@@ -50,6 +50,7 @@ async function parseItem(slug: string): Promise<{ item: Item; raw: string }> {
     type: data.type ?? "content",
     links: data.links,
     preview,
+    ...(data.type === "interactive" && data.frame ? { frame: data.frame } : {}),
     ...(data.type === "preview" ? { name: data.name, props: data.props } : {}),
     ...(data.type === "image" ? { src: data.src } : {}),
     ...(data.type === "video" ? { src: data.src } : {}),

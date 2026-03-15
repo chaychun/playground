@@ -1,7 +1,8 @@
+import { ComponentFrame } from "@/components/component-frame";
 import { StaggerEntrance } from "@/components/stagger-entrance";
-import { cn } from "@/lib/cn";
 import { getAllItems, getItemBySlug } from "@/lib/content";
 import { LazyPlaygroundComponent } from "@/lib/lazy-component";
+import { DEFAULT_CATEGORY } from "@/lib/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -24,49 +25,35 @@ export default async function ItemPage({ params }: { params: Promise<Params> }) 
   if (!result) return notFound();
 
   const { item, content } = result;
-  const hasPanel = item.type === "interactive";
 
   return (
-    <>
-      {/* Mobile */}
-      <div className="flex flex-col px-5 pt-10 pb-6 lg:hidden">
-        {hasPanel && (
-          <div className="aspect-[4/3] w-full overflow-hidden bg-surface">
-            <LazyPlaygroundComponent
-              slug={item.slug}
-              fallback={<div className="h-full w-full bg-surface" />}
-            />
-          </div>
+    <StaggerEntrance className="pt-8 pb-16">
+      <h1 className="font-serif text-heading font-extralight text-ink">{item.title}</h1>
+      <div className="mt-3 font-mono text-meta tracking-[0.04em] text-muted uppercase">
+        {item.category || DEFAULT_CATEGORY}
+        {item.createdAt && (
+          <>
+            <span className="mx-2 text-border">·</span>
+            {new Date(item.createdAt).getFullYear()}
+          </>
         )}
-        <div className={cn("space-y-4 text-[13px] leading-relaxed text-dim", hasPanel && "mt-6")}>
-          {content}
-        </div>
       </div>
 
-      {/* Desktop */}
-      <div className="hidden h-full bg-paper lg:flex">
-        {hasPanel && (
-          <div className="relative flex h-full w-[var(--panel-split)] shrink-0 flex-col overflow-hidden bg-paper">
-            <div className="flex flex-1 items-center justify-center overflow-hidden">
-              <div className="h-full w-full">
-                <LazyPlaygroundComponent
-                  slug={item.slug}
-                  fallback={<div className="h-full w-full" />}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        <StaggerEntrance
-          className={cn(
-            "flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-paper px-8 pt-24 pb-10 xl:px-12",
-            !hasPanel && "lg:ml-[var(--panel-split)]",
-          )}
+      {/* Auto-inject interactive component above MDX content */}
+      {item.type === "interactive" && (
+        <ComponentFrame
+          aspectRatio={item.frame?.aspectRatio}
+          size={item.frame?.size}
+          minHeight={item.frame?.minHeight}
         >
-          {content}
-        </StaggerEntrance>
-      </div>
-    </>
+          <LazyPlaygroundComponent
+            slug={item.slug}
+            fallback={<div className="h-full w-full bg-surface" />}
+          />
+        </ComponentFrame>
+      )}
+
+      <div className="mt-8">{content}</div>
+    </StaggerEntrance>
   );
 }

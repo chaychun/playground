@@ -1,12 +1,11 @@
 import { AgentationOverlay } from "@/components/agentation";
+import { DevTools } from "@/components/dev-tools";
 import { cn } from "@/lib/cn";
-import type { Metadata } from "next";
-import { DM_Mono, Fraunces, Raleway } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
-// Dev-only: DialKit for live animation parameter tuning
 import "dialkit/styles.css";
-const DialRoot = process.env.NODE_ENV === "development" ? require("dialkit").DialRoot : () => null;
+import { DM_Mono, Fraunces, Raleway } from "next/font/google";
 
 const raleway = Raleway({
   variable: "--font-sans",
@@ -29,6 +28,10 @@ export const metadata: Metadata = {
   description: "Personal works and interactive component demos",
 };
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,9 +40,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(raleway.variable, dmMono.variable, fraunces.variable, "antialiased")}>
+        {/* Safari iOS 26 toolbar tint — position:fixed strip at the very top of the DOM */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: 6,
+            backgroundColor: "var(--paper)",
+            pointerEvents: "none",
+            zIndex: 9999,
+          }}
+        />
         {children}
-        <DialRoot position="top-right" />
         <AgentationOverlay />
+        <DevTools />
       </body>
     </html>
   );
