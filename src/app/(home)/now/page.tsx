@@ -1,24 +1,57 @@
-import { StaggerEntrance } from "@/components/stagger-entrance";
-import timelineData from "@/data/now-timeline.json";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
-type TimelineEntry = {
+import { StaggerEntrance } from "@/components/stagger-entrance";
+import { descriptionMdxComponents } from "@/lib/mdx-components";
+import { compileMDX } from "next-mdx-remote/rsc";
+
+type NowEntry = {
   title: string;
   body: string;
-  tags?: string[];
 };
 
-type MonthEntry = {
-  month: string;
-  year: number;
-  entries: TimelineEntry[];
+type NowMonth = {
+  heading: string;
+  entries: NowEntry[];
 };
 
-function TimelineContent({ data }: { data: MonthEntry[] }) {
+function parseNowContent(): NowMonth[] {
+  const source = readFileSync(join(process.cwd(), "src/data/now.mdx"), "utf-8");
+  const months: NowMonth[] = [];
+
+  const h2Sections = source.split(/^## /m).filter(Boolean);
+
+  for (const section of h2Sections) {
+    const [headingLine, ...rest] = section.split("\n");
+    const body = rest.join("\n");
+    const h3Sections = body.split(/^### /m);
+    const entries: NowEntry[] = [];
+
+    for (let i = 1; i < h3Sections.length; i++) {
+      const [titleLine, ...entryRest] = h3Sections[i].split("\n");
+      entries.push({
+        title: titleLine.trim(),
+        body: entryRest.join("\n").trim(),
+      });
+    }
+
+    months.push({ heading: headingLine.trim(), entries });
+  }
+
+  return months;
+}
+
+async function EntryBody({ markdown }: { markdown: string }) {
+  const { content } = await compileMDX({ source: markdown, components: descriptionMdxComponents });
+  return <div className="mt-2 text-body text-dim">{content}</div>;
+}
+
+function TimelineContent({ data }: { data: NowMonth[] }) {
   return (
     <div className="relative mt-10">
       {data.map((month, monthIndex) => (
         <div
-          key={`${month.month}-${month.year}`}
+          key={month.heading}
           className="entrance relative pb-10 last:pb-0"
           style={{ animationDelay: `${200 + monthIndex * 80}ms` }}
         >
@@ -28,27 +61,15 @@ function TimelineContent({ data }: { data: MonthEntry[] }) {
 
           <div className="pb-5 pl-[31px]">
             <span className="font-mono text-meta tracking-[0.08em] text-muted uppercase">
-              {month.month} {month.year}
+              {month.heading}
             </span>
           </div>
 
           <div className="ml-[31px] space-y-5">
             {month.entries.map((entry) => (
               <div key={entry.title}>
-                <div className="flex items-baseline gap-x-2 gap-y-1">
-                  <h3 className="min-w-0 flex-1 font-serif text-h2 font-light text-ink">
-                    {entry.title}
-                  </h3>
-                  {entry.tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      className="shrink-0 rounded-full bg-surface px-2 py-0.5 font-mono text-meta text-muted"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <p className="mt-2 text-body text-dim">{entry.body}</p>
+                <h3 className="font-serif text-h2 font-light text-ink">{entry.title}</h3>
+                <EntryBody markdown={entry.body} />
               </div>
             ))}
           </div>
@@ -59,7 +80,7 @@ function TimelineContent({ data }: { data: MonthEntry[] }) {
 }
 
 export default function NowPage() {
-  const data = timelineData as MonthEntry[];
+  const data = parseNowContent();
 
   return (
     <div className="pt-8 pb-16">
