@@ -2,9 +2,11 @@ import { Frame } from "@/components/frame";
 import { StaggerEntrance } from "@/components/stagger-entrance";
 import { getAllItems } from "@/lib/content";
 import { LazyPreviewComponent } from "@/lib/lazy-component";
+import { descriptionMdxComponents } from "@/lib/mdx-components";
 import { inlineLink } from "@/lib/styles";
 import { DEFAULT_CATEGORY } from "@/lib/types";
 import type { Item } from "@/lib/types";
+import { compileMDX } from "next-mdx-remote/rsc";
 import Link from "next/link";
 
 function Intro() {
@@ -31,21 +33,40 @@ function Intro() {
   );
 }
 
-function ItemCard({ item }: { item: Item }) {
+async function ItemDescription({ markdown }: { markdown: string }) {
+  const { content } = await compileMDX({ source: markdown, components: descriptionMdxComponents });
+  return <div className="mt-1.5 text-body-sm text-dim">{content}</div>;
+}
+
+async function ItemCard({ item }: { item: Item }) {
+  const slug = item.hasFullPage ? `/${item.slug}` : undefined;
   return (
     <>
-      {item.hasPreview && (
-        <Frame {...item.previewFrame}>
-          <LazyPreviewComponent slug={item.slug} />
-        </Frame>
-      )}
+      {item.hasPreview &&
+        (slug ? (
+          <Link href={slug} className="block">
+            <Frame {...item.previewFrame}>
+              <LazyPreviewComponent slug={item.slug} />
+            </Frame>
+          </Link>
+        ) : (
+          <Frame {...item.previewFrame}>
+            <LazyPreviewComponent slug={item.slug} />
+          </Frame>
+        ))}
       <div className="mt-3 flex items-baseline justify-between gap-3">
-        <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
+        {slug ? (
+          <Link href={slug} className="font-serif text-item-title font-light text-ink">
+            {item.title}
+          </Link>
+        ) : (
+          <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
+        )}
         <span className="shrink-0 font-mono text-meta tracking-[0.04em] text-muted uppercase">
           {item.category || DEFAULT_CATEGORY}
         </span>
       </div>
-      {item.description && <p className="mt-1.5 text-body-sm text-dim">{item.description}</p>}
+      {item.description && <ItemDescription markdown={item.description} />}
     </>
   );
 }
@@ -57,17 +78,11 @@ export default async function Home() {
     <>
       <Intro />
       <StaggerEntrance className="space-y-16 pb-16">
-        {items.map((item) =>
-          item.hasFullPage ? (
-            <Link key={item.slug} href={`/${item.slug}`} className="block">
-              <ItemCard item={item} />
-            </Link>
-          ) : (
-            <div key={item.slug}>
-              <ItemCard item={item} />
-            </div>
-          ),
-        )}
+        {items.map((item) => (
+          <div key={item.slug}>
+            <ItemCard item={item} />
+          </div>
+        ))}
       </StaggerEntrance>
     </>
   );
