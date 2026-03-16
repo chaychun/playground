@@ -3,6 +3,20 @@ import { Frame } from "@/components/frame";
 import { inlineLink } from "@/lib/styles";
 import type { MDXComponents } from "mdx/types";
 
+/**
+ * Lightweight components for rendering markdown descriptions in the feed.
+ * Supports paragraphs, inline formatting, and links — no headings or blocks.
+ */
+/* eslint-disable jsx-a11y/anchor-has-content */
+export const descriptionMdxComponents: MDXComponents = {
+  p: (props) => <p className="mt-2 first:mt-0" {...props} />,
+  a: (props) => <a className={inlineLink} {...props} />,
+  strong: (props) => <strong className="font-medium text-ink" {...props} />,
+  code: (props) => (
+    <code className="rounded bg-surface px-1 py-0.5 font-mono text-[0.85em] text-dim" {...props} />
+  ),
+};
+
 /* eslint-disable jsx-a11y/heading-has-content, jsx-a11y/anchor-has-content */
 export const mdxComponents: MDXComponents = {
   h1: (props) => <h1 className="font-serif text-heading font-extralight text-ink" {...props} />,
