@@ -4,7 +4,7 @@ import { inlineLink } from "@/lib/styles";
 import Link from "next/link";
 
 const ABOUT_SOCIAL_LINKS: (SocialLink & { display: string })[] = [
-  { ...SOCIAL_LINKS[0], display: "@chayutc_" },
+  { ...SOCIAL_LINKS[0], display: "chun.chayut" },
   { ...SOCIAL_LINKS[1], display: "chaychun" },
   { ...SOCIAL_LINKS[2], display: "chun.chayut@gmail.com" },
 ];
@@ -12,6 +12,7 @@ const ABOUT_SOCIAL_LINKS: (SocialLink & { display: string })[] = [
 export default function AboutPage() {
   return (
     <StaggerEntrance className="pt-8 pb-16">
+      <h1 className="mb-6 font-serif text-heading font-extralight text-ink">About me</h1>
       <div className="space-y-4 text-body text-dim">
         <p>
           I design and build cool things with code, focusing on motion-led interactions and
@@ -46,10 +47,10 @@ export default function AboutPage() {
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-body-sm text-muted transition-colors hover:text-accent"
+            className="group flex items-center gap-2 text-body-sm text-muted"
           >
-            <link.icon className="size-3.5 shrink-0" />
-            <span>{link.display}</span>
+            <link.icon className="size-3.5 shrink-0 transition-colors group-hover:text-accent" />
+            <span className="transition-colors group-hover:text-ink">{link.display}</span>
           </a>
         ))}
       </div>
