@@ -1,5 +1,5 @@
-export type ItemCategory = "exploration" | "pattern" | "case study";
-export const DEFAULT_CATEGORY: ItemCategory = "exploration";
+export type ItemCategory = "playground" | "exploration";
+export const DEFAULT_CATEGORY: ItemCategory = "playground";
 
 export type Item = {
   slug: string;
