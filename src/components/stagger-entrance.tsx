@@ -17,6 +17,7 @@ export function StaggerEntrance({ className, children, ...props }: ComponentProp
     Array.from(el.children).forEach((child, i) => {
       (child as HTMLElement).style.animationDelay = `${(i + 1) * step}ms`;
     });
+    el.classList.add("ready");
   }, []);
 
   return (
