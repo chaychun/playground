@@ -3,9 +3,16 @@
 import { cn } from "@/lib/cn";
 import { X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import type { ComponentType } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useMeasure from "react-use-measure";
+
+import atriumImg from "./assets/atrium.jpg";
+import bgCoverImg from "./assets/bg-cover.jpg";
+import lightStudiesImg from "./assets/light-studies.jpg";
+import peterZumthorImg from "./assets/peter-zumthor.jpg";
+import thermeValsImg from "./assets/therme-vals.jpg";
 
 // --- Types & Constants ---
 
@@ -226,8 +233,8 @@ function CardBContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
         itself decided to make room for water and stone.
       </p>
       <div className="h-7" />
-      <img
-        src="/images/page-stack/therme-vals.jpg"
+      <Image
+        src={thermeValsImg}
         alt="Therme Vals exterior"
         className="h-[355px] w-full object-cover"
       />
@@ -281,11 +288,7 @@ function CardCContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
           — the space holds its breath, somewhere between silence and sound.
         </p>
       </div>
-      <img
-        src="/images/page-stack/atrium.jpg"
-        alt="Atrium interior"
-        className="h-[500px] w-full object-cover"
-      />
+      <Image src={atriumImg} alt="Atrium interior" className="h-[500px] w-full object-cover" />
     </div>
   );
 }
@@ -363,8 +366,8 @@ function CardDContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 function CardEContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
     <div className="flex flex-col">
-      <img
-        src="/images/page-stack/peter-zumthor.jpg"
+      <Image
+        src={peterZumthorImg}
         alt="Peter Zumthor portrait"
         className="h-[450px] w-full object-cover"
       />
@@ -443,11 +446,7 @@ function CardFContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
 function CardGContent({ onNavigate }: { onNavigate: (t: CardId) => void }) {
   return (
     <div className="flex min-h-full flex-col">
-      <img
-        src="/images/page-stack/light-studies.jpg"
-        alt="Light on stone"
-        className="h-[733px] w-full object-cover"
-      />
+      <Image src={lightStudiesImg} alt="Light on stone" className="h-[733px] w-full object-cover" />
       <div className="flex flex-col gap-2.5 px-9 pt-6 pb-9">
         <CategoryLabel>Media</CategoryLabel>
         <h2 className="text-[24px] leading-[30px] font-bold text-[#121214]">Light Studies</h2>
@@ -646,11 +645,7 @@ export default function PageStack() {
     >
       {/* Background image — always visible */}
       <div className="absolute inset-0 select-none" aria-hidden="true">
-        <img
-          src="/images/page-stack/bg-cover.jpg"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        <Image src={bgCoverImg} alt="" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/50" />
       </div>
       {isMobile ? (
