@@ -9,27 +9,30 @@ import type { Item } from "@/lib/types";
 import { compileMDX } from "next-mdx-remote/rsc";
 import Link from "next/link";
 
-function Intro() {
+function IntroHeading() {
   return (
-    <div className="pt-8 pb-30">
-      <h1 className="font-serif text-heading font-extralight text-ink">
-        I&apos;m Chayut, a designer and builder exploring{" "}
-        <em className="text-accent italic">interface craft</em>
-        <span className="text-accent">.</span>
-      </h1>
-      <p className="mt-5 text-body text-dim">
-        This site is a collection of my experiments, studies, and writings on software design. Feel
-        free to explore! You can also read{" "}
-        <Link href="/about" className={inlineLink}>
-          about me
-        </Link>{" "}
-        and see what I&apos;m{" "}
-        <Link href="/now" className={inlineLink}>
-          currently up to
-        </Link>
-        .
-      </p>
-    </div>
+    <h1 className="pt-8 font-serif text-heading font-extralight text-ink">
+      I&apos;m Chayut, a designer and builder exploring{" "}
+      <em className="text-accent italic">interface craft</em>
+      <span className="text-accent">.</span>
+    </h1>
+  );
+}
+
+function IntroDescription() {
+  return (
+    <p className="mt-5 mb-30 text-body text-dim">
+      This site is a collection of my experiments, studies, and writings on software design. Feel
+      free to explore! You can also read{" "}
+      <Link href="/about" className={inlineLink}>
+        about me
+      </Link>{" "}
+      and see what I&apos;m{" "}
+      <Link href="/now" className={inlineLink}>
+        currently up to
+      </Link>
+      .
+    </p>
   );
 }
 
@@ -75,15 +78,14 @@ export default async function Home() {
   const items = await getAllItems();
 
   return (
-    <>
-      <Intro />
-      <StaggerEntrance className="space-y-16 pb-16">
-        {items.map((item) => (
-          <div key={item.slug}>
-            <ItemCard item={item} />
-          </div>
-        ))}
-      </StaggerEntrance>
-    </>
+    <StaggerEntrance className="pb-16">
+      <IntroHeading />
+      <IntroDescription />
+      {items.map((item, i) => (
+        <div key={item.slug} className={i > 0 ? "mt-16" : ""}>
+          <ItemCard item={item} />
+        </div>
+      ))}
+    </StaggerEntrance>
   );
 }
