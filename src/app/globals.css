@@ -63,7 +63,7 @@
   --dim: #a8a7a2;
   --ink: #e8e7e3;
   --ink-inv: #141312;
-  --accent: #a6cdd2;
+  --accent: #a2bfd2;
 }
 
 @media (prefers-color-scheme: light) {
@@ -77,7 +77,7 @@
     --dim: #575552;
     --ink: #141312;
     --ink-inv: #e8e7e3;
-    --accent: #3d8a96;
+    --accent: #588ba9;
   }
 }
 
@@ -91,7 +91,7 @@ html.dark {
   --dim: #a8a7a2;
   --ink: #e8e7e3;
   --ink-inv: #141312;
-  --accent: #a6cdd2;
+  --accent: #a2bfd2;
 }
 
 .force-dark {
@@ -104,7 +104,7 @@ html.dark {
   --dim: #a8a7a2;
   --ink: #e8e7e3;
   --ink-inv: #141312;
-  --accent: #a6cdd2;
+  --accent: #a2bfd2;
 }
 
 .force-light {
@@ -117,7 +117,7 @@ html.dark {
   --dim: #575552;
   --ink: #141312;
   --ink-inv: #e8e7e3;
-  --accent: #3d8a96;
+  --accent: #588ba9;
 }
 
 /* ── Entrance stagger system ──────────────────────────────────── */

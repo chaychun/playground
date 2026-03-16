@@ -12,7 +12,8 @@ function Intro() {
     <div className="pt-8 pb-30">
       <h1 className="font-serif text-heading font-extralight text-ink">
         I&apos;m Chayut, a designer and builder exploring{" "}
-        <em className="text-accent italic">interface craft</em>.
+        <em className="text-accent italic">interface craft</em>
+        <span className="text-accent">.</span>
       </h1>
       <p className="mt-5 text-body text-dim">
         This site is a collection of my experiments, studies, and writings on software design. Feel
