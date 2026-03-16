@@ -3,7 +3,10 @@
 import { cn } from "@/lib/cn";
 import { CaretDown, Info, X } from "@phosphor-icons/react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+
+import nearGlarusImg from "./assets/near-glarus.webp";
 
 interface InfoModalProps {
   label?: string;
@@ -210,11 +213,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
 export default function InfoModalDemo() {
   return (
     <div className="force-light relative flex h-full w-full items-center justify-center overflow-hidden">
-      <img
-        src="/images/near-glarus.webp"
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+      <Image src={nearGlarusImg} alt="" fill className="object-cover" />
       <div className="relative h-full w-full p-4">
         <InfoModal
           label="About this piece"
