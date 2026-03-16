@@ -1,10 +1,10 @@
-import { EnvelopeSimple, GithubLogo, XLogo } from "@phosphor-icons/react/dist/ssr";
+import { EnvelopeSimple, GithubLogo, ThreadsLogo } from "@phosphor-icons/react/dist/ssr";
 
 export const SOCIAL_LINKS = [
   {
-    icon: XLogo,
-    href: "https://x.com/chayutc_",
-    label: "X (Twitter)",
+    icon: ThreadsLogo,
+    href: "https://www.threads.com/@chun.chayut",
+    label: "Threads",
   },
   {
     icon: GithubLogo,
