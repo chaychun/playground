@@ -12,7 +12,7 @@
  * ───────────────────────────────────────────────────────── */
 
 import { cn } from "@/lib/cn";
-import { ArrowsClockwise, DownloadSimple } from "@phosphor-icons/react";
+import { ArrowsClockwiseIcon, DownloadSimpleIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -122,7 +122,7 @@ function SizeSelector({ value, onChange }: { value: number; onChange: (s: number
 
 // ── Main component ───────────────────────────────────────────────
 
-export default function GraecoLatinSquares() {
+export function GraecoLatinSquares() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [size, setSize] = useState(DEFAULT_SIZE);
   const sizeRef = useRef(DEFAULT_SIZE);
@@ -310,7 +310,7 @@ export default function GraecoLatinSquares() {
                 : "bg-accent text-ink-inv hover:opacity-85 active:opacity-75",
             )}
           >
-            <ArrowsClockwise size={16} weight="bold" />
+            <ArrowsClockwiseIcon size={16} weight="bold" />
             Randomize
           </button>
           <button
@@ -321,7 +321,7 @@ export default function GraecoLatinSquares() {
               impossible ? "cursor-not-allowed text-muted/30" : "text-muted hover:text-ink",
             )}
           >
-            <DownloadSimple size={16} />
+            <DownloadSimpleIcon size={16} />
             Save PNG
           </button>
         </div>
@@ -329,3 +329,5 @@ export default function GraecoLatinSquares() {
     </div>
   );
 }
+
+export default GraecoLatinSquares;

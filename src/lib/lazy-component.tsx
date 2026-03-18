@@ -1,19 +1,9 @@
 "use client";
 
-import { Component as ReactComponent, Suspense, lazy } from "react";
+import { Component as ReactComponent, lazy } from "react";
 import type { ComponentType, ReactNode } from "react";
 
-const componentCache = new Map<string, React.LazyExoticComponent<ComponentType>>();
 const previewCache = new Map<string, React.LazyExoticComponent<ComponentType>>();
-
-function getLazyComponent(slug: string) {
-  let component = componentCache.get(slug);
-  if (!component) {
-    component = lazy(() => import(`@/playground/${slug}/component`));
-    componentCache.set(slug, component);
-  }
-  return component;
-}
 
 function getLazyPreview(slug: string) {
   let component = previewCache.get(slug);
@@ -41,23 +31,6 @@ class CellErrorBoundary extends ReactComponent<{ children: ReactNode }, { hasErr
     }
     return this.props.children;
   }
-}
-
-export function LazyPlaygroundComponent({
-  slug,
-  fallback,
-}: {
-  slug: string;
-  fallback?: ReactNode;
-}) {
-  const Component = getLazyComponent(slug);
-  return (
-    <CellErrorBoundary>
-      <Suspense fallback={fallback ?? null}>
-        <Component />
-      </Suspense>
-    </CellErrorBoundary>
-  );
 }
 
 export function LazyPreviewComponent({ slug }: { slug: string }) {

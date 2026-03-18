@@ -74,13 +74,19 @@ export async function getItemBySlug(
   try {
     const { item, raw } = await parseItem(slug);
 
-    // Pass the item's interactive component as `Component` so MDX authors can use
-    // `import Component from "./component"` and `<Component />` without next-mdx-remote
-    // needing to resolve the import statement at runtime.
-    const compMod = await import(`@/playground/${slug}/component`).catch(() => null);
-    const components = compMod?.default
-      ? { ...mdxComponents, Component: compMod.default as React.ComponentType }
-      : mdxComponents;
+    // Collect PascalCase named exports from the slug's component files.
+    // Fixed import path so Turbopack can statically analyze and resolve them at build time:
+    const barrelMod = await import(`@/playground/${slug}/components`).catch(() => null);
+
+    const slugComponents: Record<string, React.ComponentType> = {};
+    if (barrelMod) {
+      for (const [name, value] of Object.entries(barrelMod)) {
+        if (name !== "default" && /^[A-Z]/.test(name)) {
+          slugComponents[name] = value as React.ComponentType;
+        }
+      }
+    }
+    const components = { ...mdxComponents, ...slugComponents };
 
     const { content } = await compileMDX({
       source: raw,

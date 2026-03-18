@@ -1,15 +1,24 @@
 ---
 title: "Graeco-Latin Squares"
-description: "Randomized patterns from orthogonal Latin square constructions"
-createdAt: "2026-03-09"
+description: "Algorithmic art from a mathematical concept"
+createdAt: "2025-08-27"
 category: "exploration"
 ---
 
-import { Frame } from "@/components/frame";
-import Component from "./component";
+I love mathematics and the beauty hidden within it. I was a huge math nerd in college, and I always love when things I do tie back to it somehow.
+
+This is one such case. I thought it would be pretty fun to try to visualize a mathematical concept in an artistic way. I went through many ideas that didn't turn out quite as nice as I had imagined before I landed on this one.
+
+## A brief tour of the squares
+
+Let me give you a little context so you understand what you're looking at. We start with a **Latin Square**. It's a square grid filled with **symbols**. The number of symbols used is equal to the size of the grid. So a 3x3 grid would have 3 symbols, for example. By convention we often use the Latin alphabet (hence the name), but we can really use anything: numbers, shapes, etc.
+
+<LatinSquareDiagram />
+
+But there's an extra rule: the symbols can't repeat in any row or column. So in the example above, you can see that the letters A, B, C, D appear exactly once in each row and column. The same is true for the numbers 1, 2, 3, 4, and the shapes Circle, Square, Triangle, Hexagon.
+
+<GraecoLatinPatternDiagram />
 
 <Frame aspectRatio="1/1">
-  <Component />
+  <GraecoLatinSquares />
 </Frame>
-
-Randomized patterns from orthogonal Latin square constructions.

@@ -54,11 +54,6 @@ export const mdxComponents: MDXComponents = {
     // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     <img className="mt-5 rounded-md" {...props} />
   ),
-  Callout: ({ children }: { children: React.ReactNode }) => (
-    <div className="mt-5 rounded-md border border-accent/20 bg-accent/5 px-5 py-4 text-body text-dim">
-      {children}
-    </div>
-  ),
   Frame,
   Caption,
 };
