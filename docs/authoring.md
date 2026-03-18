@@ -95,7 +95,18 @@ The optional named `frame` export controls the preview card dimensions:
 
 Completely optional. Items can be pure articles with no interactive piece.
 
-If you do have one, it's just a React component — no constraints on naming, exports, or rendering strategy. Server-rendered, client-rendered, multiple exports, a whole sub-app — all fine. Import it however you like in `content.mdx` or `preview.tsx`.
+If you have React components that you want to use in your `content.mdx`, you **must** export them from a `components.ts` file inside your slug folder:
+
+```ts
+// src/playground/my-item/components.ts
+export { default as MyComponent } from "./my-component";
+```
+
+Any component exported from `components.ts` with a Capitalized name will become automatically available globally within that slug's MDX. Both client and server components work fine.
+
+For components not used inside `content.mdx` (like the preview frame itself), there are no constraints on naming or exports.
+
+Two additional components are also automatically injected on all `content.mdx` files: `Frame` and `Caption` which are used for authoring.
 
 ### Keep everything inside the slug folder
 
