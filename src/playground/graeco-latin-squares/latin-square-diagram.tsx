@@ -120,8 +120,8 @@ export function GraecoLatinPatternDiagram() {
           );
         })}
       </div>
-      <span className="font-mono text-meta tracking-[0.04em] text-muted uppercase">
-        Graeco-Latin Pattern
+      <span className="font-mono text-meta tracking-[0.04em] text-muted">
+        A solution to the playing cards problem
       </span>
     </div>
   );

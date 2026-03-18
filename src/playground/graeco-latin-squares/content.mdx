@@ -9,16 +9,40 @@ I love mathematics and the beauty hidden within it. I was a huge math nerd in co
 
 This is one such case. I thought it would be pretty fun to try to visualize a mathematical concept in an artistic way. I went through many ideas that didn't turn out quite as nice as I had imagined before I landed on this one.
 
+<PreviewCycle />
+
 ## A brief tour of the squares
 
-Let me give you a little context so you understand what you're looking at. We start with a **Latin Square**. It's a square grid filled with **symbols**. The number of symbols used is equal to the size of the grid. So a 3x3 grid would have 3 symbols, for example. By convention we often use the Latin alphabet (hence the name), but we can really use anything: numbers, shapes, etc.
+Let me give you a little context so you understand what you're looking at. We start with a [Latin Square](https://en.wikipedia.org/wiki/Latin_square). It's a square grid filled with **symbols**. The number of symbols used is equal to the size of the grid. So a 3x3 grid would have 3 symbols, for example. By convention we often use the Latin alphabet (hence the name), but we can really use anything: numbers, shapes, etc.
 
 <LatinSquareDiagram />
 
-But there's an extra rule: the symbols can't repeat in any row or column. So in the example above, you can see that the letters A, B, C, D appear exactly once in each row and column. The same is true for the numbers 1, 2, 3, 4, and the shapes Circle, Square, Triangle, Hexagon.
+But there's an extra rule: the symbols **can't repeat in any row or column**. So in the example above, you can see that the letters A, B, C, D appear exactly once in each row and column. The same is true for the numbers and the shapes.
+
+We can then construct a [Graeco-Latin Square](https://en.wikipedia.org/wiki/Mutually_orthogonal_Latin_squares) by overlaying two (different) Latin Squares on top of each other in such a way that each pair of symbols appears exactly once on the grid. The name originated similarly, with [Euler](https://en.wikipedia.org/wiki/Leonhard_Euler) (one of the first to study the squares seriously) using Greek and Latin letters.
+
+This might be hard to take in. A useful analogy is to think of it as a puzzle where you have to arrange 16 cards — A, J, Q, K of each suit — in a 4x4 grid such that no row or column has a repeating suit or rank. Using cards automatically impose the uniqueness constraint, so it's easier to just move them around.
+
+You can try to solve it yourself if you have some cards around. One valid solution is this:
 
 <GraecoLatinPatternDiagram />
+
+A cool consequence of this is that every possible pair appears exactly once on the grid. This is why Graco-Latin squares are useful in many real-world applications, such as experimental design, where you want to test the effect of two factors on an outcome, or in scheduling problems, where you want to assign tasks to workers in such a way that each worker performs each task exactly once.
+
+## Making Graeco-Latin art
 
 <Frame aspectRatio="1/1">
   <GraecoLatinSquares />
 </Frame>
+
+In the interactive tool above, I solve for a valid square and visualize it using colors in a square-inside-square pattern. You can play around with it: select different grid sizes, randomize the color palette, and even save your favorite arrangements as a PNG. In this case, our "symbol" is simply the color of the squares.
+
+The visual style was actually inspired by the front cover of the November 1959 edition of _Scientific American_:
+
+<ScientificAmericanCover />
+
+I originally learned about the history of these squares from a Numberphile video, and it sent me down a fascinating rabbit hole. The hardest part of this project was actually _generating_ the valid squares in the first place.
+
+Building a solver for some grid sizes is relatively straightforward, as there exist well-known methods for generating and composing squares. But there is no clean, universal algorithm that works for every size. Because we have to rely on entirely different mathematical techniques depending on the dimensions, some generated solutions are relatively symmetric, while others look much more chaotic. The less symmetric ones usually belong to the grid sizes that are the hardest to solve for—and ironically, I think they end up being the most visually interesting!
+
+It took the brightest mathematicians centuries to figure out exactly what sizes are possible (every size except 2 and 6), and find an example square for them. The hardest one on this list was 10, which belonged in a family thought impossible by Euler. It wasn't until 1959 that a group of researchers found the first example solution using some genuinely clever algorithm—the same one I also used here.
