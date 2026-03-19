@@ -4,7 +4,6 @@ import { getAllItems } from "@/lib/content";
 import { LazyPreviewComponent } from "@/lib/lazy-component";
 import { descriptionMdxComponents } from "@/lib/mdx-components";
 import { inlineLink } from "@/lib/styles";
-import { DEFAULT_CATEGORY } from "@/lib/types";
 import type { Item } from "@/lib/types";
 import { compileMDX } from "next-mdx-remote/rsc";
 import Link from "next/link";
@@ -92,8 +91,11 @@ async function ItemCard({ item }: { item: Item }) {
         ) : (
           <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
         )}
-        <span className="shrink-0 font-mono text-meta tracking-[0.04em] text-muted uppercase">
-          {item.category || DEFAULT_CATEGORY}
+        <span className="shrink-0 font-mono text-meta text-muted">
+          {new Date(item.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            year: "numeric",
+          })}
         </span>
       </div>
       {item.description && <ItemDescription markdown={item.description} />}
