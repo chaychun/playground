@@ -49,7 +49,11 @@ export default async function ItemPage({ params }: { params: Promise<Params> }) 
         {item.createdAt && (
           <>
             <span className="mx-2 text-border">·</span>
-            {new Date(item.createdAt).getFullYear()}
+            {(() => {
+              const [year, month] = item.createdAt.split("-");
+              const date = new Date(Number(year), Number(month) - 1);
+              return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+            })()}
           </>
         )}
       </div>
