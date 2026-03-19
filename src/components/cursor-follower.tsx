@@ -73,8 +73,10 @@ export function CursorFollower() {
           clearTimeout(hideTimeout);
           setIsVisible(true);
         } else if (type === "external") {
+          const customLabel = cursorTarget.getAttribute("data-cursor-label");
+          const label = customLabel || "Visit";
           setData((prev) =>
-            prev?.type === "external" ? prev : { type: "external", label: "Visit" },
+            prev?.type === "external" && prev.label === label ? prev : { type: "external", label },
           );
           clearTimeout(hideTimeout);
           setIsVisible(true);
