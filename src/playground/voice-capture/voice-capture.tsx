@@ -1,187 +1,26 @@
 "use client";
 
+import {
+  MicrophoneIcon,
+  HouseIcon,
+  LinkIcon,
+  BookmarkSimpleIcon,
+  UserIcon,
+  XIcon,
+  PauseIcon,
+  PlayIcon,
+  ArrowUpIcon,
+  CheckIcon,
+} from "@phosphor-icons/react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
-function MicIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect x="9" y="2" width="6" height="12" rx="3" />
-      <path d="M5 10a7 7 0 0 0 14 0" />
-      <line x1="12" y1="17" x2="12" y2="21" />
-    </svg>
-  );
-}
-
-function HomeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M3 10.5L12 3l9 7.5" />
-      <path d="M5 9.5V19a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1V9.5" />
-    </svg>
-  );
-}
-
-function LinkIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-    </svg>
-  );
-}
-
-function BookmarkIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M6 4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17l-6-4-6 4V4z" />
-    </svg>
-  );
-}
-
-function ProfileIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 20c0-4 4-7 8-7s8 3 8 7" />
-    </svg>
-  );
-}
-
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}
-
-function PauseIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect x="6" y="4" width="4" height="16" rx="1" />
-      <rect x="14" y="4" width="4" height="16" rx="1" />
-    </svg>
-  );
-}
-
-function PlayIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <polygon points="6,4 20,12 6,20" />
-    </svg>
-  );
-}
-
-function SendIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <line x1="12" y1="19" x2="12" y2="5" />
-      <polyline points="5 12 12 5 19 12" />
-    </svg>
-  );
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <motion.path
-        d="M4 12l6 6L20 6"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ type: "spring", visualDuration: 0.4, bounce: 0 }}
-      />
-    </svg>
-  );
-}
-
 const NAV_ICONS = [
-  { key: "home", icon: HomeIcon, label: "Home" },
+  { key: "home", icon: HouseIcon, label: "Home" },
   { key: "link", icon: LinkIcon, label: "Links" },
-  { key: "mic", icon: MicIcon, label: "Record" },
-  { key: "bookmark", icon: BookmarkIcon, label: "Saved" },
-  { key: "profile", icon: ProfileIcon, label: "Profile" },
+  { key: "mic", icon: MicrophoneIcon, label: "Record" },
+  { key: "bookmark", icon: BookmarkSimpleIcon, label: "Saved" },
+  { key: "profile", icon: UserIcon, label: "Profile" },
 ];
 
 const BAR_KEYS = ["a", "b", "c", "d", "e", "f", "g"];
@@ -355,7 +194,7 @@ export default function VoiceCapture() {
                       delay: isExpanded ? 0 : FADE_MIC_IN_DELAY,
                     }}
                   >
-                    <MicIcon className="h-5 w-5 text-ink-inv" />
+                    <MicrophoneIcon className="h-5 w-5 text-ink-inv" />
                   </motion.div>
 
                   {/* Expanded content — visible when expanded */}
@@ -413,7 +252,7 @@ export default function VoiceCapture() {
                               }}
                               aria-label="Cancel recording"
                             >
-                              <CloseIcon className="h-5 w-5" />
+                              <XIcon className="h-5 w-5" />
                             </motion.button>
 
                             <motion.button
@@ -433,9 +272,9 @@ export default function VoiceCapture() {
                                   transition={{ duration: 0.1 }}
                                 >
                                   {paused ? (
-                                    <PlayIcon className="h-5 w-5" />
+                                    <PlayIcon className="h-5 w-5" weight="fill" />
                                   ) : (
-                                    <PauseIcon className="h-5 w-5" />
+                                    <PauseIcon className="h-5 w-5" weight="fill" />
                                   )}
                                 </motion.span>
                               </AnimatePresence>
@@ -448,7 +287,7 @@ export default function VoiceCapture() {
                               onClick={handleSend}
                               aria-label="Send recording"
                             >
-                              <SendIcon className="h-5 w-5" />
+                              <ArrowUpIcon className="h-5 w-5" />
                             </motion.button>
                           </div>
                         </motion.div>

@@ -71,9 +71,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
         <motion.div
           className={cn(
             "relative overflow-hidden bg-paper",
-            isOpen
-              ? "flex max-h-[calc(100%-32px)] w-[min(380px,calc(100%-32px))] flex-col"
-              : "h-14 w-14",
+            isOpen ? "flex max-h-full w-full max-w-[380px] flex-col" : "h-14 w-14",
           )}
           layout
           ref={panelRef}
@@ -87,7 +85,9 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                 key="content"
                 className={cn(
                   "min-h-0 flex-1",
-                  isLayoutAnimating ? "overflow-hidden" : "overflow-y-auto",
+                  isLayoutAnimating
+                    ? "overflow-hidden"
+                    : "overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
                 )}
                 layout
                 initial={{ opacity: 0 }}
@@ -212,7 +212,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
 
 export default function InfoModalDemo() {
   return (
-    <div className="force-light relative flex h-full w-full items-center justify-center overflow-hidden">
+    <div className="force-light absolute inset-0 flex items-center justify-center overflow-hidden">
       <Image src={nearGlarusImg} alt="" fill className="object-cover" />
       <div className="relative h-full w-full p-4">
         <InfoModal
