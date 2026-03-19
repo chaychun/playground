@@ -1,6 +1,7 @@
 import { AgentationOverlay } from "@/components/agentation";
 import { DevTools } from "@/components/dev-tools";
 import { cn } from "@/lib/cn";
+import { AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
@@ -24,8 +25,22 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Playground",
-  description: "Personal works and interactive component demos",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `Playground — ${AUTHOR}`,
+    template: "%s — Playground",
+  },
+  description: SITE_DESCRIPTION,
+  authors: [{ name: AUTHOR, url: SITE_URL }],
+  creator: AUTHOR,
+  openGraph: {
+    siteName: SITE_NAME,
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export const viewport: Viewport = {

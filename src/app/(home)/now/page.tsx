@@ -3,7 +3,13 @@ import { join } from "node:path";
 
 import { StaggerEntrance } from "@/components/stagger-entrance";
 import { descriptionMdxComponents } from "@/lib/mdx-components";
+import type { Metadata } from "next";
 import { compileMDX } from "next-mdx-remote/rsc";
+
+export const metadata: Metadata = {
+  title: "Now",
+  description: "What Chayut is currently doing, thinking about, and working on.",
+};
 
 type NowEntry = {
   title: string;

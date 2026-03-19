@@ -14,7 +14,23 @@ export async function generateStaticParams(): Promise<Params[]> {
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const result = await getItemBySlug(slug);
-  return { title: result?.item.hasFullPage ? `${result.item.title} — Playground` : "Not Found" };
+
+  if (!result?.item.hasFullPage) {
+    return { title: "Not Found" };
+  }
+
+  const { item } = result;
+  const title = item.title;
+  const description = item.description ?? `${title} — an interactive design exploration.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} — Playground`,
+      description,
+    },
+  };
 }
 
 export default async function ItemPage({ params }: { params: Promise<Params> }) {

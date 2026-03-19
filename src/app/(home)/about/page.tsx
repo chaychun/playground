@@ -1,7 +1,14 @@
 import { StaggerEntrance } from "@/components/stagger-entrance";
 import { type SocialLink, SOCIAL_LINKS } from "@/data/social";
 import { inlineLink } from "@/lib/styles";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Chayut Chunsamphran — design engineer focused on motion-led interactions, calm technology, and interfaces that feel intentionally crafted.",
+};
 
 const ABOUT_SOCIAL_LINKS: (SocialLink & { display: string })[] = [
   { ...SOCIAL_LINKS[0], display: "chun.chayut" },
