@@ -56,6 +56,7 @@ async function ItemCard({ item }: { item: Item }) {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="external"
+              data-cursor-label={item.links?.[0]?.label}
               className="block"
             >
               <Frame {...item.previewFrame}>
