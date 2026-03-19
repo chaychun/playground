@@ -84,7 +84,7 @@ async function ItemCard({ item }: { item: Item }) {
             href={externalLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-serif text-item-title font-light text-ink hover:underline"
+            className="font-serif text-item-title font-light text-ink"
           >
             {item.title}
           </a>
