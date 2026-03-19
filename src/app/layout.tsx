@@ -1,4 +1,5 @@
 import { AgentationOverlay } from "@/components/agentation";
+import { CursorFollower } from "@/components/cursor-follower";
 import { DevTools } from "@/components/dev-tools";
 import { cn } from "@/lib/cn";
 import { AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
@@ -70,6 +71,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <CursorFollower />
         <AgentationOverlay />
         <DevTools />
       </body>

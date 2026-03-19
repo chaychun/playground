@@ -40,15 +40,35 @@ async function ItemDescription({ markdown }: { markdown: string }) {
 
 async function ItemCard({ item }: { item: Item }) {
   const slug = item.hasFullPage ? `/${item.slug}` : undefined;
+  const externalLink = item.links?.[0]?.href ? item.links[0].href : undefined;
+
+  // For the preview, prioritize externalLink if specified, fallback to slug
+  const previewHref = externalLink || slug;
+  const previewIsExternal = !!externalLink;
+
   return (
     <>
       {item.hasPreview &&
-        (slug ? (
-          <Link href={slug} className="block">
-            <Frame {...item.previewFrame}>
-              <LazyPreviewComponent slug={item.slug} />
-            </Frame>
-          </Link>
+        (previewHref ? (
+          previewIsExternal ? (
+            <a
+              href={previewHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="external"
+              className="block"
+            >
+              <Frame {...item.previewFrame}>
+                <LazyPreviewComponent slug={item.slug} />
+              </Frame>
+            </a>
+          ) : (
+            <Link href={previewHref} data-cursor="internal" className="block">
+              <Frame {...item.previewFrame}>
+                <LazyPreviewComponent slug={item.slug} />
+              </Frame>
+            </Link>
+          )
         ) : (
           <Frame {...item.previewFrame}>
             <LazyPreviewComponent slug={item.slug} />
@@ -59,6 +79,15 @@ async function ItemCard({ item }: { item: Item }) {
           <Link href={slug} className="font-serif text-item-title font-light text-ink">
             {item.title}
           </Link>
+        ) : externalLink ? (
+          <a
+            href={externalLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-serif text-item-title font-light text-ink hover:underline"
+          >
+            {item.title}
+          </a>
         ) : (
           <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
         )}
