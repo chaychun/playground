@@ -18,15 +18,19 @@ function Intro() {
       </h1>
       <p className="mt-5 text-body text-dim">
         This site is a collection of my experiments, studies, and writings on software design. Feel
-        free to explore! You can also read{" "}
+        free to explore! You can also read more{" "}
         <Link href="/about" className={inlineLink}>
           about me
-        </Link>{" "}
-        and see what I&apos;m{" "}
-        <Link href="/now" className={inlineLink}>
-          currently up to
         </Link>
         .
+      </p>
+      <p className="mt-5 text-body text-dim">
+        I&apos;m currently open for design and engineering work. If you&apos;re interested in
+        working with me, check out my{" "}
+        <Link href="/resume" className={inlineLink}>
+          resume
+        </Link>{" "}
+        and feel free to reach out!
       </p>
     </div>
   );

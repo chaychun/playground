@@ -139,7 +139,7 @@ export default function ResumePage() {
 
             <article className="project">
               <div className="project-header">
-                <h3 className="project-name">Syne</h3>
+                <h3 className="project-name">Knopp</h3>
                 <span className="in-progress">In Progress</span>
               </div>
               <p className="project-subtitle">Knowledge Management Tool</p>
@@ -148,7 +148,9 @@ export default function ResumePage() {
                 documents upfront, knowledge accumulates naturally through short captures that link
                 to topics, building a connected, browsable graph over time. Built for Mac and iOS.
               </p>
-              <p className="project-tech">SwiftUI &middot; SQLite</p>
+              <p className="project-tech">
+                TypeScript &middot; React &middot; Electrobun &middot; SwiftUI
+              </p>
             </article>
 
             <article className="project">

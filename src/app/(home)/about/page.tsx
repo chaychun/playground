@@ -1,8 +1,6 @@
 import { StaggerEntrance } from "@/components/stagger-entrance";
 import { type SocialLink, SOCIAL_LINKS } from "@/data/social";
-import { inlineLink } from "@/lib/styles";
 import type { Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About",
@@ -36,14 +34,6 @@ export default function AboutPage() {
           Outside of code, I&apos;m probably rearranging my room for the third time this month, deep
           in a rabbit hole about how people think and learn, or just enjoying a quiet moment with
           people I care about.
-        </p>
-        <p>
-          I&apos;m currently open for design and engineering work. If you&apos;re interested in
-          working with me, check out my{" "}
-          <Link href="/resume" className={inlineLink}>
-            resume
-          </Link>{" "}
-          and feel free to reach out!
         </p>
       </div>
 
