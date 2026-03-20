@@ -13,12 +13,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: `${SITE_URL}/now`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
+    // temporarily removed from sitemap until now page content is ready
+    // { url: `${SITE_URL}/now`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     {
       url: `${SITE_URL}/resume`,
       lastModified: new Date(),
