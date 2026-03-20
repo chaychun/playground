@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export type StorySlide =
   | { kind: "image"; src: StaticImageData | string }
-  | { kind: "video"; src: string };
+  | { kind: "video"; src: string; position?: string };
 
 const slideKey = (slide: StorySlide) =>
   slide.kind === "video" ? slide.src : typeof slide.src === "string" ? slide.src : slide.src.src;
@@ -118,6 +118,7 @@ export default function StoryCarousel({
                 }}
                 src={slide.src}
                 className="h-full w-full object-cover"
+                style={slide.position ? { objectPosition: slide.position } : undefined}
                 muted
                 playsInline
                 preload="metadata"
