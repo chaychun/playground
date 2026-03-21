@@ -89,6 +89,7 @@ export default function VariableFontSelector() {
           <motion.ul
             className="flex flex-col"
             style={{ gap: GAP }}
+            initial={false}
             animate={{ y: listY }}
             transition={{ type: "spring", duration: 0.5, bounce: 0 }}
           >
@@ -101,6 +102,7 @@ export default function VariableFontSelector() {
                       "flex h-full items-center bg-transparent text-left leading-none transition-colors duration-200",
                       isActive ? "text-ink" : "text-muted hover:text-dim",
                     )}
+                    initial={false}
                     animate={{
                       fontWeight: isActive ? 600 : 300,
                       fontSize: isActive ? "60px" : "48px",
