@@ -10,6 +10,7 @@ const PARAMS = {
     layers: 8,
     intensity: 0.6,
     height: 100,
+    overhang: 48,
   },
   fade: {
     solidEnd: 15,
@@ -23,7 +24,6 @@ const PARAMS = {
   layout: {
     paddingTop: 40,
     paddingBottom: 4,
-    tintHeight: 6,
   },
 };
 
@@ -72,16 +72,15 @@ function buildFadePoints(fade: typeof PARAMS.fade) {
   ].toSorted((a, b) => a.pos - b.pos);
 }
 
-/** Generate a smooth CSS gradient by sampling the spline at many stops */
-function buildSmoothGradient(fade: typeof PARAMS.fade, steps = 24) {
+/** Generate a smooth CSS mask-image gradient by sampling the spline at many stops */
+function buildSmoothMask(fade: typeof PARAMS.fade, steps = 24) {
   const points = buildFadePoints(fade);
   const stops: string[] = [];
 
   for (let i = 0; i <= steps; i++) {
     const pct = (i / steps) * 100;
     const opacity = smoothFade(pct, points);
-    const mix = Math.round(opacity * 100);
-    stops.push(`color-mix(in oklch, var(--paper) ${mix}%, transparent) ${pct.toFixed(1)}%`);
+    stops.push(`rgb(0 0 0 / ${(opacity * 100).toFixed(1)}%) ${pct.toFixed(1)}%`);
   }
 
   return `linear-gradient(180deg, ${stops.join(", ")})`;
@@ -91,19 +90,29 @@ export function StickyHeader({ children }: { children: React.ReactNode }) {
   const layers = Math.max(PARAMS.blur.layers, 2);
   const segmentSize = 1 / (layers + 1);
 
-  // Smooth fade gradient — Catmull-Rom spline sampled at 24 stops
-  const fadeGradient = buildSmoothGradient(PARAMS.fade);
+  const fadeMask = buildSmoothMask(PARAMS.fade);
 
   return (
     <div className="sticky top-0 z-50 print:hidden">
       {/* Blur + fade overlay */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0"
-        style={{ height: PARAMS.blur.height }}
+        className="pointer-events-none absolute top-0"
+        style={{
+          height: PARAMS.blur.height,
+          left: -PARAMS.blur.overhang,
+          right: -PARAMS.blur.overhang,
+        }}
         aria-hidden="true"
       >
-        {/* Color fade: paper → transparent (curve-driven) */}
-        <div className="absolute inset-0" style={{ background: fadeGradient }} />
+        {/* Color fade: paper → transparent */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: "var(--paper)",
+            maskImage: fadeMask,
+            WebkitMaskImage: fadeMask,
+          }}
+        />
         {/* Progressive blur layers — strongest at top, fading to none at bottom */}
         {Array.from({ length: layers }, (_, i) => {
           const stops = [
