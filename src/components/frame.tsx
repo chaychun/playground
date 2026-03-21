@@ -11,7 +11,7 @@ function parseAspectRatio(value: string): string | undefined {
 }
 
 function FrameSkeleton() {
-  return <div className="absolute inset-0 bg-surface" />;
+  return <div className="absolute inset-0" />;
 }
 
 export function Frame({
