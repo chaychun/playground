@@ -23,7 +23,7 @@ Required. Every item must have one.
 ---
 title: "My Item" # required
 description: "One paragraph." # shown in the feed, can be longer
-createdAt: "2026-03-16" # ISO date — determines sort order
+createdAt: "2026-03" # year-month — determines sort order
 category: "exploration" # "playground" | "exploration"
 links: # optional external links
   - label: "GitHub"
