@@ -3,7 +3,7 @@
 import { cn } from "@/lib/cn";
 import { ArrowRight, Check, X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState, type ElementType } from "react";
 
 type ButtonState = "idle" | "processing" | "done" | "failure";
 
@@ -47,21 +47,41 @@ const BG_COLOR: Record<ButtonState, string> = {
   failure: "#ef4444", // red-500
 };
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function StateIcon({ icon: Icon, size }: { icon: ElementType; size: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Icon weight="bold" size={size} className="text-white" />
+    </motion.div>
+  );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MorphingPillButton({ className }: { className?: string }) {
   const [state, setState] = useState<ButtonState>("idle");
-  const [count, setCount] = useState(0);
+  const toggleRef = useRef(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const handleClick = () => {
     if (state !== "idle") return;
-    const next = count + 1;
-    setCount(next);
+    toggleRef.current = !toggleRef.current;
+    const isDone = toggleRef.current;
     setState("processing");
-    setTimeout(() => {
-      setState(next % 2 === 1 ? "done" : "failure");
-      setTimeout(() => setState("idle"), 2000);
+    const t1 = setTimeout(() => {
+      setState(isDone ? "done" : "failure");
+      const t2 = setTimeout(() => setState("idle"), 2000);
+      timers.current.push(t2);
     }, 3000);
+    timers.current.push(t1);
   };
 
   const isIdle = state === "idle";
@@ -99,7 +119,7 @@ export function MorphingPillButton({ className }: { className?: string }) {
       {/* Ghost sizer — invisible, in-flow only when idle, holds the natural idle width */}
       {isIdle && (
         <div className="pointer-events-none invisible flex items-center gap-1.5 px-6" aria-hidden>
-          <span>Submit</span>
+          <span>{LABELS.idle}</span>
           <ArrowRight weight="bold" size={15} />
         </div>
       )}
@@ -118,7 +138,7 @@ export function MorphingPillButton({ className }: { className?: string }) {
             }}
             exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.1, ease: EASE } }}
           >
-            <span>Submit</span>
+            <span>{LABELS.idle}</span>
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
               <ArrowRight weight="bold" size={15} />
             </span>
@@ -195,28 +215,8 @@ export function MorphingPillButton({ className }: { className?: string }) {
                   ))}
                 </motion.div>
               )}
-              {state === "done" && (
-                <motion.div
-                  key="done"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Check weight="bold" size={15} className="text-white" />
-                </motion.div>
-              )}
-              {state === "failure" && (
-                <motion.div
-                  key="failure"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <X weight="bold" size={13} className="text-white" />
-                </motion.div>
-              )}
+              {state === "done" && <StateIcon key="done" icon={Check} size={15} />}
+              {state === "failure" && <StateIcon key="failure" icon={X} size={13} />}
             </AnimatePresence>
           </motion.div>
         )}
