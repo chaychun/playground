@@ -8,7 +8,7 @@ const MorphingPillButton = dynamic(() =>
 
 export default function Preview() {
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="absolute inset-0 flex items-center justify-center">
       <MorphingPillButton />
     </div>
   );
