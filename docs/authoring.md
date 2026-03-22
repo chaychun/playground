@@ -117,3 +117,15 @@ Treat each item directory as its own self-contained world. Assets, utilities, su
 ## Disabling an Item
 
 Rename `content.mdx` to `content.mdx.disabled`. The item will be excluded from the feed without deleting any work.
+
+## Planned Migration (TODO)
+
+All `exploration` category items (writings, works, project showcases) are currently temporarily disabled. The plan is to migrate them to a separate structure — isolated from actual playground components — so that writings/works live in their own section distinct from the interactive playground feed.
+
+Disabled items (restore by renaming `.disabled` files back to `.mdx`):
+
+- `coding-tutor` — AI Coding Tutor desktop app
+- `graeco-latin-squares` — exploration
+- `object-permanence` — fictional sculptor landing page
+- `page-stack` — card-stack navigation pattern (in-progress redesign)
+- `thai-bus-food-tour` — marketing site
