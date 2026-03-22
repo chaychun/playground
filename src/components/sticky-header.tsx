@@ -93,7 +93,7 @@ export function StickyHeader({ children }: { children: React.ReactNode }) {
   const fadeMask = buildSmoothMask(PARAMS.fade);
 
   return (
-    <div className="sticky top-0 z-50 print:hidden">
+    <div className="sticky top-0 z-50 overflow-hidden print:hidden">
       {/* Blur + fade overlay */}
       <div
         className="pointer-events-none absolute top-0"
