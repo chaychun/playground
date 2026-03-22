@@ -7,9 +7,9 @@ import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
 import "dialkit/styles.css";
-import { DM_Mono, Fraunces, Raleway } from "next/font/google";
+import { DM_Mono, Fraunces, Manrope } from "next/font/google";
 
-const raleway = Raleway({
+const manrope = Manrope({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -55,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(raleway.variable, dmMono.variable, fraunces.variable, "antialiased")}>
+      <body className={cn(manrope.variable, dmMono.variable, fraunces.variable, "antialiased")}>
         {/* Safari iOS 26 toolbar tint — position:fixed strip at the very top of the DOM */}
         <div
           aria-hidden="true"
