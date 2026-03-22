@@ -2,9 +2,14 @@
 
 import { cn } from "@/lib/cn";
 import { useMeasure } from "@/lib/use-measure";
-import { ArrowLeftIcon, BellIcon, CaretUpIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
-import { AnimatePresence, motion, MotionConfig } from "motion/react";
-import { useState } from "react";
+import {
+  ArrowLeftIcon,
+  CaretUpIcon,
+  PaperPlaneTiltIcon,
+  VideoCameraIcon,
+} from "@phosphor-icons/react";
+import { AnimatePresence, motion, MotionConfig, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -16,6 +21,7 @@ interface Message {
 }
 
 interface Conversation {
+  type: "conversation";
   id: number;
   name: string;
   initials: string;
@@ -26,10 +32,44 @@ interface Conversation {
   messages: Message[];
 }
 
+interface CalendarEvent {
+  type: "calendar";
+  id: number;
+  title: string;
+  dayName: string;
+  dayNum: string;
+  timeRange: string;
+  timeUntil: string;
+  duration: string;
+  attendees: Array<{ initials: string; className: string }>;
+  organizer: string;
+  location: string;
+}
+
+type NotificationItem = Conversation | CalendarEvent;
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const initialConversations: Conversation[] = [
+const notifications: NotificationItem[] = [
   {
+    type: "calendar",
+    id: 101,
+    title: "Design sync",
+    dayName: "MON",
+    dayNum: "22",
+    timeRange: "3:00 – 3:30 PM",
+    timeUntil: "in 15 min",
+    duration: "30 min",
+    attendees: [
+      { initials: "SC", className: "bg-[#1c3345] text-[#6aaed0]" },
+      { initials: "MW", className: "bg-[#2a1f3d] text-[#9d85d0]" },
+      { initials: "LP", className: "bg-[#1a3024] text-[#70b894]" },
+    ],
+    organizer: "Sarah Chen",
+    location: "Zoom",
+  },
+  {
+    type: "conversation",
     id: 1,
     name: "Sarah Chen",
     initials: "SC",
@@ -55,6 +95,7 @@ const initialConversations: Conversation[] = [
     ],
   },
   {
+    type: "conversation",
     id: 2,
     name: "Marcus Wright",
     initials: "MW",
@@ -77,13 +118,14 @@ const initialConversations: Conversation[] = [
     ],
   },
   {
+    type: "conversation",
     id: 3,
     name: "Lena Park",
     initials: "LP",
     avatarClass: "bg-[#1a3024] text-[#70b894]",
     preview: "also have you started that book yet?",
     time: "3 hours ago",
-    unread: false,
+    unread: true,
     messages: [
       {
         id: 1,
@@ -100,9 +142,11 @@ const initialConversations: Conversation[] = [
   },
 ];
 
-// ─── Avatar ───────────────────────────────────────────────────────────────────
+const conversations = notifications.filter((n): n is Conversation => n.type === "conversation");
 
-function Avatar({ conv, size = "md" }: { conv: Conversation; size?: "sm" | "md" }) {
+// ─── Conversation avatar ───────────────────────────────────────────────────────
+
+function ConvAvatar({ conv, size = "md" }: { conv: Conversation; size?: "sm" | "md" }) {
   return (
     <div
       className={cn(
@@ -116,31 +160,108 @@ function Avatar({ conv, size = "md" }: { conv: Conversation; size?: "sm" | "md" 
   );
 }
 
+// ─── Calendar date box ────────────────────────────────────────────────────────
+
+function EventDateBox({ event, size = "md" }: { event: CalendarEvent; size?: "sm" | "md" }) {
+  return (
+    <div
+      className={cn(
+        "flex shrink-0 flex-col items-center justify-center rounded-[8px] border border-border bg-surface",
+        size === "sm" ? "h-7 w-7" : "h-9 w-9",
+      )}
+    >
+      <span
+        className={cn(
+          "font-mono leading-none font-bold tracking-widest text-muted uppercase",
+          size === "sm" ? "text-[5px]" : "text-[6px]",
+        )}
+      >
+        {event.dayName}
+      </span>
+      <span
+        className={cn(
+          "font-mono leading-none font-bold text-dim",
+          size === "sm" ? "text-[10px]" : "text-[12px]",
+        )}
+      >
+        {event.dayNum}
+      </span>
+    </div>
+  );
+}
+
 // ─── Heights ──────────────────────────────────────────────────────────────────
 
-const CHAT_H = 340; // 288px messages + 52px input
+const CHAT_H = 340;
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function ActivityDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
+  const [activeEvent, setActiveEvent] = useState<CalendarEvent | null>(null);
   const [messagesByConv, setMessagesByConv] = useState<Record<number, Message[]>>(
-    Object.fromEntries(initialConversations.map((c) => [c.id, c.messages])),
+    Object.fromEntries(conversations.map((c) => [c.id, c.messages])),
   );
   const [input, setInput] = useState("");
   const [listRef, { height: listHeight }] = useMeasure();
+  const [eventRef, { height: eventHeight }] = useMeasure();
+  const chatScrollRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion() ?? false;
 
-  const activeConv = initialConversations.find((c) => c.id === activeId) ?? null;
-  const unreadCount = initialConversations.filter((c) => c.unread).length;
+  const spring = reduced
+    ? { type: "tween" as const, duration: 0 }
+    : { type: "spring" as const, duration: 0.3, bounce: 0 };
+  const fast = reduced ? { duration: 0 } : { duration: 0.18 };
+  const medium = reduced ? { duration: 0 } : { duration: 0.2, ease: [0.2, 0, 0, 1] as const };
+
+  const activeConv = conversations.find((c) => c.id === activeId) ?? null;
+  const unreadCount = conversations.filter((c) => c.unread).length;
+  const isDetailOpen = activeId !== null || activeEvent !== null;
+  const newCount = notifications.filter(
+    (n) => n.type === "calendar" || (n.type === "conversation" && n.unread),
+  ).length;
+
+  function scrollToBottom(smooth = false) {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    if (smooth && !reduced) {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    } else {
+      el.scrollTop = el.scrollHeight;
+    }
+  }
+
+  // Scroll to bottom when opening a chat
+  useEffect(() => {
+    if (activeId !== null) scrollToBottom();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeId]);
+
+  // Scroll to bottom when a new message is sent
+  useEffect(() => {
+    if (activeId !== null) scrollToBottom(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messagesByConv]);
 
   function openChat(id: number) {
+    setActiveEvent(null);
     setActiveId(id);
     if (!isOpen) setIsOpen(true);
   }
 
   function closeChat() {
     setActiveId(null);
+  }
+
+  function openEvent(event: CalendarEvent) {
+    setActiveId(null);
+    setActiveEvent(event);
+    if (!isOpen) setIsOpen(true);
+  }
+
+  function closeEvent() {
+    setActiveEvent(null);
   }
 
   function sendMessage() {
@@ -150,70 +271,106 @@ export function ActivityDropdown() {
     setInput("");
   }
 
+  // Header height: compact when list is open but no detail; full otherwise
+  const headerH = isOpen && !isDetailOpen ? 36 : 68;
+
   return (
-    <MotionConfig transition={{ type: "spring", duration: 0.45, bounce: 0 }}>
+    <MotionConfig transition={spring}>
       <motion.div className="w-full max-w-sm overflow-hidden rounded-[20px] border border-border bg-paper">
         {/* ── Header ── */}
-        <div className="relative flex h-[68px] shrink-0 items-center">
+        <motion.div
+          className={cn(
+            "group relative flex shrink-0 items-center overflow-hidden",
+            !isDetailOpen && "cursor-pointer",
+          )}
+          animate={{ height: headerH }}
+          transition={spring}
+          onClick={!isDetailOpen ? () => setIsOpen((o) => !o) : undefined}
+        >
           <AnimatePresence mode="popLayout" initial={false}>
             {activeConv ? (
               // Chat header
               <motion.div
                 key="chat-header"
                 className="flex w-full items-center gap-3 px-3"
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 24 }}
-                transition={{ duration: 0.25 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={fast}
               >
                 <button
                   type="button"
                   onClick={closeChat}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink"
                 >
                   <ArrowLeftIcon className="h-4 w-4" />
                 </button>
-                <Avatar conv={activeConv} size="sm" />
+                <ConvAvatar conv={activeConv} size="sm" />
                 <span className="text-sm font-medium text-ink">{activeConv.name}</span>
               </motion.div>
+            ) : activeEvent ? (
+              // Event header
+              <motion.div
+                key="event-header"
+                className="flex w-full items-center gap-2 px-3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={medium}
+              >
+                <button
+                  type="button"
+                  onClick={closeEvent}
+                  className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink"
+                >
+                  <ArrowLeftIcon className="h-4 w-4" />
+                </button>
+                <span className="text-xs text-muted">
+                  {activeEvent.dayName} {activeEvent.dayNum}
+                </span>
+                <span className="text-muted/30">·</span>
+                <span className="text-xs text-muted">{activeEvent.timeRange}</span>
+                <span className="ml-auto rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
+                  {activeEvent.timeUntil}
+                </span>
+              </motion.div>
+            ) : isOpen ? (
+              // Expanded list: title + chevron to close
+              <motion.div
+                key="chevron-only"
+                className="flex w-full items-center justify-between px-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={fast}
+              >
+                <span className="text-xs font-medium text-muted transition-colors group-hover:text-ink">
+                  Notifications
+                </span>
+                <CaretUpIcon className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-ink" />
+              </motion.div>
             ) : (
-              // List header
+              // Collapsed: full summary header
               <motion.div
                 key="list-header"
-                className="flex w-full cursor-pointer items-center gap-3 px-4"
-                onClick={() => setIsOpen((v) => !v)}
-                initial={{ opacity: 0, x: -24 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -24 }}
-                transition={{ duration: 0.25 }}
+                className="flex w-full items-center gap-3 px-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={fast}
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-surface">
-                  <BellIcon className="h-[18px] w-[18px] text-dim" weight="light" />
-                </div>
+                <div className="h-2 w-2 shrink-0 rounded-full bg-accent" />
                 <div className="flex-1 overflow-hidden">
-                  <h3 className="text-sm font-medium text-ink">
-                    {unreadCount > 0 ? `${unreadCount} unread` : "Messages"}
-                  </h3>
-                  <p
-                    className={cn(
-                      "truncate text-xs text-muted",
-                      "transition-all duration-400 ease-[cubic-bezier(0.4,0,0.2,1)]",
-                      isOpen ? "max-h-0 opacity-0" : "mt-0.5 max-h-5 opacity-100",
-                    )}
-                  >
-                    {initialConversations[0].name}: {initialConversations[0].preview}
+                  <h3 className="text-sm font-semibold text-ink">{newCount} new updates</h3>
+                  <p className="mt-0.5 truncate text-xs text-muted transition-colors group-hover:text-ink">
+                    {unreadCount} messages · 1 invite
                   </p>
                 </div>
-                <CaretUpIcon
-                  className={cn(
-                    "h-4 w-4 shrink-0 text-muted transition-transform duration-400 ease-[cubic-bezier(0.4,0,0.2,1)]",
-                    isOpen ? "rotate-0" : "rotate-180",
-                  )}
-                />
+                <CaretUpIcon className="h-4 w-4 shrink-0 rotate-180 text-muted transition-colors group-hover:text-ink" />
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* ── Content area ── */}
         <AnimatePresence initial={false}>
@@ -222,45 +379,102 @@ export function ActivityDropdown() {
               key="content"
               className="relative overflow-hidden"
               initial={{ height: 0, opacity: 0 }}
-              animate={{ height: activeId !== null ? CHAT_H : listHeight, opacity: 1 }}
+              animate={{
+                height:
+                  activeId !== null ? CHAT_H : activeEvent !== null ? eventHeight : listHeight,
+                opacity: 1,
+              }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ type: "spring", duration: 0.45, bounce: 0 }}
+              transition={spring}
             >
               {/* List panel */}
               <motion.div
                 className="absolute inset-0"
-                style={{ pointerEvents: activeId !== null ? "none" : "auto" }}
+                style={{ pointerEvents: isDetailOpen ? "none" : "auto" }}
                 animate={{
                   x: activeId !== null ? -40 : 0,
-                  opacity: activeId !== null ? 0 : 1,
-                  filter: activeId !== null ? "blur(4px)" : "blur(0px)",
+                  y: activeEvent !== null ? -8 : 0,
+                  opacity: isDetailOpen ? 0 : 1,
                 }}
               >
-                <div ref={listRef} className="space-y-0.5 p-2">
-                  {initialConversations.map((conv, index) => (
-                    <motion.div
-                      key={conv.id}
-                      className="flex cursor-pointer items-center gap-3 rounded-[12px] p-3 hover:bg-surface"
-                      onClick={() => openChat(conv.id)}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.06, duration: 0.3 }}
-                    >
-                      <Avatar conv={conv} />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-baseline justify-between gap-2">
-                          <span className="text-sm font-medium text-ink">{conv.name}</span>
-                          <span className="shrink-0 font-mono text-2xs text-muted">
-                            {conv.time}
-                          </span>
-                        </div>
-                        <p className="truncate text-xs text-muted">{conv.preview}</p>
-                      </div>
-                      {conv.unread && (
-                        <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                      )}
-                    </motion.div>
-                  ))}
+                <div ref={listRef} className="space-y-0.5 px-2 pb-2">
+                  {notifications.map((item, index) => {
+                    if (item.type === "conversation") {
+                      return (
+                        <motion.div
+                          key={item.id}
+                          className="flex cursor-pointer items-center gap-3 rounded-[12px] p-3 hover:bg-surface"
+                          onClick={() => openChat(item.id)}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            delay: reduced ? 0 : index * 0.04,
+                            duration: reduced ? 0 : 0.2,
+                          }}
+                        >
+                          <ConvAvatar conv={item} />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-baseline justify-between gap-2">
+                              <span className="text-sm font-medium text-ink">{item.name}</span>
+                              <span className="shrink-0 font-mono text-2xs text-muted">
+                                {item.time}
+                              </span>
+                            </div>
+                            <p className="truncate text-xs text-muted">{item.preview}</p>
+                          </div>
+                          {item.unread && (
+                            <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                          )}
+                        </motion.div>
+                      );
+                    } else {
+                      // Calendar event card
+                      return (
+                        <motion.div
+                          key={item.id}
+                          className="cursor-pointer rounded-[12px] border border-border bg-surface p-3 hover:bg-mid"
+                          onClick={() => openEvent(item)}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            delay: reduced ? 0 : index * 0.04,
+                            duration: reduced ? 0 : 0.2,
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <EventDateBox event={item} />
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-sm font-semibold text-ink">{item.title}</span>
+                                <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
+                                  invited
+                                </span>
+                              </div>
+                              <p className="mt-0.5 text-2xs text-muted">{item.timeRange}</p>
+                            </div>
+                          </div>
+                          <div className="mt-2.5 flex items-center gap-2">
+                            <div className="flex -space-x-1.5">
+                              {item.attendees.slice(0, 3).map((a) => (
+                                <div
+                                  key={a.initials}
+                                  className={cn(
+                                    "flex h-[18px] w-[18px] items-center justify-center rounded-full font-mono text-[7px] font-medium ring-1 ring-surface",
+                                    a.className,
+                                  )}
+                                >
+                                  {a.initials}
+                                </div>
+                              ))}
+                            </div>
+                            <span className="text-2xs text-muted">
+                              {item.organizer} · {item.timeRange}
+                            </span>
+                          </div>
+                        </motion.div>
+                      );
+                    }
+                  })}
                 </div>
               </motion.div>
 
@@ -269,37 +483,37 @@ export function ActivityDropdown() {
                 className="absolute inset-0 flex flex-col"
                 style={{ pointerEvents: activeId !== null ? "auto" : "none" }}
                 animate={{
-                  x: activeId !== null ? 0 : 40,
                   opacity: activeId !== null ? 1 : 0,
-                  filter: activeId !== null ? "blur(0px)" : "blur(4px)",
                 }}
               >
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto px-3 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  {activeId !== null &&
-                    (messagesByConv[activeId] ?? []).map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={cn(
-                          "mb-1.5 flex",
-                          msg.from === "me" ? "justify-end" : "justify-start",
-                        )}
-                      >
+                <motion.div animate={{ x: activeId !== null ? 0 : 40 }} className="min-h-0 flex-1">
+                  <div
+                    ref={chatScrollRef}
+                    className="h-full overflow-y-auto px-3 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  >
+                    {activeId !== null &&
+                      (messagesByConv[activeId] ?? []).map((msg) => (
                         <div
+                          key={msg.id}
                           className={cn(
-                            "max-w-[75%] rounded-[14px] px-3 py-2 text-xs leading-relaxed text-ink",
-                            msg.from === "me"
-                              ? "rounded-br-[4px] bg-mid"
-                              : "rounded-bl-[4px] bg-surface",
+                            "mb-1.5 flex",
+                            msg.from === "me" ? "justify-end" : "justify-start",
                           )}
                         >
-                          {msg.text}
+                          <div
+                            className={cn(
+                              "max-w-[75%] rounded-[14px] px-3 py-2 text-xs leading-relaxed text-ink",
+                              msg.from === "me"
+                                ? "rounded-br-[4px] bg-mid"
+                                : "rounded-bl-[4px] bg-surface",
+                            )}
+                          >
+                            {msg.text}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                </div>
-
-                {/* Input */}
+                      ))}
+                  </div>
+                </motion.div>
                 <div className="flex shrink-0 items-center gap-2 border-t border-border px-3 py-2.5">
                   <input
                     className="flex-1 bg-transparent text-xs text-ink outline-none placeholder:text-muted"
@@ -316,6 +530,80 @@ export function ActivityDropdown() {
                   >
                     <PaperPlaneTiltIcon className="h-3.5 w-3.5" weight="fill" />
                   </button>
+                </div>
+              </motion.div>
+
+              {/* Event detail panel */}
+              <motion.div
+                className="absolute inset-0"
+                style={{ pointerEvents: activeEvent !== null ? "auto" : "none" }}
+                animate={{ opacity: activeEvent !== null ? 1 : 0 }}
+                transition={reduced ? { duration: 0 } : { duration: 0.15 }}
+              >
+                <div ref={eventRef}>
+                  {activeEvent && (
+                    <motion.div
+                      initial={{ opacity: 0, y: reduced ? 0 : 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={
+                        reduced
+                          ? { duration: 0 }
+                          : { delay: 0.07, duration: 0.18, ease: [0.2, 0, 0, 1] }
+                      }
+                    >
+                      {/* Title + location */}
+                      <div className="px-4 pt-2 pb-4">
+                        <h2 className="text-3xl leading-tight font-semibold tracking-tight text-ink">
+                          {activeEvent.title}
+                        </h2>
+                        <div className="mt-1.5 flex items-center gap-1.5">
+                          <VideoCameraIcon className="h-3 w-3 shrink-0 text-muted" weight="light" />
+                          <span className="text-xs text-muted">
+                            {activeEvent.location} · Video call
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Invited by row */}
+                      <div className="flex items-center justify-between px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className="flex -space-x-1.5">
+                            {activeEvent.attendees.map((a) => (
+                              <div
+                                key={a.initials}
+                                className={cn(
+                                  "flex h-5 w-5 items-center justify-center rounded-full font-mono text-[8px] font-medium ring-[1.5px] ring-paper",
+                                  a.className,
+                                )}
+                              >
+                                {a.initials}
+                              </div>
+                            ))}
+                          </div>
+                          <span className="text-xs text-muted">
+                            {activeEvent.organizer} invited you
+                          </span>
+                        </div>
+                        <span className="text-xs text-muted">{activeEvent.duration}</span>
+                      </div>
+
+                      {/* Accept / Decline */}
+                      <div className="flex items-center gap-2 px-3 py-3">
+                        <button
+                          type="button"
+                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-border py-2 text-xs font-medium text-muted transition-colors hover:text-ink"
+                        >
+                          Decline
+                        </button>
+                        <button
+                          type="button"
+                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] bg-accent/15 py-2 text-xs font-medium text-accent transition-colors hover:bg-accent/25"
+                        >
+                          Accept
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </motion.div>
             </motion.div>
