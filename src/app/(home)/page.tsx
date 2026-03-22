@@ -43,7 +43,7 @@ async function ItemDescription({ markdown }: { markdown: string }) {
 
 async function ItemCard({ item }: { item: Item }) {
   const slug = item.hasFullPage ? `/${item.slug}` : undefined;
-  const externalLink = item.links?.[0]?.href ? item.links[0].href : undefined;
+  const externalLink = item.links?.[0]?.href;
 
   // For the preview, prioritize externalLink if specified, fallback to slug
   const previewHref = externalLink || slug;

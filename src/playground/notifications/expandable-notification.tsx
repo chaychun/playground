@@ -162,30 +162,13 @@ function ConvAvatar({ conv, size = "md" }: { conv: Conversation; size?: "sm" | "
 
 // ─── Calendar date box ────────────────────────────────────────────────────────
 
-function EventDateBox({ event, size = "md" }: { event: CalendarEvent; size?: "sm" | "md" }) {
+function EventDateBox({ event }: { event: CalendarEvent }) {
   return (
-    <div
-      className={cn(
-        "flex shrink-0 flex-col items-center justify-center rounded-[8px] border border-border bg-surface",
-        size === "sm" ? "h-7 w-7" : "h-9 w-9",
-      )}
-    >
-      <span
-        className={cn(
-          "font-mono leading-none font-bold tracking-widest text-muted uppercase",
-          size === "sm" ? "text-[5px]" : "text-[6px]",
-        )}
-      >
+    <div className="flex h-9 w-9 shrink-0 flex-col items-center justify-center rounded-[8px] border border-border bg-surface">
+      <span className="font-mono text-[6px] leading-none font-bold tracking-widest text-muted uppercase">
         {event.dayName}
       </span>
-      <span
-        className={cn(
-          "font-mono leading-none font-bold text-dim",
-          size === "sm" ? "text-[10px]" : "text-[12px]",
-        )}
-      >
-        {event.dayNum}
-      </span>
+      <span className="font-mono text-[12px] leading-none font-bold text-dim">{event.dayNum}</span>
     </div>
   );
 }
@@ -196,7 +179,7 @@ const CHAT_H = 340;
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function ActivityDropdown() {
+export function ExpandableNotification() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [activeEvent, setActiveEvent] = useState<CalendarEvent | null>(null);
@@ -247,7 +230,7 @@ export function ActivityDropdown() {
   function openChat(id: number) {
     setActiveEvent(null);
     setActiveId(id);
-    if (!isOpen) setIsOpen(true);
+    setIsOpen(true);
   }
 
   function closeChat() {
@@ -257,7 +240,7 @@ export function ActivityDropdown() {
   function openEvent(event: CalendarEvent) {
     setActiveId(null);
     setActiveEvent(event);
-    if (!isOpen) setIsOpen(true);
+    setIsOpen(true);
   }
 
   function closeEvent() {
@@ -285,7 +268,14 @@ export function ActivityDropdown() {
           )}
           animate={{ height: headerH }}
           transition={spring}
+          role={!isDetailOpen ? "button" : undefined}
+          tabIndex={!isDetailOpen ? 0 : undefined}
           onClick={!isDetailOpen ? () => setIsOpen((o) => !o) : undefined}
+          onKeyDown={
+            !isDetailOpen
+              ? (e) => (e.key === "Enter" || e.key === " ") && setIsOpen((o) => !o)
+              : undefined
+          }
         >
           <AnimatePresence mode="popLayout" initial={false}>
             {activeConv ? (
@@ -301,7 +291,8 @@ export function ActivityDropdown() {
                 <button
                   type="button"
                   onClick={closeChat}
-                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink"
+                  aria-label="Back to notifications"
+                  className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
                 >
                   <ArrowLeftIcon className="h-4 w-4" />
                 </button>
@@ -321,7 +312,8 @@ export function ActivityDropdown() {
                 <button
                   type="button"
                   onClick={closeEvent}
-                  className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink"
+                  aria-label="Back to notifications"
+                  className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
                 >
                   <ArrowLeftIcon className="h-4 w-4" />
                 </button>
@@ -334,39 +326,53 @@ export function ActivityDropdown() {
                   {activeEvent.timeUntil}
                 </span>
               </motion.div>
-            ) : isOpen ? (
-              // Expanded list: title + chevron to close
+            ) : (
+              // Notifications header — shared key keeps it mounted across collapsed/expanded
               <motion.div
-                key="chevron-only"
+                key="notifications-header"
                 className="flex w-full items-center justify-between px-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                whileHover="hovered"
                 transition={fast}
               >
-                <span className="text-xs font-medium text-muted transition-colors group-hover:text-ink">
-                  Notifications
-                </span>
-                <CaretUpIcon className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-ink" />
-              </motion.div>
-            ) : (
-              // Collapsed: full summary header
-              <motion.div
-                key="list-header"
-                className="flex w-full items-center gap-3 px-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={fast}
-              >
-                <div className="h-2 w-2 shrink-0 rounded-full bg-accent" />
                 <div className="flex-1 overflow-hidden">
-                  <h3 className="text-sm font-semibold text-ink">{newCount} new updates</h3>
-                  <p className="mt-0.5 truncate text-xs text-muted transition-colors group-hover:text-ink">
-                    {unreadCount} messages · 1 invite
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <motion.span
+                      className="text-sm font-semibold"
+                      variants={{ hovered: { color: isOpen ? "var(--dim)" : "var(--ink)" } }}
+                      animate={{ color: isOpen ? "var(--muted)" : "var(--ink)" }}
+                      transition={fast}
+                    >
+                      Notifications
+                    </motion.span>
+                    <span className="rounded-full bg-accent/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent">
+                      {newCount}
+                    </span>
+                  </div>
+                  <AnimatePresence initial={false}>
+                    {!isOpen && (
+                      <motion.p
+                        key="subtitle"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={fast}
+                        className="mt-0.5 truncate text-xs text-muted"
+                      >
+                        {unreadCount} messages · 1 invite
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <CaretUpIcon className="h-4 w-4 shrink-0 rotate-180 text-muted transition-colors group-hover:text-ink" />
+                <motion.div
+                  animate={{ rotate: isOpen ? 0 : 180 }}
+                  transition={spring}
+                  className="shrink-0"
+                >
+                  <CaretUpIcon className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-ink" />
+                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -412,7 +418,12 @@ export function ActivityDropdown() {
                             duration: reduced ? 0 : 0.2,
                           }}
                         >
-                          <ConvAvatar conv={item} />
+                          <div className="relative">
+                            <ConvAvatar conv={item} />
+                            {item.unread && (
+                              <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-accent ring-2 ring-paper" />
+                            )}
+                          </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-baseline justify-between gap-2">
                               <span className="text-sm font-medium text-ink">{item.name}</span>
@@ -422,9 +433,6 @@ export function ActivityDropdown() {
                             </div>
                             <p className="truncate text-xs text-muted">{item.preview}</p>
                           </div>
-                          {item.unread && (
-                            <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                          )}
                         </motion.div>
                       );
                     } else {
@@ -432,7 +440,7 @@ export function ActivityDropdown() {
                       return (
                         <motion.div
                           key={item.id}
-                          className="cursor-pointer rounded-[12px] border border-border bg-surface p-3 hover:bg-mid"
+                          className="cursor-pointer rounded-[12px] border border-border bg-surface p-3 hover:bg-accent/10"
                           onClick={() => openEvent(item)}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -446,7 +454,7 @@ export function ActivityDropdown() {
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center justify-between gap-2">
                                 <span className="text-sm font-semibold text-ink">{item.title}</span>
-                                <span className="shrink-0 rounded-full bg-accent/10 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
+                                <span className="shrink-0 rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
                                   invited
                                 </span>
                               </div>
@@ -468,7 +476,7 @@ export function ActivityDropdown() {
                               ))}
                             </div>
                             <span className="text-2xs text-muted">
-                              {item.organizer} · {item.timeRange}
+                              {item.organizer} and {item.attendees.length - 1} others
                             </span>
                           </div>
                         </motion.div>
@@ -516,6 +524,7 @@ export function ActivityDropdown() {
                 </motion.div>
                 <div className="flex shrink-0 items-center gap-2 border-t border-border px-3 py-2.5">
                   <input
+                    aria-label="Message"
                     className="flex-1 bg-transparent text-xs text-ink outline-none placeholder:text-muted"
                     placeholder="Message…"
                     value={input}
@@ -526,7 +535,8 @@ export function ActivityDropdown() {
                     type="button"
                     onClick={sendMessage}
                     disabled={!input.trim()}
-                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-accent/20 text-accent transition-opacity disabled:opacity-30"
+                    aria-label="Send message"
+                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-accent/20 text-accent transition-opacity focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none disabled:opacity-30"
                   >
                     <PaperPlaneTiltIcon className="h-3.5 w-3.5" weight="fill" />
                   </button>
@@ -538,19 +548,11 @@ export function ActivityDropdown() {
                 className="absolute inset-0"
                 style={{ pointerEvents: activeEvent !== null ? "auto" : "none" }}
                 animate={{ opacity: activeEvent !== null ? 1 : 0 }}
-                transition={reduced ? { duration: 0 } : { duration: 0.15 }}
+                transition={fast}
               >
                 <div ref={eventRef}>
                   {activeEvent && (
-                    <motion.div
-                      initial={{ opacity: 0, y: reduced ? 0 : 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={
-                        reduced
-                          ? { duration: 0 }
-                          : { delay: 0.07, duration: 0.18, ease: [0.2, 0, 0, 1] }
-                      }
-                    >
+                    <div>
                       {/* Title + location */}
                       <div className="px-4 pt-2 pb-4">
                         <h2 className="text-3xl leading-tight font-semibold tracking-tight text-ink">
@@ -581,7 +583,7 @@ export function ActivityDropdown() {
                             ))}
                           </div>
                           <span className="text-xs text-muted">
-                            {activeEvent.organizer} invited you
+                            {activeEvent.organizer} and {activeEvent.attendees.length - 1} others
                           </span>
                         </div>
                         <span className="text-xs text-muted">{activeEvent.duration}</span>
@@ -591,18 +593,18 @@ export function ActivityDropdown() {
                       <div className="flex items-center gap-2 px-3 py-3">
                         <button
                           type="button"
-                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-border py-2 text-xs font-medium text-muted transition-colors hover:text-ink"
+                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-border py-2 text-xs font-medium text-muted transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
                         >
                           Decline
                         </button>
                         <button
                           type="button"
-                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] bg-accent/15 py-2 text-xs font-medium text-accent transition-colors hover:bg-accent/25"
+                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] bg-accent/15 py-2 text-xs font-medium text-accent transition-colors hover:bg-accent/25 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
                         >
                           Accept
                         </button>
                       </div>
-                    </motion.div>
+                    </div>
                   )}
                 </div>
               </motion.div>
