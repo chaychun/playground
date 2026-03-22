@@ -15,6 +15,8 @@ interface LotusAccordionProps {
   className?: string;
 }
 
+const LOTUS_GOLD = "#d4a54a";
+
 const PETAL_OPEN_DELAYS = [0.05, 0.1, 0.15, 0.2] as const;
 const PETAL_CLOSE_DELAYS = [0.12, 0.08, 0.04, 0] as const;
 
@@ -41,15 +43,15 @@ interface AccordionRowProps {
   item: AccordionItem;
   isOpen: boolean;
   onToggle: () => void;
-  isLast: boolean;
 }
 
-function AccordionRow({ item, isOpen, onToggle, isLast }: AccordionRowProps) {
+function AccordionRow({ item, isOpen, onToggle }: AccordionRowProps) {
   const gradientId = `lotus-gradient-${item.id}`;
 
   return (
-    <div className={cn("accordion-item", !isLast && "border-b border-border")}>
+    <div>
       <button
+        type="button"
         className="group flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left"
         aria-expanded={isOpen}
         aria-controls={`panel-${item.id}`}
@@ -57,17 +59,16 @@ function AccordionRow({ item, isOpen, onToggle, isLast }: AccordionRowProps) {
       >
         <span
           className="font-serif text-[1.0625rem] font-light transition-colors duration-200 group-hover:text-[#d4a54a]"
-          style={{ color: isOpen ? "#d4a54a" : undefined }}
+          style={{ color: isOpen ? LOTUS_GOLD : undefined }}
         >
           {item.title}
         </span>
 
         <span
-          className="flex-shrink-0 text-[var(--color-dim)] transition-colors duration-200 group-hover:text-[#d4a54a]"
+          className="h-6 w-6 flex-shrink-0 text-[var(--color-dim)] transition-colors duration-200 group-hover:text-[#d4a54a]"
           aria-hidden="true"
-          style={{ width: "1.5rem", height: "1.5rem" }}
         >
-          <svg viewBox="0 0 40 40" style={{ width: "100%", height: "100%", overflow: "visible" }}>
+          <svg viewBox="0 0 40 40" className="h-full w-full overflow-visible">
             <defs>
               <radialGradient
                 id={gradientId}
@@ -78,12 +79,11 @@ function AccordionRow({ item, isOpen, onToggle, isLast }: AccordionRowProps) {
                 fy="20"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop offset="0%" stopColor="#d4a54a" />
+                <stop offset="0%" stopColor={LOTUS_GOLD} />
                 <stop offset="100%" stopColor="#fde68a" />
               </radialGradient>
             </defs>
 
-            {/* Chevron — S-Tier: transform + opacity via Motion WAAPI */}
             <motion.path
               d="M12 16 L20 24 L28 16"
               fill="none"
@@ -100,7 +100,6 @@ function AccordionRow({ item, isOpen, onToggle, isLast }: AccordionRowProps) {
               transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             />
 
-            {/* Lotus petals — S-Tier: transform + opacity via Motion WAAPI */}
             {PETALS.map(({ key, d }, i) => (
               <motion.path
                 key={key}
@@ -119,11 +118,11 @@ function AccordionRow({ item, isOpen, onToggle, isLast }: AccordionRowProps) {
         </span>
       </button>
 
-      {/* Content panel — height: auto, Motion measures once then animates pixel value */}
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
             id={`panel-${item.id}`}
+            className="overflow-hidden"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -131,17 +130,8 @@ function AccordionRow({ item, isOpen, onToggle, isLast }: AccordionRowProps) {
               height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
               opacity: { duration: 0.25, ease: "easeOut" },
             }}
-            style={{ overflow: "hidden" }}
           >
-            <motion.p
-              className="pb-5 text-sm leading-relaxed text-muted"
-              initial={{ y: -8 }}
-              animate={{ y: 0 }}
-              exit={{ y: -8 }}
-              transition={{ duration: 0.25, ease: "easeOut", delay: 0.1 }}
-            >
-              {item.content}
-            </motion.p>
+            <p className="pb-5 text-sm leading-relaxed text-muted">{item.content}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -157,14 +147,13 @@ export function LotusAccordion({ items, className }: LotusAccordionProps) {
   };
 
   return (
-    <div className={cn("w-full", className)}>
-      {items.map((item, index) => (
+    <div className={cn("w-full divide-y divide-border", className)}>
+      {items.map((item) => (
         <AccordionRow
           key={item.id}
           item={item}
           isOpen={openId === item.id}
           onToggle={() => toggle(item.id)}
-          isLast={index === items.length - 1}
         />
       ))}
     </div>
