@@ -6,14 +6,14 @@ import Image, { type StaticImageData } from "next/image";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 
-import boutiqueImg from "./assets/Charming Boutique Storefront.webp";
-import clothesPileImg from "./assets/Person Under Clothes Pile.webp";
-import telephoneImg from "./assets/Retro Pink Telephone Scene.webp";
+import coldBrewImg from "./assets/cold-brew-cans.png";
+import coveringFaceImg from "./assets/person-covering-face.png";
+import sneakersImg from "./assets/sneakers-gas-station.png";
 
 const PHOTOS: { src: StaticImageData; alt: string }[] = [
-  { src: boutiqueImg, alt: "Charming boutique storefront" },
-  { src: telephoneImg, alt: "Retro pink telephone scene" },
-  { src: clothesPileImg, alt: "Person under clothes pile" },
+  { src: sneakersImg, alt: "Sneakers at a gas station" },
+  { src: coldBrewImg, alt: "Cold brew cans on green table" },
+  { src: coveringFaceImg, alt: "Person covering face with hand" },
 ];
 
 function useMediaQuery(query: string) {
