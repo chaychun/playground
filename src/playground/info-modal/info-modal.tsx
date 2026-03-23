@@ -64,7 +64,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
     <MotionConfig transition={{ type: "spring", duration: 0.6, bounce: 0 }}>
       <div
         ref={wrapperRef}
-        className="pointer-events-auto flex h-full w-full items-start justify-end"
+        className="pointer-events-auto flex h-full w-full items-end justify-end"
         role={isOpen ? "dialog" : undefined}
         aria-modal={isOpen ? "true" : undefined}
       >
