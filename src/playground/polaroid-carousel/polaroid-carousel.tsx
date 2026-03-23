@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { scaleTransition, useSpeed } from "@/lib/speed-context";
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
 import Image, { type StaticImageData } from "next/image";
 import { Dialog } from "radix-ui";
@@ -29,6 +30,7 @@ function useMediaQuery(query: string) {
 }
 
 export default function PolaroidStack() {
+  const factor = useSpeed();
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const isSmallScreen = useMediaQuery("(max-width: 999px)");
@@ -177,7 +179,9 @@ export default function PolaroidStack() {
   );
 
   return (
-    <MotionConfig transition={{ type: "spring", duration: 0.6, bounce: 0.2 }}>
+    <MotionConfig
+      transition={scaleTransition({ type: "spring", duration: 0.6, bounce: 0.2 }, factor)}
+    >
       <LayoutGroup>
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
           <div className="relative flex h-[26rem] w-full items-center justify-center">
@@ -192,6 +196,7 @@ export default function PolaroidStack() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
+                  transition={scaleTransition({ duration: 0.3, ease: "easeOut" }, factor)}
                   className="fixed inset-0 z-50 bg-black/40"
                   onClick={() => setIsOpen(false)}
                 />

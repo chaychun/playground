@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { scaleTransition, useSpeed } from "@/lib/speed-context";
 import { useMeasure } from "@/lib/use-measure";
 import {
   ArrowLeftIcon,
@@ -190,13 +191,16 @@ export function ExpandableNotification() {
   const [listRef, { height: listHeight }] = useMeasure();
   const [eventRef, { height: eventHeight }] = useMeasure();
   const chatScrollRef = useRef<HTMLDivElement>(null);
+  const factor = useSpeed();
   const reduced = useReducedMotion() ?? false;
 
   const spring = reduced
     ? { type: "tween" as const, duration: 0 }
-    : { type: "spring" as const, duration: 0.3, bounce: 0 };
-  const fast = reduced ? { duration: 0 } : { duration: 0.18 };
-  const medium = reduced ? { duration: 0 } : { duration: 0.2, ease: [0.2, 0, 0, 1] as const };
+    : scaleTransition({ type: "spring" as const, duration: 0.3, bounce: 0 }, factor);
+  const fast = reduced ? { duration: 0 } : scaleTransition({ duration: 0.18 }, factor);
+  const medium = reduced
+    ? { duration: 0 }
+    : scaleTransition({ duration: 0.2, ease: [0.2, 0, 0, 1] as const }, factor);
 
   const activeConv = conversations.find((c) => c.id === activeId) ?? null;
   const unreadCount = conversations.filter((c) => c.unread).length;
@@ -413,10 +417,13 @@ export function ExpandableNotification() {
                           onClick={() => openChat(item.id)}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            delay: reduced ? 0 : index * 0.04,
-                            duration: reduced ? 0 : 0.2,
-                          }}
+                          transition={scaleTransition(
+                            {
+                              delay: reduced ? 0 : index * 0.04,
+                              duration: reduced ? 0 : 0.2,
+                            },
+                            factor,
+                          )}
                         >
                           <div className="relative">
                             <ConvAvatar conv={item} />
@@ -444,10 +451,13 @@ export function ExpandableNotification() {
                           onClick={() => openEvent(item)}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            delay: reduced ? 0 : index * 0.04,
-                            duration: reduced ? 0 : 0.2,
-                          }}
+                          transition={scaleTransition(
+                            {
+                              delay: reduced ? 0 : index * 0.04,
+                              duration: reduced ? 0 : 0.2,
+                            },
+                            factor,
+                          )}
                         >
                           <div className="flex items-center gap-3">
                             <EventDateBox event={item} />

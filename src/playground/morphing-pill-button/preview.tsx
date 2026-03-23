@@ -1,3 +1,4 @@
+import { SpeedControl } from "@/components/speed-control";
 import dynamic from "next/dynamic";
 
 export const frame = { minHeight: 160 };
@@ -8,8 +9,10 @@ const MorphingPillButton = dynamic(() =>
 
 export default function Preview() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <MorphingPillButton />
-    </div>
+    <SpeedControl slowFactor={0.33}>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <MorphingPillButton />
+      </div>
+    </SpeedControl>
   );
 }

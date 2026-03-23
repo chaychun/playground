@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { scaleTransition, useSpeed } from "@/lib/speed-context";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
@@ -46,6 +47,7 @@ interface AccordionRowProps {
 }
 
 function AccordionRow({ item, isOpen, onToggle }: AccordionRowProps) {
+  const factor = useSpeed();
   const gradientId = `lotus-gradient-${item.id}`;
 
   return (
@@ -97,7 +99,7 @@ function AccordionRow({ item, isOpen, onToggle }: AccordionRowProps) {
                   ? { rotate: 180, scale: 0.5, opacity: 0 }
                   : { rotate: 0, scale: 1, opacity: 1 }
               }
-              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              transition={scaleTransition({ duration: 0.3, ease: [0.4, 0, 0.2, 1] }, factor)}
             />
 
             {PETALS.map(({ key, d }, i) => (
@@ -107,11 +109,14 @@ function AccordionRow({ item, isOpen, onToggle }: AccordionRowProps) {
                 fill={`url(#${gradientId})`}
                 style={{ transformOrigin: "center", transformBox: "fill-box" }}
                 animate={isOpen ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-                transition={{
-                  duration: 0.35,
-                  ease: [0.34, 1.56, 0.64, 1],
-                  delay: isOpen ? PETAL_OPEN_DELAYS[i] : PETAL_CLOSE_DELAYS[i],
-                }}
+                transition={scaleTransition(
+                  {
+                    duration: 0.35,
+                    ease: [0.34, 1.56, 0.64, 1],
+                    delay: isOpen ? PETAL_OPEN_DELAYS[i] : PETAL_CLOSE_DELAYS[i],
+                  },
+                  factor,
+                )}
               />
             ))}
           </svg>
@@ -126,10 +131,13 @@ function AccordionRow({ item, isOpen, onToggle }: AccordionRowProps) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{
-              height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
-              opacity: { duration: 0.25, ease: "easeOut" },
-            }}
+            transition={scaleTransition(
+              {
+                height: { duration: 0.35, ease: [0.4, 0, 0.2, 1] },
+                opacity: { duration: 0.25, ease: "easeOut" },
+              },
+              factor,
+            )}
           >
             <p className="pb-5 text-sm leading-relaxed text-muted">{item.content}</p>
           </motion.div>

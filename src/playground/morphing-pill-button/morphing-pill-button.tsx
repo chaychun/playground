@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { scaleTransition, useSpeed } from "@/lib/speed-context";
 import { ArrowRight, Check, X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState, type ElementType } from "react";
@@ -50,12 +51,13 @@ const BG_COLOR: Record<ButtonState, string> = {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function StateIcon({ icon: Icon, size }: { icon: ElementType; size: number }) {
+  const factor = useSpeed();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.5 }}
-      transition={{ duration: 0.2 }}
+      transition={scaleTransition({ duration: 0.2 }, factor)}
     >
       <Icon weight="bold" size={size} className="text-white" />
     </motion.div>
@@ -65,6 +67,7 @@ function StateIcon({ icon: Icon, size }: { icon: ElementType; size: number }) {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MorphingPillButton({ className }: { className?: string }) {
+  const factor = useSpeed();
   const [state, setState] = useState<ButtonState>("idle");
   const toggleRef = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -78,9 +81,9 @@ export function MorphingPillButton({ className }: { className?: string }) {
     setState("processing");
     const t1 = setTimeout(() => {
       setState(isDone ? "done" : "failure");
-      const t2 = setTimeout(() => setState("idle"), 2000);
+      const t2 = setTimeout(() => setState("idle"), 2000 / factor);
       timers.current.push(t2);
-    }, 3000);
+    }, 3000 / factor);
     timers.current.push(t1);
   };
 
@@ -96,10 +99,13 @@ export function MorphingPillButton({ className }: { className?: string }) {
       )}
       style={{ borderRadius: 9999 }}
       animate={state === "failure" ? { x: [0, -6, 6, -5, 5, -3, 3, 0] } : { x: 0 }}
-      transition={{
-        layout: { duration: 0.25, ease: EASE },
-        x: state === "failure" ? { duration: 0.4, ease: "easeInOut" } : { duration: 0.2 },
-      }}
+      transition={scaleTransition(
+        {
+          layout: { duration: 0.25, ease: EASE },
+          x: state === "failure" ? { duration: 0.4, ease: "easeInOut" } : { duration: 0.2 },
+        },
+        factor,
+      )}
     >
       {/* White base */}
       <div className="absolute inset-0 rounded-full bg-surface ring-1 ring-border ring-inset" />
@@ -113,7 +119,7 @@ export function MorphingPillButton({ className }: { className?: string }) {
           clipPath: isIdle ? CLIP_IDLE : CLIP_DOT,
           backgroundColor: BG_COLOR[state],
         }}
-        transition={{ duration: 0.25, ease: EASE }}
+        transition={scaleTransition({ duration: 0.25, ease: EASE }, factor)}
       />
 
       {/* Ghost sizer — invisible, in-flow only when idle, holds the natural idle width */}
@@ -134,9 +140,13 @@ export function MorphingPillButton({ className }: { className?: string }) {
             animate={{
               opacity: 1,
               filter: "blur(0px)",
-              transition: { delay: 0.1, duration: 0.15, ease: EASE },
+              transition: scaleTransition({ delay: 0.1, duration: 0.15, ease: EASE }, factor),
             }}
-            exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.1, ease: EASE } }}
+            exit={{
+              opacity: 0,
+              filter: "blur(4px)",
+              transition: scaleTransition({ duration: 0.1, ease: EASE }, factor),
+            }}
           >
             <span>{LABELS.idle}</span>
             <span className="transition-transform duration-200 group-hover:translate-x-0.5">
@@ -158,9 +168,13 @@ export function MorphingPillButton({ className }: { className?: string }) {
             animate={{
               opacity: 1,
               filter: "blur(0px)",
-              transition: { delay: 0.1, duration: 0.15, ease: EASE },
+              transition: scaleTransition({ delay: 0.1, duration: 0.15, ease: EASE }, factor),
             }}
-            exit={{ opacity: 0, filter: "blur(4px)", transition: { duration: 0.1, ease: EASE } }}
+            exit={{
+              opacity: 0,
+              filter: "blur(4px)",
+              transition: scaleTransition({ duration: 0.1, ease: EASE }, factor),
+            }}
           >
             <AnimatePresence mode="popLayout">
               <motion.span
@@ -170,7 +184,7 @@ export function MorphingPillButton({ className }: { className?: string }) {
                 initial={{ opacity: 0, filter: "blur(4px)" }}
                 animate={{ opacity: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, filter: "blur(4px)" }}
-                transition={{ duration: 0.15, ease: EASE }}
+                transition={scaleTransition({ duration: 0.15, ease: EASE }, factor)}
               >
                 {LABELS[state]}
               </motion.span>
@@ -187,8 +201,14 @@ export function MorphingPillButton({ className }: { className?: string }) {
             className="pointer-events-none absolute z-20 flex items-center justify-center"
             style={{ right: DR, top: DT, width: R * 2, height: R * 2 }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { delay: 0.1, duration: 0.15 } }}
-            exit={{ opacity: 0, transition: { duration: 0.1 } }}
+            animate={{
+              opacity: 1,
+              transition: scaleTransition({ delay: 0.1, duration: 0.15 }, factor),
+            }}
+            exit={{
+              opacity: 0,
+              transition: scaleTransition({ duration: 0.1 }, factor),
+            }}
           >
             <AnimatePresence mode="popLayout">
               {state === "processing" && (
@@ -198,19 +218,22 @@ export function MorphingPillButton({ className }: { className?: string }) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
+                  transition={scaleTransition({ duration: 0.15 }, factor)}
                 >
                   {[0, 1, 2].map((i) => (
                     <motion.span
                       key={i}
                       className="block h-[3px] w-[3px] rounded-full bg-ink-inv"
                       animate={{ y: [0, -3, 0] }}
-                      transition={{
-                        duration: 0.55,
-                        repeat: Infinity,
-                        delay: i * 0.12,
-                        ease: "easeInOut",
-                      }}
+                      transition={scaleTransition(
+                        {
+                          duration: 0.55,
+                          repeat: Infinity,
+                          delay: i * 0.12,
+                          ease: "easeInOut",
+                        },
+                        factor,
+                      )}
                     />
                   ))}
                 </motion.div>
