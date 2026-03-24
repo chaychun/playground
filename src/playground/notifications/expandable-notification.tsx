@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { scaleTransition, useSpeed } from "@/lib/speed-context";
+import { scaleTransition, useSpeedControl } from "@/lib/speed-context";
 import { useMeasure } from "@/lib/use-measure";
 import {
   ArrowLeftIcon,
@@ -191,7 +191,7 @@ export function ExpandableNotification() {
   const [listRef, { height: listHeight }] = useMeasure();
   const [eventRef, { height: eventHeight }] = useMeasure();
   const chatScrollRef = useRef<HTMLDivElement>(null);
-  const factor = useSpeed();
+  const { factor, toggle: toggleSpeed } = useSpeedControl();
   const reduced = useReducedMotion() ?? false;
 
   const spring = reduced
@@ -262,222 +262,338 @@ export function ExpandableNotification() {
   const headerH = isOpen && !isDetailOpen ? 36 : 68;
 
   return (
-    <MotionConfig transition={spring}>
-      <motion.div className="w-full max-w-sm overflow-hidden rounded-[20px] border border-border bg-paper">
-        {/* ── Header ── */}
-        <motion.div
-          className={cn(
-            "group relative flex shrink-0 items-center overflow-hidden",
-            !isDetailOpen && "cursor-pointer",
-          )}
-          animate={{ height: headerH }}
-          transition={spring}
-          role={!isDetailOpen ? "button" : undefined}
-          tabIndex={!isDetailOpen ? 0 : undefined}
-          onClick={!isDetailOpen ? () => setIsOpen((o) => !o) : undefined}
-          onKeyDown={
-            !isDetailOpen
-              ? (e) => (e.key === "Enter" || e.key === " ") && setIsOpen((o) => !o)
-              : undefined
-          }
-        >
-          <AnimatePresence mode="popLayout" initial={false}>
-            {activeConv ? (
-              // Chat header
-              <motion.div
-                key="chat-header"
-                className="flex w-full items-center gap-3 px-3"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={fast}
-              >
-                <button
-                  type="button"
-                  onClick={closeChat}
-                  aria-label="Back to notifications"
-                  className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
-                >
-                  <ArrowLeftIcon className="h-4 w-4" />
-                </button>
-                <ConvAvatar conv={activeConv} size="sm" />
-                <span className="text-sm font-medium text-ink">{activeConv.name}</span>
-              </motion.div>
-            ) : activeEvent ? (
-              // Event header
-              <motion.div
-                key="event-header"
-                className="flex w-full items-center gap-2 px-3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={medium}
-              >
-                <button
-                  type="button"
-                  onClick={closeEvent}
-                  aria-label="Back to notifications"
-                  className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
-                >
-                  <ArrowLeftIcon className="h-4 w-4" />
-                </button>
-                <span className="text-xs text-muted">
-                  {activeEvent.dayName} {activeEvent.dayNum}
-                </span>
-                <span className="text-muted/30">·</span>
-                <span className="text-xs text-muted">{activeEvent.timeRange}</span>
-                <span className="ml-auto rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
-                  {activeEvent.timeUntil}
-                </span>
-              </motion.div>
-            ) : (
-              // Notifications header — shared key keeps it mounted across collapsed/expanded
-              <motion.div
-                key="notifications-header"
-                className="flex w-full items-center justify-between px-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                whileHover="hovered"
-                transition={fast}
-              >
-                <div className="flex-1 overflow-hidden">
-                  <div className="flex items-center gap-2">
-                    <motion.span
-                      className="text-sm font-semibold"
-                      variants={{ hovered: { color: isOpen ? "var(--dim)" : "var(--ink)" } }}
-                      animate={{ color: isOpen ? "var(--muted)" : "var(--ink)" }}
-                      transition={fast}
-                    >
-                      Notifications
-                    </motion.span>
-                    <span className="rounded-full bg-accent/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent">
-                      {newCount}
-                    </span>
-                  </div>
-                  <AnimatePresence initial={false}>
-                    {!isOpen && (
-                      <motion.p
-                        key="subtitle"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={fast}
-                        className="mt-0.5 truncate text-xs text-muted"
-                      >
-                        {unreadCount} messages · 1 invite
-                      </motion.p>
-                    )}
-                  </AnimatePresence>
-                </div>
-                <motion.div
-                  animate={{ rotate: isOpen ? 0 : 180 }}
-                  transition={spring}
-                  className="shrink-0"
-                >
-                  <CaretUpIcon className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-ink" />
-                </motion.div>
-              </motion.div>
+    <>
+      <MotionConfig transition={spring}>
+        <motion.div className="w-full max-w-sm overflow-hidden rounded-[20px] border border-border bg-paper">
+          {/* ── Header ── */}
+          <motion.div
+            className={cn(
+              "group relative flex shrink-0 items-center overflow-hidden",
+              !isDetailOpen && "cursor-pointer",
             )}
-          </AnimatePresence>
-        </motion.div>
+            animate={{ height: headerH }}
+            transition={spring}
+            role={!isDetailOpen ? "button" : undefined}
+            tabIndex={!isDetailOpen ? 0 : undefined}
+            onClick={!isDetailOpen ? () => setIsOpen((o) => !o) : undefined}
+            onKeyDown={
+              !isDetailOpen
+                ? (e) => (e.key === "Enter" || e.key === " ") && setIsOpen((o) => !o)
+                : undefined
+            }
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              {activeConv ? (
+                // Chat header
+                <motion.div
+                  key="chat-header"
+                  className="flex w-full items-center gap-3 px-3"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={fast}
+                >
+                  <button
+                    type="button"
+                    onClick={closeChat}
+                    aria-label="Back to notifications"
+                    className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+                  >
+                    <ArrowLeftIcon className="h-4 w-4" />
+                  </button>
+                  <ConvAvatar conv={activeConv} size="sm" />
+                  <span className="text-sm font-medium text-ink">{activeConv.name}</span>
+                </motion.div>
+              ) : activeEvent ? (
+                // Event header
+                <motion.div
+                  key="event-header"
+                  className="flex w-full items-center gap-2 px-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={medium}
+                >
+                  <button
+                    type="button"
+                    onClick={closeEvent}
+                    aria-label="Back to notifications"
+                    className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-muted hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+                  >
+                    <ArrowLeftIcon className="h-4 w-4" />
+                  </button>
+                  <span className="text-xs text-muted">
+                    {activeEvent.dayName} {activeEvent.dayNum}
+                  </span>
+                  <span className="text-muted/30">·</span>
+                  <span className="text-xs text-muted">{activeEvent.timeRange}</span>
+                  <span className="ml-auto rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
+                    {activeEvent.timeUntil}
+                  </span>
+                </motion.div>
+              ) : (
+                // Notifications header — shared key keeps it mounted across collapsed/expanded
+                <motion.div
+                  key="notifications-header"
+                  className="flex w-full items-center justify-between px-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  whileHover="hovered"
+                  transition={fast}
+                >
+                  <div className="flex-1 overflow-hidden">
+                    <div className="flex items-center gap-2">
+                      <motion.span
+                        className="text-sm font-semibold"
+                        variants={{ hovered: { color: isOpen ? "var(--dim)" : "var(--ink)" } }}
+                        animate={{ color: isOpen ? "var(--muted)" : "var(--ink)" }}
+                        transition={fast}
+                      >
+                        Notifications
+                      </motion.span>
+                      <span className="rounded-full bg-accent/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-accent">
+                        {newCount}
+                      </span>
+                    </div>
+                    <AnimatePresence initial={false}>
+                      {!isOpen && (
+                        <motion.p
+                          key="subtitle"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={fast}
+                          className="mt-0.5 truncate text-xs text-muted"
+                        >
+                          {unreadCount} messages · 1 invite
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: isOpen ? 0 : 180 }}
+                    transition={spring}
+                    className="shrink-0"
+                  >
+                    <CaretUpIcon className="h-3.5 w-3.5 text-muted transition-colors group-hover:text-ink" />
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
-        {/* ── Content area ── */}
-        <AnimatePresence initial={false}>
-          {isOpen && (
-            <motion.div
-              key="content"
-              className="relative overflow-hidden"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{
-                height:
-                  activeId !== null ? CHAT_H : activeEvent !== null ? eventHeight : listHeight,
-                opacity: 1,
-              }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={spring}
-            >
-              {/* List panel */}
+          {/* ── Content area ── */}
+          <AnimatePresence initial={false}>
+            {isOpen && (
               <motion.div
-                className="absolute inset-0"
-                style={{ pointerEvents: isDetailOpen ? "none" : "auto" }}
+                key="content"
+                className="relative overflow-hidden"
+                initial={{ height: 0, opacity: 0 }}
                 animate={{
-                  x: activeId !== null ? -40 : 0,
-                  y: activeEvent !== null ? -8 : 0,
-                  opacity: isDetailOpen ? 0 : 1,
+                  height:
+                    activeId !== null ? CHAT_H : activeEvent !== null ? eventHeight : listHeight,
+                  opacity: 1,
                 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={spring}
               >
-                <div ref={listRef} className="space-y-0.5 px-2 pb-2">
-                  {notifications.map((item, index) => {
-                    if (item.type === "conversation") {
-                      return (
-                        <motion.div
-                          key={item.id}
-                          className="flex cursor-pointer items-center gap-3 rounded-[12px] p-3 hover:bg-surface"
-                          onClick={() => openChat(item.id)}
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={scaleTransition(
-                            {
-                              delay: reduced ? 0 : index * 0.04,
-                              duration: reduced ? 0 : 0.2,
-                            },
-                            factor,
-                          )}
-                        >
-                          <div className="relative">
-                            <ConvAvatar conv={item} />
-                            {item.unread && (
-                              <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-accent ring-2 ring-paper" />
+                {/* List panel */}
+                <motion.div
+                  className="absolute inset-0"
+                  style={{ pointerEvents: isDetailOpen ? "none" : "auto" }}
+                  animate={{
+                    x: activeId !== null ? -40 : 0,
+                    y: activeEvent !== null ? -8 : 0,
+                    opacity: isDetailOpen ? 0 : 1,
+                  }}
+                >
+                  <div ref={listRef} className="space-y-0.5 px-2 pb-2">
+                    {notifications.map((item, index) => {
+                      if (item.type === "conversation") {
+                        return (
+                          <motion.div
+                            key={item.id}
+                            className="flex cursor-pointer items-center gap-3 rounded-[12px] p-3 hover:bg-surface"
+                            onClick={() => openChat(item.id)}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={scaleTransition(
+                              {
+                                delay: reduced ? 0 : index * 0.04,
+                                duration: reduced ? 0 : 0.2,
+                              },
+                              factor,
                             )}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-baseline justify-between gap-2">
-                              <span className="text-sm font-medium text-ink">{item.name}</span>
-                              <span className="shrink-0 font-mono text-2xs text-muted">
-                                {item.time}
-                              </span>
+                          >
+                            <div className="relative">
+                              <ConvAvatar conv={item} />
+                              {item.unread && (
+                                <div className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-accent ring-2 ring-paper" />
+                              )}
                             </div>
-                            <p className="truncate text-xs text-muted">{item.preview}</p>
-                          </div>
-                        </motion.div>
-                      );
-                    } else {
-                      // Calendar event card
-                      return (
-                        <motion.div
-                          key={item.id}
-                          className="cursor-pointer rounded-[12px] border border-border bg-surface p-3 hover:bg-accent/10"
-                          onClick={() => openEvent(item)}
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={scaleTransition(
-                            {
-                              delay: reduced ? 0 : index * 0.04,
-                              duration: reduced ? 0 : 0.2,
-                            },
-                            factor,
-                          )}
-                        >
-                          <div className="flex items-center gap-3">
-                            <EventDateBox event={item} />
                             <div className="min-w-0 flex-1">
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-sm font-semibold text-ink">{item.title}</span>
-                                <span className="shrink-0 rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
-                                  invited
+                              <div className="flex items-baseline justify-between gap-2">
+                                <span className="text-sm font-medium text-ink">{item.name}</span>
+                                <span className="shrink-0 font-mono text-2xs text-muted">
+                                  {item.time}
                                 </span>
                               </div>
-                              <p className="mt-0.5 text-2xs text-muted">{item.timeRange}</p>
+                              <p className="truncate text-xs text-muted">{item.preview}</p>
+                            </div>
+                          </motion.div>
+                        );
+                      } else {
+                        // Calendar event card
+                        return (
+                          <motion.div
+                            key={item.id}
+                            className="cursor-pointer rounded-[12px] border border-border bg-surface p-3 hover:bg-accent/10"
+                            onClick={() => openEvent(item)}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={scaleTransition(
+                              {
+                                delay: reduced ? 0 : index * 0.04,
+                                duration: reduced ? 0 : 0.2,
+                              },
+                              factor,
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <EventDateBox event={item} />
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-sm font-semibold text-ink">
+                                    {item.title}
+                                  </span>
+                                  <span className="shrink-0 rounded-full bg-accent/15 px-2 py-0.5 font-mono text-[10px] font-bold text-accent">
+                                    invited
+                                  </span>
+                                </div>
+                                <p className="mt-0.5 text-2xs text-muted">{item.timeRange}</p>
+                              </div>
+                            </div>
+                            <div className="mt-2.5 flex items-center gap-2">
+                              <div className="flex -space-x-1.5">
+                                {item.attendees.slice(0, 3).map((a) => (
+                                  <div
+                                    key={a.initials}
+                                    className={cn(
+                                      "flex h-[18px] w-[18px] items-center justify-center rounded-full font-mono text-[7px] font-medium ring-1 ring-surface",
+                                      a.className,
+                                    )}
+                                  >
+                                    {a.initials}
+                                  </div>
+                                ))}
+                              </div>
+                              <span className="text-2xs text-muted">
+                                {item.organizer} and {item.attendees.length - 1} others
+                              </span>
+                            </div>
+                          </motion.div>
+                        );
+                      }
+                    })}
+                  </div>
+                </motion.div>
+
+                {/* Chat panel */}
+                <motion.div
+                  className="absolute inset-0 flex flex-col"
+                  style={{ pointerEvents: activeId !== null ? "auto" : "none" }}
+                  animate={{
+                    opacity: activeId !== null ? 1 : 0,
+                  }}
+                >
+                  <motion.div
+                    animate={{ x: activeId !== null ? 0 : 40 }}
+                    className="min-h-0 flex-1"
+                  >
+                    <div
+                      ref={chatScrollRef}
+                      className="h-full overflow-y-auto px-3 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                    >
+                      {activeId !== null &&
+                        (messagesByConv[activeId] ?? []).map((msg) => (
+                          <div
+                            key={msg.id}
+                            className={cn(
+                              "mb-1.5 flex",
+                              msg.from === "me" ? "justify-end" : "justify-start",
+                            )}
+                          >
+                            <div
+                              className={cn(
+                                "max-w-[75%] rounded-[14px] px-3 py-2 text-xs leading-relaxed text-ink",
+                                msg.from === "me"
+                                  ? "rounded-br-[4px] bg-mid"
+                                  : "rounded-bl-[4px] bg-surface",
+                              )}
+                            >
+                              {msg.text}
                             </div>
                           </div>
-                          <div className="mt-2.5 flex items-center gap-2">
+                        ))}
+                    </div>
+                  </motion.div>
+                  <div className="flex shrink-0 items-center gap-2 border-t border-border px-3 py-2.5">
+                    <input
+                      aria-label="Message"
+                      className="flex-1 bg-transparent text-xs text-ink outline-none placeholder:text-muted"
+                      placeholder="Message…"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                    />
+                    <button
+                      type="button"
+                      onClick={sendMessage}
+                      disabled={!input.trim()}
+                      aria-label="Send message"
+                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-accent/20 text-accent transition-opacity focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none disabled:opacity-30"
+                    >
+                      <PaperPlaneTiltIcon className="h-3.5 w-3.5" weight="fill" />
+                    </button>
+                  </div>
+                </motion.div>
+
+                {/* Event detail panel */}
+                <motion.div
+                  className="absolute inset-0"
+                  style={{ pointerEvents: activeEvent !== null ? "auto" : "none" }}
+                  animate={{ opacity: activeEvent !== null ? 1 : 0 }}
+                  transition={fast}
+                >
+                  <div ref={eventRef}>
+                    {activeEvent && (
+                      <div>
+                        {/* Title + location */}
+                        <div className="px-4 pt-2 pb-4">
+                          <h2 className="text-3xl leading-tight font-semibold tracking-tight text-ink">
+                            {activeEvent.title}
+                          </h2>
+                          <div className="mt-1.5 flex items-center gap-1.5">
+                            <VideoCameraIcon
+                              className="h-3 w-3 shrink-0 text-muted"
+                              weight="light"
+                            />
+                            <span className="text-xs text-muted">
+                              {activeEvent.location} · Video call
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Invited by row */}
+                        <div className="flex items-center justify-between px-4 py-3">
+                          <div className="flex items-center gap-2">
                             <div className="flex -space-x-1.5">
-                              {item.attendees.slice(0, 3).map((a) => (
+                              {activeEvent.attendees.map((a) => (
                                 <div
                                   key={a.initials}
                                   className={cn(
-                                    "flex h-[18px] w-[18px] items-center justify-center rounded-full font-mono text-[7px] font-medium ring-1 ring-surface",
+                                    "flex h-5 w-5 items-center justify-center rounded-full font-mono text-[8px] font-medium ring-[1.5px] ring-paper",
                                     a.className,
                                   )}
                                 >
@@ -485,143 +601,46 @@ export function ExpandableNotification() {
                                 </div>
                               ))}
                             </div>
-                            <span className="text-2xs text-muted">
-                              {item.organizer} and {item.attendees.length - 1} others
+                            <span className="text-xs text-muted">
+                              {activeEvent.organizer} and {activeEvent.attendees.length - 1} others
                             </span>
                           </div>
-                        </motion.div>
-                      );
-                    }
-                  })}
-                </div>
-              </motion.div>
-
-              {/* Chat panel */}
-              <motion.div
-                className="absolute inset-0 flex flex-col"
-                style={{ pointerEvents: activeId !== null ? "auto" : "none" }}
-                animate={{
-                  opacity: activeId !== null ? 1 : 0,
-                }}
-              >
-                <motion.div animate={{ x: activeId !== null ? 0 : 40 }} className="min-h-0 flex-1">
-                  <div
-                    ref={chatScrollRef}
-                    className="h-full overflow-y-auto px-3 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                  >
-                    {activeId !== null &&
-                      (messagesByConv[activeId] ?? []).map((msg) => (
-                        <div
-                          key={msg.id}
-                          className={cn(
-                            "mb-1.5 flex",
-                            msg.from === "me" ? "justify-end" : "justify-start",
-                          )}
-                        >
-                          <div
-                            className={cn(
-                              "max-w-[75%] rounded-[14px] px-3 py-2 text-xs leading-relaxed text-ink",
-                              msg.from === "me"
-                                ? "rounded-br-[4px] bg-mid"
-                                : "rounded-bl-[4px] bg-surface",
-                            )}
-                          >
-                            {msg.text}
-                          </div>
+                          <span className="text-xs text-muted">{activeEvent.duration}</span>
                         </div>
-                      ))}
+
+                        {/* Accept / Decline */}
+                        <div className="flex items-center gap-2 px-3 py-3">
+                          <button
+                            type="button"
+                            className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-border py-2 text-xs font-medium text-muted transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+                          >
+                            Decline
+                          </button>
+                          <button
+                            type="button"
+                            className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] bg-accent/15 py-2 text-xs font-medium text-accent transition-colors hover:bg-accent/25 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
+                          >
+                            Accept
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
-                <div className="flex shrink-0 items-center gap-2 border-t border-border px-3 py-2.5">
-                  <input
-                    aria-label="Message"
-                    className="flex-1 bg-transparent text-xs text-ink outline-none placeholder:text-muted"
-                    placeholder="Message…"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                  />
-                  <button
-                    type="button"
-                    onClick={sendMessage}
-                    disabled={!input.trim()}
-                    aria-label="Send message"
-                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-accent/20 text-accent transition-opacity focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none disabled:opacity-30"
-                  >
-                    <PaperPlaneTiltIcon className="h-3.5 w-3.5" weight="fill" />
-                  </button>
-                </div>
               </motion.div>
-
-              {/* Event detail panel */}
-              <motion.div
-                className="absolute inset-0"
-                style={{ pointerEvents: activeEvent !== null ? "auto" : "none" }}
-                animate={{ opacity: activeEvent !== null ? 1 : 0 }}
-                transition={fast}
-              >
-                <div ref={eventRef}>
-                  {activeEvent && (
-                    <div>
-                      {/* Title + location */}
-                      <div className="px-4 pt-2 pb-4">
-                        <h2 className="text-3xl leading-tight font-semibold tracking-tight text-ink">
-                          {activeEvent.title}
-                        </h2>
-                        <div className="mt-1.5 flex items-center gap-1.5">
-                          <VideoCameraIcon className="h-3 w-3 shrink-0 text-muted" weight="light" />
-                          <span className="text-xs text-muted">
-                            {activeEvent.location} · Video call
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Invited by row */}
-                      <div className="flex items-center justify-between px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="flex -space-x-1.5">
-                            {activeEvent.attendees.map((a) => (
-                              <div
-                                key={a.initials}
-                                className={cn(
-                                  "flex h-5 w-5 items-center justify-center rounded-full font-mono text-[8px] font-medium ring-[1.5px] ring-paper",
-                                  a.className,
-                                )}
-                              >
-                                {a.initials}
-                              </div>
-                            ))}
-                          </div>
-                          <span className="text-xs text-muted">
-                            {activeEvent.organizer} and {activeEvent.attendees.length - 1} others
-                          </span>
-                        </div>
-                        <span className="text-xs text-muted">{activeEvent.duration}</span>
-                      </div>
-
-                      {/* Accept / Decline */}
-                      <div className="flex items-center gap-2 px-3 py-3">
-                        <button
-                          type="button"
-                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] border border-border py-2 text-xs font-medium text-muted transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
-                        >
-                          Decline
-                        </button>
-                        <button
-                          type="button"
-                          className="flex flex-1 cursor-pointer items-center justify-center rounded-[10px] bg-accent/15 py-2 text-xs font-medium text-accent transition-colors hover:bg-accent/25 focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:outline-none"
-                        >
-                          Accept
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </MotionConfig>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </MotionConfig>
+      <div className="absolute inset-x-0 bottom-3 flex justify-center">
+        <button
+          type="button"
+          onClick={toggleSpeed}
+          className="hover:text-foreground cursor-pointer font-mono text-[11px] text-muted transition-colors"
+        >
+          {factor}x
+        </button>
+      </div>
+    </>
   );
 }

@@ -9,8 +9,8 @@ interface SpeedContextValue {
 
 export const SpeedContext = createContext<SpeedContextValue>({ factor: 1, toggle: () => {} });
 
-export function useSpeed(): number {
-  return useContext(SpeedContext).factor;
+export function useSpeedControl() {
+  return useContext(SpeedContext);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

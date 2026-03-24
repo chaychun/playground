@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { scaleTransition, useSpeed } from "@/lib/speed-context";
+import { scaleTransition, useSpeedControl } from "@/lib/speed-context";
 import { ArrowRight, Check, X } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState, type ElementType } from "react";
@@ -51,7 +51,7 @@ const BG_COLOR: Record<ButtonState, string> = {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function StateIcon({ icon: Icon, size }: { icon: ElementType; size: number }) {
-  const factor = useSpeed();
+  const { factor } = useSpeedControl();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
@@ -67,7 +67,7 @@ function StateIcon({ icon: Icon, size }: { icon: ElementType; size: number }) {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MorphingPillButton({ className }: { className?: string }) {
-  const factor = useSpeed();
+  const { factor, toggle: toggleSpeed } = useSpeedControl();
   const [state, setState] = useState<ButtonState>("idle");
   const toggleRef = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -90,160 +90,171 @@ export function MorphingPillButton({ className }: { className?: string }) {
   const isIdle = state === "idle";
 
   return (
-    <motion.button
-      layout
-      onClick={handleClick}
-      className={cn(
-        "group relative flex h-10 cursor-pointer items-center overflow-hidden rounded-full font-semibold select-none",
-        className,
-      )}
-      style={{ borderRadius: 9999 }}
-      animate={state === "failure" ? { x: [0, -6, 6, -5, 5, -3, 3, 0] } : { x: 0 }}
-      transition={scaleTransition(
-        {
-          layout: { duration: 0.25, ease: EASE },
-          x: state === "failure" ? { duration: 0.4, ease: "easeInOut" } : { duration: 0.2 },
-        },
-        factor,
-      )}
-    >
-      {/* White base */}
-      <div className="absolute inset-0 rounded-full bg-surface ring-1 ring-border ring-inset" />
+    <>
+      <motion.button
+        layout
+        onClick={handleClick}
+        className={cn(
+          "group relative flex h-10 cursor-pointer items-center overflow-hidden rounded-full font-semibold select-none",
+          className,
+        )}
+        style={{ borderRadius: 9999 }}
+        animate={state === "failure" ? { x: [0, -6, 6, -5, 5, -3, 3, 0] } : { x: 0 }}
+        transition={scaleTransition(
+          {
+            layout: { duration: 0.25, ease: EASE },
+            x: state === "failure" ? { duration: 0.4, ease: "easeInOut" } : { duration: 0.2 },
+          },
+          factor,
+        )}
+      >
+        {/* White base */}
+        <div className="absolute inset-0 rounded-full bg-surface ring-1 ring-border ring-inset" />
 
-      {/* Ink fill — morphs between full pill (idle) and dot pill (other states).
+        {/* Ink fill — morphs between full pill (idle) and dot pill (other states).
           Color also transitions to green/red for done/failure. */}
-      <motion.div
-        className="absolute inset-0"
-        initial={false}
-        animate={{
-          clipPath: isIdle ? CLIP_IDLE : CLIP_DOT,
-          backgroundColor: BG_COLOR[state],
-        }}
-        transition={scaleTransition({ duration: 0.25, ease: EASE }, factor)}
-      />
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{
+            clipPath: isIdle ? CLIP_IDLE : CLIP_DOT,
+            backgroundColor: BG_COLOR[state],
+          }}
+          transition={scaleTransition({ duration: 0.25, ease: EASE }, factor)}
+        />
 
-      {/* Ghost sizer — invisible, in-flow only when idle, holds the natural idle width */}
-      {isIdle && (
-        <div className="pointer-events-none invisible flex items-center gap-1.5 px-6" aria-hidden>
-          <span>{LABELS.idle}</span>
-          <ArrowRight weight="bold" size={15} />
-        </div>
-      )}
-
-      {/* Idle text — absolute so it's never squished by layout changes, just clipped */}
-      <AnimatePresence initial={false}>
+        {/* Ghost sizer — invisible, in-flow only when idle, holds the natural idle width */}
         {isIdle && (
-          <motion.div
-            key="idle"
-            className="absolute inset-0 z-10 flex items-center gap-1.5 px-6 text-ink-inv"
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{
-              opacity: 1,
-              filter: "blur(0px)",
-              transition: scaleTransition({ delay: 0.1, duration: 0.15, ease: EASE }, factor),
-            }}
-            exit={{
-              opacity: 0,
-              filter: "blur(4px)",
-              transition: scaleTransition({ duration: 0.1, ease: EASE }, factor),
-            }}
-          >
+          <div className="pointer-events-none invisible flex items-center gap-1.5 px-6" aria-hidden>
             <span>{LABELS.idle}</span>
-            <span className="transition-transform duration-200 group-hover:translate-x-0.5">
-              <ArrowRight weight="bold" size={15} />
-            </span>
-          </motion.div>
+            <ArrowRight weight="bold" size={15} />
+          </div>
         )}
-      </AnimatePresence>
 
-      {/* Active content — in-flow, determines button width in active state */}
-      <AnimatePresence mode="popLayout" initial={false}>
-        {!isIdle && (
-          <motion.div
-            key="active"
-            layout
-            className="relative z-10 flex items-center"
-            style={{ paddingLeft: TEXT_PL, paddingRight: TEXT_PR }}
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{
-              opacity: 1,
-              filter: "blur(0px)",
-              transition: scaleTransition({ delay: 0.1, duration: 0.15, ease: EASE }, factor),
-            }}
-            exit={{
-              opacity: 0,
-              filter: "blur(4px)",
-              transition: scaleTransition({ duration: 0.1, ease: EASE }, factor),
-            }}
-          >
-            <AnimatePresence mode="popLayout">
-              <motion.span
-                key={state}
-                layout
-                className="whitespace-nowrap text-ink"
-                initial={{ opacity: 0, filter: "blur(4px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, filter: "blur(4px)" }}
-                transition={scaleTransition({ duration: 0.15, ease: EASE }, factor)}
-              >
-                {LABELS[state]}
-              </motion.span>
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Idle text — absolute so it's never squished by layout changes, just clipped */}
+        <AnimatePresence initial={false}>
+          {isIdle && (
+            <motion.div
+              key="idle"
+              className="absolute inset-0 z-10 flex items-center gap-1.5 px-6 text-ink-inv"
+              initial={{ opacity: 0, filter: "blur(4px)" }}
+              animate={{
+                opacity: 1,
+                filter: "blur(0px)",
+                transition: scaleTransition({ delay: 0.1, duration: 0.15, ease: EASE }, factor),
+              }}
+              exit={{
+                opacity: 0,
+                filter: "blur(4px)",
+                transition: scaleTransition({ duration: 0.1, ease: EASE }, factor),
+              }}
+            >
+              <span>{LABELS.idle}</span>
+              <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                <ArrowRight weight="bold" size={15} />
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      {/* Dot indicator — centered inside the right cap, only in non-idle states */}
-      <AnimatePresence>
-        {!isIdle && (
-          <motion.div
-            key="indicator"
-            className="pointer-events-none absolute z-20 flex items-center justify-center"
-            style={{ right: DR, top: DT, width: R * 2, height: R * 2 }}
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              transition: scaleTransition({ delay: 0.1, duration: 0.15 }, factor),
-            }}
-            exit={{
-              opacity: 0,
-              transition: scaleTransition({ duration: 0.1 }, factor),
-            }}
-          >
-            <AnimatePresence mode="popLayout">
-              {state === "processing" && (
-                <motion.div
-                  key="dots"
-                  className="flex items-center gap-[2.5px]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={scaleTransition({ duration: 0.15 }, factor)}
+        {/* Active content — in-flow, determines button width in active state */}
+        <AnimatePresence mode="popLayout" initial={false}>
+          {!isIdle && (
+            <motion.div
+              key="active"
+              layout
+              className="relative z-10 flex items-center"
+              style={{ paddingLeft: TEXT_PL, paddingRight: TEXT_PR }}
+              initial={{ opacity: 0, filter: "blur(4px)" }}
+              animate={{
+                opacity: 1,
+                filter: "blur(0px)",
+                transition: scaleTransition({ delay: 0.1, duration: 0.15, ease: EASE }, factor),
+              }}
+              exit={{
+                opacity: 0,
+                filter: "blur(4px)",
+                transition: scaleTransition({ duration: 0.1, ease: EASE }, factor),
+              }}
+            >
+              <AnimatePresence mode="popLayout">
+                <motion.span
+                  key={state}
+                  layout
+                  className="whitespace-nowrap text-ink"
+                  initial={{ opacity: 0, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(4px)" }}
+                  transition={scaleTransition({ duration: 0.15, ease: EASE }, factor)}
                 >
-                  {[0, 1, 2].map((i) => (
-                    <motion.span
-                      key={i}
-                      className="block h-[3px] w-[3px] rounded-full bg-ink-inv"
-                      animate={{ y: [0, -3, 0] }}
-                      transition={scaleTransition(
-                        {
-                          duration: 0.55,
-                          repeat: Infinity,
-                          delay: i * 0.12,
-                          ease: "easeInOut",
-                        },
-                        factor,
-                      )}
-                    />
-                  ))}
-                </motion.div>
-              )}
-              {state === "done" && <StateIcon key="done" icon={Check} size={15} />}
-              {state === "failure" && <StateIcon key="failure" icon={X} size={13} />}
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.button>
+                  {LABELS[state]}
+                </motion.span>
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Dot indicator — centered inside the right cap, only in non-idle states */}
+        <AnimatePresence>
+          {!isIdle && (
+            <motion.div
+              key="indicator"
+              className="pointer-events-none absolute z-20 flex items-center justify-center"
+              style={{ right: DR, top: DT, width: R * 2, height: R * 2 }}
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: 1,
+                transition: scaleTransition({ delay: 0.1, duration: 0.15 }, factor),
+              }}
+              exit={{
+                opacity: 0,
+                transition: scaleTransition({ duration: 0.1 }, factor),
+              }}
+            >
+              <AnimatePresence mode="popLayout">
+                {state === "processing" && (
+                  <motion.div
+                    key="dots"
+                    className="flex items-center gap-[2.5px]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={scaleTransition({ duration: 0.15 }, factor)}
+                  >
+                    {[0, 1, 2].map((i) => (
+                      <motion.span
+                        key={i}
+                        className="block h-[3px] w-[3px] rounded-full bg-ink-inv"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={scaleTransition(
+                          {
+                            duration: 0.55,
+                            repeat: Infinity,
+                            delay: i * 0.12,
+                            ease: "easeInOut",
+                          },
+                          factor,
+                        )}
+                      />
+                    ))}
+                  </motion.div>
+                )}
+                {state === "done" && <StateIcon key="done" icon={Check} size={15} />}
+                {state === "failure" && <StateIcon key="failure" icon={X} size={13} />}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.button>
+      <div className="absolute inset-x-0 bottom-3 flex justify-center">
+        <button
+          type="button"
+          onClick={toggleSpeed}
+          className="hover:text-foreground cursor-pointer font-mono text-[11px] text-muted transition-colors"
+        >
+          {factor}x
+        </button>
+      </div>
+    </>
   );
 }
