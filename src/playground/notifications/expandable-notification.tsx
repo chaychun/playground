@@ -636,7 +636,7 @@ export function ExpandableNotification() {
         <button
           type="button"
           onClick={toggleSpeed}
-          className="hover:text-foreground cursor-pointer font-mono text-[11px] text-muted transition-colors"
+          className="cursor-pointer font-mono text-[11px] text-muted transition-colors hover:text-ink"
         >
           {factor}x
         </button>

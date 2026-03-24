@@ -53,7 +53,3 @@ export function scaleTransition(transition: AnyTransition, factor: number): AnyT
   if (factor === 1) return transition;
   return scaleTransitionObject(transition, factor);
 }
-
-export function scaleTime(value: number, factor: number): number {
-  return value / factor;
-}
