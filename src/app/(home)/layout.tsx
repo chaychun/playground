@@ -11,7 +11,7 @@ export default function HomeLayout({
       <StickyHeader>
         <BreadcrumbNav />
       </StickyHeader>
-      <main>{children}</main>
+      <main style={{ paddingTop: 72 }}>{children}</main>
     </div>
   );
 }
