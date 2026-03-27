@@ -17,7 +17,7 @@ const ABOUT_SOCIAL_LINKS: (SocialLink & { display: string })[] = [
 export default function AboutPage() {
   return (
     <StaggerEntrance className="pt-8 pb-16">
-      <h1 className="mb-6 font-serif text-heading font-extralight text-ink">About me</h1>
+      <h1 className="mb-6 font-sans text-heading font-extralight text-ink">About me</h1>
       <div className="space-y-4 text-body text-dim">
         <p>
           I design and build cool things with code, focusing on motion-led interactions and

@@ -19,8 +19,8 @@ export const descriptionMdxComponents: MDXComponents = {
 
 /* eslint-disable jsx-a11y/heading-has-content, jsx-a11y/anchor-has-content */
 export const mdxComponents: MDXComponents = {
-  h1: (props) => <h1 className="font-serif text-heading font-extralight text-ink" {...props} />,
-  h2: (props) => <h2 className="mt-10 mb-4 font-serif text-h2 font-light text-ink" {...props} />,
+  h1: (props) => <h1 className="font-sans text-heading font-extralight text-ink" {...props} />,
+  h2: (props) => <h2 className="mt-10 mb-4 font-sans text-h2 font-light text-ink" {...props} />,
   h3: (props) => <h3 className="mt-8 mb-3 font-sans text-h3 font-light text-ink" {...props} />,
   p: (props) => <p className="mt-4 text-body text-dim" {...props} />,
   a: (props) => <a className={inlineLink} {...props} />,

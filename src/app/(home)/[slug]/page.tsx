@@ -39,7 +39,7 @@ export default async function ItemPage({ params }: { params: Promise<Params> }) 
 
   return (
     <StaggerEntrance className="pt-8 pb-16">
-      <h1 className="font-serif text-heading font-extralight text-ink">{item.title}</h1>
+      <h1 className="font-sans text-heading font-extralight text-ink">{item.title}</h1>
       {item.createdAt && (
         <div className="mt-3 font-mono text-meta tracking-[0.04em] text-muted uppercase">
           {(() => {

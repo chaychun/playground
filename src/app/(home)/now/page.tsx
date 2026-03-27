@@ -74,7 +74,7 @@ function TimelineContent({ data }: { data: NowMonth[] }) {
           <div className="ml-[31px] space-y-5">
             {month.entries.map((entry) => (
               <div key={entry.title}>
-                <h3 className="font-serif text-h2 font-light text-ink">{entry.title}</h3>
+                <h3 className="font-sans text-h2 font-light text-ink">{entry.title}</h3>
                 <EntryBody markdown={entry.body} />
               </div>
             ))}
@@ -91,7 +91,7 @@ export default function NowPage() {
   return (
     <div className="pt-8 pb-16">
       <StaggerEntrance>
-        <h1 className="font-serif text-heading font-extralight text-ink">
+        <h1 className="font-sans text-heading font-extralight text-ink">
           What I&apos;m doing, thinking about, and working on.
         </h1>
         <p className="mt-3 text-meta text-muted">

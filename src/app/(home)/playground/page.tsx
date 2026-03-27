@@ -26,7 +26,7 @@ function ItemCard({ item }: { item: Item }) {
         </Frame>
       )}
       <div className="mt-3 flex items-baseline justify-between gap-3">
-        <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
+        <span className="font-sans text-item-title font-light text-ink">{item.title}</span>
         <span className="shrink-0 font-mono text-meta text-muted">
           {new Date(item.createdAt).toLocaleDateString("en-US", {
             month: "short",
