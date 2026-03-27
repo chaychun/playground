@@ -88,7 +88,7 @@ export function SocialLinks() {
   const isTouch = useTouchDevice();
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 max-sm:text-body-sm">
       {SOCIAL_LINK_DETAILS.map((link) => (
         <SocialLink key={link.label} link={link} isTouch={isTouch} />
       ))}
