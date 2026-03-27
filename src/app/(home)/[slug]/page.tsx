@@ -1,6 +1,5 @@
 import { StaggerEntrance } from "@/components/stagger-entrance";
 import { getAllItems, getItemBySlug } from "@/lib/content";
-import { DEFAULT_CATEGORY } from "@/lib/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -21,14 +20,11 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
   const { item } = result;
   const title = item.title;
-  const description = item.description ?? `${title} — an interactive design exploration.`;
 
   return {
     title,
-    description,
     openGraph: {
       title: `${title} — Playground`,
-      description,
     },
   };
 }
@@ -44,19 +40,15 @@ export default async function ItemPage({ params }: { params: Promise<Params> }) 
   return (
     <StaggerEntrance className="pt-8 pb-16">
       <h1 className="font-serif text-heading font-extralight text-ink">{item.title}</h1>
-      <div className="mt-3 font-mono text-meta tracking-[0.04em] text-muted uppercase">
-        {item.category || DEFAULT_CATEGORY}
-        {item.createdAt && (
-          <>
-            <span className="mx-2 text-border">·</span>
-            {(() => {
-              const [year, month] = item.createdAt.split("-");
-              const date = new Date(Number(year), Number(month) - 1);
-              return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-            })()}
-          </>
-        )}
-      </div>
+      {item.createdAt && (
+        <div className="mt-3 font-mono text-meta tracking-[0.04em] text-muted uppercase">
+          {(() => {
+            const [year, month] = item.createdAt.split("-");
+            const date = new Date(Number(year), Number(month) - 1);
+            return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+          })()}
+        </div>
+      )}
 
       <div className="mt-8">{content}</div>
     </StaggerEntrance>

@@ -1,5 +1,4 @@
 import { getAllItems } from "@/lib/content";
-import { DEFAULT_CATEGORY } from "@/lib/types";
 import { ImageResponse } from "next/og";
 
 export const alt = "Playground article";
@@ -16,7 +15,6 @@ export default async function OGImage({ params }: { params: Promise<{ slug: stri
   const item = items.find((i) => i.slug === slug);
 
   const title = item?.title ?? slug;
-  const category = item?.category ?? DEFAULT_CATEGORY;
 
   const [ralewayRes, frauncesRes] = await Promise.all([
     fetch("https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap").then((r) =>
@@ -82,25 +80,6 @@ export default async function OGImage({ params }: { params: Promise<{ slug: stri
           display: "flex",
         }}
       />
-
-      {/* Category pill */}
-      <div
-        style={{
-          fontFamily: "Raleway",
-          fontSize: "14px",
-          fontWeight: 300,
-          color: "#a2bfd2",
-          letterSpacing: "0.14em",
-          textTransform: "uppercase",
-          marginBottom: "32px",
-          padding: "6px 16px",
-          border: "1px solid rgba(162, 191, 210, 0.2)",
-          borderRadius: "100px",
-          display: "flex",
-        }}
-      >
-        {category}
-      </div>
 
       {/* Title */}
       <div

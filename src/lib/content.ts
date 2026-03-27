@@ -47,15 +47,15 @@ async function parseItem(slug: string): Promise<{ item: Item; raw: string }> {
     }
   }
 
+  const body = hasBodyContent(content) ? content.trim() : undefined;
+
   const item: Item = {
     slug,
     title: data.title ?? slug,
-    description: data.description,
     createdAt: data.createdAt ?? "",
-    category: data.category,
-    links: data.links,
+    ...(body ? { body } : {}),
     hasPreview,
-    hasFullPage: hasBodyContent(content),
+    hasFullPage: !!body,
     ...(previewFrame ? { previewFrame } : {}),
   };
 
@@ -75,8 +75,10 @@ export async function getItemBySlug(
     const { item, raw } = await parseItem(slug);
 
     // Collect PascalCase named exports from the slug's component files.
-    // Fixed import path so Turbopack can statically analyze and resolve them at build time:
-    const barrelMod = await import(`@/playground/${slug}/components`).catch(() => null);
+    const hasComponents = existsSync(join(PLAYGROUND_DIR, slug, "components.ts"));
+    const barrelMod = hasComponents
+      ? await import(`@/playground/${slug}/components`).catch(() => null)
+      : null;
 
     const slugComponents: Record<string, React.ComponentType> = {};
     if (barrelMod) {

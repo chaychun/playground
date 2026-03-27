@@ -41,60 +41,16 @@ async function ItemDescription({ markdown }: { markdown: string }) {
   return <div className="mt-1.5 text-body-sm text-dim">{content}</div>;
 }
 
-async function ItemCard({ item }: { item: Item }) {
-  const slug = item.hasFullPage ? `/${item.slug}` : undefined;
-  const externalLink = item.links?.[0]?.href;
-
-  // For the preview, prioritize externalLink if specified, fallback to slug
-  const previewHref = externalLink || slug;
-  const previewIsExternal = !!externalLink;
-
+function ItemCard({ item }: { item: Item }) {
   return (
     <>
-      {item.hasPreview &&
-        (previewHref ? (
-          previewIsExternal ? (
-            <a
-              href={previewHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="external"
-              data-cursor-label={item.links?.[0]?.label}
-              className="block"
-            >
-              <Frame {...item.previewFrame}>
-                <LazyPreviewComponent slug={item.slug} />
-              </Frame>
-            </a>
-          ) : (
-            <Link href={previewHref} data-cursor="internal" className="block">
-              <Frame {...item.previewFrame}>
-                <LazyPreviewComponent slug={item.slug} />
-              </Frame>
-            </Link>
-          )
-        ) : (
-          <Frame {...item.previewFrame}>
-            <LazyPreviewComponent slug={item.slug} />
-          </Frame>
-        ))}
+      {item.hasPreview && (
+        <Frame {...item.previewFrame}>
+          <LazyPreviewComponent slug={item.slug} />
+        </Frame>
+      )}
       <div className="mt-3 flex items-baseline justify-between gap-3">
-        {slug ? (
-          <Link href={slug} className="font-serif text-item-title font-light text-ink">
-            {item.title}
-          </Link>
-        ) : externalLink ? (
-          <a
-            href={externalLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-serif text-item-title font-light text-ink"
-          >
-            {item.title}
-          </a>
-        ) : (
-          <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
-        )}
+        <span className="font-serif text-item-title font-light text-ink">{item.title}</span>
         <span className="shrink-0 font-mono text-meta text-muted">
           {new Date(item.createdAt).toLocaleDateString("en-US", {
             month: "short",
@@ -102,7 +58,7 @@ async function ItemCard({ item }: { item: Item }) {
           })}
         </span>
       </div>
-      {item.description && <ItemDescription markdown={item.description} />}
+      {item.body && <ItemDescription markdown={item.body} />}
     </>
   );
 }
