@@ -9,6 +9,7 @@ export default function FloatingLabelDemo() {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
   const [submittedName, setSubmittedName] = useState<string | null>(null);
+  const [labelResetting, setLabelResetting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const prefixRef = useRef<HTMLSpanElement>(null);
   const [prefixWidth, setPrefixWidth] = useState(0);
@@ -30,8 +31,10 @@ export default function FloatingLabelDemo() {
   useEffect(() => {
     if (!submittedName) return;
     const t = setTimeout(() => {
+      setLabelResetting(true);
       setSubmittedName(null);
       inputRef.current?.blur();
+      requestAnimationFrame(() => setLabelResetting(false));
     }, 2800);
     return () => clearTimeout(t);
   }, [submittedName]);
@@ -43,11 +46,37 @@ export default function FloatingLabelDemo() {
           htmlFor={id}
           initial={false}
           animate={
-            isFloating
-              ? { y: 0, fontSize: "0.7rem", color: focused ? "var(--accent)" : "var(--muted)" }
-              : { y: 20, fontSize: "1rem", color: "var(--dim)" }
+            submittedName
+              ? { y: 0, fontSize: "0.7rem", opacity: 0, filter: "blur(4px)" }
+              : labelResetting
+                ? { y: 8, fontSize: "1rem", color: "var(--dim)", opacity: 0, filter: "blur(0px)" }
+                : isFloating
+                  ? {
+                      y: 0,
+                      fontSize: "0.7rem",
+                      color: focused ? "var(--accent)" : "var(--muted)",
+                      opacity: 1,
+                      filter: "blur(0px)",
+                    }
+                  : {
+                      y: 20,
+                      fontSize: "1rem",
+                      color: "var(--dim)",
+                      opacity: 1,
+                      filter: "blur(0px)",
+                    }
           }
-          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+          transition={
+            labelResetting
+              ? { duration: 0 }
+              : {
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 32,
+                  filter: { duration: 0.2 },
+                  opacity: { duration: 0.2 },
+                }
+          }
           className="pointer-events-none absolute top-0 left-0 origin-left font-sans leading-none select-none"
         >
           Your name
@@ -87,6 +116,7 @@ export default function FloatingLabelDemo() {
                     stiffness: 280,
                     damping: 30,
                     filter: { duration: 0.2 },
+                    opacity: { duration: 0.2 },
                   }}
                   className="pointer-events-none absolute inset-0 overflow-hidden text-base text-ink"
                 >
