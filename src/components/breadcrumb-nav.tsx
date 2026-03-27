@@ -36,19 +36,19 @@ export function BreadcrumbNav() {
         <button
           type="button"
           onClick={goHome}
-          className="cursor-pointer text-ink transition-colors hover:text-accent"
+          className="cursor-pointer text-white transition-opacity hover:opacity-70"
         >
           chayut.me
         </button>
       ) : (
-        <span className="text-ink">chayut.me</span>
+        <span className="text-white">chayut.me</span>
       )}
-      <span className="text-muted">/</span>
+      <span className="text-white/50">/</span>
       <AnimatePresence mode="popLayout">
         {page && (
           <motion.span
             key={page}
-            className="text-dim"
+            className="text-white/70"
             initial={{ opacity: 0, filter: "blur(4px)", x: -8 }}
             animate={{ opacity: 1, filter: "blur(0px)", x: 0 }}
             exit={{ opacity: 0, filter: "blur(4px)", x: -8 }}
