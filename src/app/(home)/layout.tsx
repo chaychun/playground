@@ -7,11 +7,11 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="relative mx-auto max-w-[680px] px-6">
+    <div className="mx-auto max-w-[680px] px-6">
       <StickyHeader>
         <BreadcrumbNav />
       </StickyHeader>
-      <main>{children}</main>
+      <main style={{ paddingTop: 72 }}>{children}</main>
     </div>
   );
 }
