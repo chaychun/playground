@@ -126,13 +126,13 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0, transition: { duration: 0.2 } }}
                       >
-                        <div className="h-px bg-dim/50" />
+                        <div className="h-px bg-dim/20" />
 
                         <p className="mt-4 text-sm leading-relaxed text-dim">{body}</p>
 
                         {details && (
                           <>
-                            <div className="mt-4 h-px bg-dim/50" />
+                            <div className="mt-4 h-px bg-dim/20" />
                             <ul className="mt-3 flex flex-col gap-1.5">
                               {details.map((detail) => (
                                 <li key={detail} className="font-mono text-2xs text-muted">
