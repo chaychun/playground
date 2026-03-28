@@ -1,9 +1,13 @@
 "use client";
 
 import { useSpeedControl } from "@/lib/speed-context";
+import { usePathname } from "next/navigation";
 
 export function SpeedToggle() {
   const { factor, toggle } = useSpeedControl();
+  const pathname = usePathname();
+
+  if (pathname !== "/playground") return null;
 
   return (
     <button
