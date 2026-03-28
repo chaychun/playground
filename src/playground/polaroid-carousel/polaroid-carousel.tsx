@@ -191,11 +191,12 @@ export default function PolaroidStack() {
       <LayoutGroup>
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
           <div className="relative flex h-[26rem] w-full items-center justify-center">
-            {!isOpen && (
-              <motion.div layoutId="polaroid-stack" className="relative">
-                {cards}
-              </motion.div>
-            )}
+            <motion.div
+              layoutId="polaroid-stack"
+              className={cn("relative", isOpen && "invisible")}
+            >
+              {!isOpen && cards}
+            </motion.div>
           </div>
           <AnimatePresence mode="popLayout">
             {isOpen && (
