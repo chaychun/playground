@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { scaleTransition, useSpeedControl } from "@/lib/speed-context";
 import { animate, motion, useMotionValue, useTransform, useVelocity } from "motion/react";
 import { useEffect, useState } from "react";
 
@@ -32,6 +33,7 @@ const FADE_MASK =
   "linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%)";
 
 export default function VariableFontSelector() {
+  const { factor } = useSpeedControl();
   const [active, setActive] = useState<Option>("Photos");
 
   const activeIndex = OPTIONS.findIndex((o) => o.label === active);
@@ -43,13 +45,13 @@ export default function VariableFontSelector() {
   // Stable motion value for emoji so velocity tracking works correctly
   const emojiYMV = useMotionValue(emojiY);
   useEffect(() => {
-    const controls = animate(emojiYMV, emojiY, {
-      type: "spring",
-      duration: 0.5,
-      bounce: 0,
-    });
+    const controls = animate(
+      emojiYMV,
+      emojiY,
+      scaleTransition({ type: "spring", duration: 0.5, bounce: 0 }, factor),
+    );
     return controls.stop;
-  }, [emojiY, emojiYMV]);
+  }, [emojiY, emojiYMV, factor]);
 
   const emojiVelocity = useVelocity(emojiYMV);
   const blurFilter = useTransform(emojiVelocity, [-600, 0, 600], [6, 0, 6]);
@@ -91,7 +93,7 @@ export default function VariableFontSelector() {
             style={{ gap: GAP }}
             initial={false}
             animate={{ y: listY }}
-            transition={{ type: "spring", duration: 0.5, bounce: 0 }}
+            transition={scaleTransition({ type: "spring", duration: 0.5, bounce: 0 }, factor)}
           >
             {OPTIONS.map(({ label }) => {
               const isActive = label === active;
@@ -107,7 +109,10 @@ export default function VariableFontSelector() {
                       fontWeight: isActive ? 600 : 300,
                       fontSize: isActive ? "60px" : "48px",
                     }}
-                    transition={{ type: "spring", duration: 0.5, bounce: 0 }}
+                    transition={scaleTransition(
+                      { type: "spring", duration: 0.5, bounce: 0 },
+                      factor,
+                    )}
                     type="button"
                     onClick={() => setActive(label)}
                   >

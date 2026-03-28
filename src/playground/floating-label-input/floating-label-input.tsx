@@ -1,11 +1,13 @@
 "use client";
 
+import { scaleTransition, useSpeedControl } from "@/lib/speed-context";
 import { ArrowRight } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 export default function FloatingLabelDemo() {
   const id = "floating-label-input";
+  const { factor } = useSpeedControl();
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
   const [submittedName, setSubmittedName] = useState<string | null>(null);
@@ -35,9 +37,9 @@ export default function FloatingLabelDemo() {
       setSubmittedName(null);
       inputRef.current?.blur();
       requestAnimationFrame(() => setLabelResetting(false));
-    }, 2800);
+    }, 2800 / factor);
     return () => clearTimeout(t);
-  }, [submittedName]);
+  }, [submittedName, factor]);
 
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
@@ -69,13 +71,16 @@ export default function FloatingLabelDemo() {
           transition={
             labelResetting
               ? { duration: 0 }
-              : {
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 32,
-                  filter: { duration: 0.2 },
-                  opacity: { duration: 0.2 },
-                }
+              : scaleTransition(
+                  {
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 32,
+                    filter: { duration: 0.2 },
+                    opacity: { duration: 0.2 },
+                  },
+                  factor,
+                )
           }
           className="pointer-events-none absolute top-0 left-0 origin-left font-sans leading-none select-none"
         >
@@ -111,20 +116,26 @@ export default function FloatingLabelDemo() {
               {submittedName && (
                 <motion.div
                   exit={{ y: 16, opacity: 0, filter: "blur(4px)" }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 280,
-                    damping: 30,
-                    filter: { duration: 0.2 },
-                    opacity: { duration: 0.2 },
-                  }}
+                  transition={scaleTransition(
+                    {
+                      type: "spring",
+                      stiffness: 280,
+                      damping: 30,
+                      filter: { duration: 0.2 },
+                      opacity: { duration: 0.2 },
+                    },
+                    factor,
+                  )}
                   className="pointer-events-none absolute inset-0 overflow-hidden text-base text-ink"
                 >
                   {/* Name: slides right, no blur */}
                   <motion.span
                     initial={{ x: 0 }}
                     animate={{ x: prefixWidth }}
-                    transition={{ type: "spring", stiffness: 280, damping: 30 }}
+                    transition={scaleTransition(
+                      { type: "spring", stiffness: 280, damping: 30 },
+                      factor,
+                    )}
                     className="absolute bottom-1.5 left-0 min-w-0 truncate"
                     style={{ maxWidth: `calc(100% - ${prefixWidth}px)` }}
                   >
@@ -134,13 +145,16 @@ export default function FloatingLabelDemo() {
                   <motion.span
                     initial={{ y: 16, opacity: 0, filter: "blur(4px)" }}
                     animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 280,
-                      damping: 30,
-                      delay: 0.15,
-                      filter: { duration: 0.2, delay: 0.15 },
-                    }}
+                    transition={scaleTransition(
+                      {
+                        type: "spring",
+                        stiffness: 280,
+                        damping: 30,
+                        delay: 0.15,
+                        filter: { duration: 0.2, delay: 0.15 },
+                      },
+                      factor,
+                    )}
                     className="absolute bottom-1.5 left-0 whitespace-nowrap"
                   >
                     Nice to meet you,&nbsp;
@@ -162,17 +176,20 @@ export default function FloatingLabelDemo() {
                   rotate: [0, 14, -8, 14, -4, 10, 0],
                 }}
                 exit={{ scale: 0.4, opacity: 0, filter: "blur(4px)" }}
-                transition={{
-                  scale: { type: "spring", stiffness: 400, damping: 28 },
-                  filter: { duration: 0.2 },
-                  opacity: { duration: 0.15 },
-                  rotate: {
-                    duration: 1.4,
-                    repeat: Infinity,
-                    repeatDelay: 0.6,
-                    ease: "easeInOut",
+                transition={scaleTransition(
+                  {
+                    scale: { type: "spring", stiffness: 400, damping: 28 },
+                    filter: { duration: 0.2 },
+                    opacity: { duration: 0.15 },
+                    rotate: {
+                      duration: 1.4,
+                      repeat: Infinity,
+                      repeatDelay: 0.6,
+                      ease: "easeInOut",
+                    },
                   },
-                }}
+                  factor,
+                )}
                 style={{ transformOrigin: "70% 70%" }}
                 className="mb-1.5 text-xl leading-none"
               >
@@ -185,12 +202,15 @@ export default function FloatingLabelDemo() {
                 initial={{ opacity: 0, scale: 0.7, filter: "blur(4px)" }}
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.7, filter: "blur(4px)" }}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 35,
-                  filter: { duration: 0.2 },
-                }}
+                transition={scaleTransition(
+                  {
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 35,
+                    filter: { duration: 0.2 },
+                  },
+                  factor,
+                )}
                 onClick={submit}
                 className="mb-1.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-paper"
               >
@@ -205,7 +225,7 @@ export default function FloatingLabelDemo() {
           <motion.div
             initial={false}
             animate={{ opacity: focused ? 1 : 0 }}
-            transition={{ duration: 0.2 }}
+            transition={scaleTransition({ duration: 0.2 }, factor)}
             className="absolute inset-0 h-px bg-accent"
           />
         </div>

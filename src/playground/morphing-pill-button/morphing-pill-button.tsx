@@ -67,7 +67,7 @@ function StateIcon({ icon: Icon, size }: { icon: ElementType; size: number }) {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MorphingPillButton({ className }: { className?: string }) {
-  const { factor, toggle: toggleSpeed } = useSpeedControl();
+  const { factor } = useSpeedControl();
   const [state, setState] = useState<ButtonState>("idle");
   const toggleRef = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -246,15 +246,6 @@ export function MorphingPillButton({ className }: { className?: string }) {
           )}
         </AnimatePresence>
       </motion.button>
-      <div className="absolute inset-x-0 bottom-3 flex justify-center">
-        <button
-          type="button"
-          onClick={toggleSpeed}
-          className="cursor-pointer font-mono text-[11px] text-muted transition-colors hover:text-ink"
-        >
-          {factor}x
-        </button>
-      </div>
     </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { scaleTransition, useSpeedControl } from "@/lib/speed-context";
 import { CaretDown, Info, X } from "@phosphor-icons/react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import Image from "next/image";
@@ -17,6 +18,7 @@ interface InfoModalProps {
 }
 
 function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
+  const { factor } = useSpeedControl();
   const [isOpen, setIsOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [isLayoutAnimating, setIsLayoutAnimating] = useState(false);
@@ -61,7 +63,9 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
   }, [isOpen]);
 
   return (
-    <MotionConfig transition={{ type: "spring", duration: 0.6, bounce: 0 }}>
+    <MotionConfig
+      transition={scaleTransition({ type: "spring", duration: 0.6, bounce: 0 }, factor)}
+    >
       <div
         ref={wrapperRef}
         className="pointer-events-auto flex h-full w-full items-end justify-end"
@@ -94,9 +98,9 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                 animate={{
                   opacity: 1,
                   y: 0,
-                  transition: { delay: 0.2, duration: 0.4 },
+                  transition: scaleTransition({ delay: 0.2, duration: 0.4 }, factor),
                 }}
-                exit={{ opacity: 0, y: 16, transition: { duration: 0.1 } }}
+                exit={{ opacity: 0, y: 16, transition: scaleTransition({ duration: 0.1 }, factor) }}
               >
                 <div className="px-6 pt-6 pb-18">
                   {label && (
@@ -124,7 +128,10 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                        exit={{
+                          opacity: 0,
+                          transition: scaleTransition({ duration: 0.2 }, factor),
+                        }}
                       >
                         <div className="h-px bg-dim/20" />
 
@@ -186,7 +193,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                   initial={{ opacity: 0, filter: "blur(4px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, filter: "blur(4px)" }}
-                  transition={{ duration: 0.3 }}
+                  transition={scaleTransition({ duration: 0.3 }, factor)}
                 >
                   <X className="h-6 w-6 text-muted" weight="light" />
                 </motion.span>
@@ -197,7 +204,7 @@ function InfoModal({ label, title, artist, body, details }: InfoModalProps) {
                   initial={{ opacity: 1, filter: "blur(0px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, filter: "blur(4px)" }}
-                  transition={{ duration: 0.3 }}
+                  transition={scaleTransition({ duration: 0.3 }, factor)}
                 >
                   <Info className="h-6 w-6 text-muted" weight="light" />
                 </motion.span>
