@@ -8,14 +8,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 1.0 },
     {
-      url: `${SITE_URL}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    // temporarily removed from sitemap until now page content is ready
-    // { url: `${SITE_URL}/now`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
-    {
       url: `${SITE_URL}/resume`,
       lastModified: new Date(),
       changeFrequency: "monthly",
