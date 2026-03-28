@@ -5,7 +5,7 @@ import { scaleTransition, useSpeedControl } from "@/lib/speed-context";
 import { AnimatePresence, LayoutGroup, MotionConfig, motion } from "motion/react";
 import Image, { type StaticImageData } from "next/image";
 import { Dialog } from "radix-ui";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import coldBrewImg from "./assets/cold-brew-cans.png";
 import coveringFaceImg from "./assets/person-covering-face.png";
@@ -34,6 +34,11 @@ export default function PolaroidStack() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const isSmallScreen = useMediaQuery("(max-width: 999px)");
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    hasAnimated.current = true;
+  }, []);
 
   const nextPhoto = () => {
     setCurrentIndex((prev) => (prev + 1) % 3);
@@ -78,8 +83,9 @@ export default function PolaroidStack() {
         position === "center"
           ? "relative bg-white shadow-lg p-3 pb-12 z-[1]"
           : "absolute cursor-pointer top-0 left-0 bg-white shadow-lg p-3 pb-12",
-      initial:
-        position === "center"
+      initial: hasAnimated.current
+        ? false
+        : position === "center"
           ? {
               scale: 0.8,
               width: baseWidth,
@@ -185,8 +191,11 @@ export default function PolaroidStack() {
       <LayoutGroup>
         <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
           <div className="relative flex h-[26rem] w-full items-center justify-center">
-            <motion.div layoutId="polaroid-stack" className={cn("relative", isOpen && "invisible")}>
-              {cards}
+            <motion.div
+              layoutId="polaroid-stack"
+              className={cn("relative", isOpen && "invisible")}
+            >
+              {!isOpen && cards}
             </motion.div>
           </div>
           <AnimatePresence mode="popLayout">
