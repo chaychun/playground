@@ -10,7 +10,7 @@ import {
   VideoCameraIcon,
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion, MotionConfig, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -191,6 +191,7 @@ export function ExpandableNotification() {
   const [listRef, { height: listHeight }] = useMeasure();
   const [eventRef, { height: eventHeight }] = useMeasure();
   const chatScrollRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const { factor } = useSpeedControl();
   const reduced = useReducedMotion() ?? false;
 
@@ -208,6 +209,28 @@ export function ExpandableNotification() {
   const newCount = notifications.filter(
     (n) => n.type === "calendar" || (n.type === "conversation" && n.unread),
   ).length;
+
+  // Close everything when clicking outside the card but within the frame
+  const closeAll = useCallback(() => {
+    setIsOpen(false);
+    setActiveId(null);
+    setActiveEvent(null);
+  }, []);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    const frame = card?.parentElement;
+    if (!frame || !isOpen) return;
+
+    function handlePointerDown(e: PointerEvent) {
+      if (card && !card.contains(e.target as Node)) {
+        closeAll();
+      }
+    }
+
+    frame.addEventListener("pointerdown", handlePointerDown);
+    return () => frame.removeEventListener("pointerdown", handlePointerDown);
+  }, [isOpen, closeAll]);
 
   function scrollToBottom(smooth = false) {
     const el = chatScrollRef.current;
@@ -264,7 +287,10 @@ export function ExpandableNotification() {
   return (
     <>
       <MotionConfig transition={spring}>
-        <motion.div className="w-full max-w-sm overflow-hidden rounded-[20px] border border-border bg-paper">
+        <motion.div
+          ref={cardRef}
+          className="w-full max-w-sm overflow-hidden rounded-[20px] border border-border bg-paper"
+        >
           {/* ── Header ── */}
           <motion.div
             className={cn(
