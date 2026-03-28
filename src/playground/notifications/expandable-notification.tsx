@@ -192,7 +192,7 @@ export function ExpandableNotification() {
   const [eventRef, { height: eventHeight }] = useMeasure();
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const { factor, toggle: toggleSpeed } = useSpeedControl();
+  const { factor } = useSpeedControl();
   const reduced = useReducedMotion() ?? false;
 
   const spring = reduced
@@ -658,15 +658,6 @@ export function ExpandableNotification() {
           </AnimatePresence>
         </motion.div>
       </MotionConfig>
-      <div className="absolute inset-x-0 bottom-3 flex justify-center">
-        <button
-          type="button"
-          onClick={toggleSpeed}
-          className="cursor-pointer font-mono text-[11px] text-muted transition-colors hover:text-ink"
-        >
-          {factor}x
-        </button>
-      </div>
     </>
   );
 }
