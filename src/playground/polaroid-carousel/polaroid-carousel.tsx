@@ -194,7 +194,7 @@ export default function PolaroidStack() {
               <Dialog.Portal forceMount>
                 <motion.div
                   initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-                  animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
+                  animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
                   exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
                   transition={scaleTransition({ duration: 0.3, ease: "easeOut" }, factor)}
                   className="fixed inset-0 z-50 bg-black/40"
